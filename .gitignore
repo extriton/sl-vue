@@ -22,3 +22,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Exclude game-settings
+server/config/game-settings-*

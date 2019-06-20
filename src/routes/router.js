@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import BookList from '@/views/BookList.vue'
+// import BookList from '@/views/BookList.vue'
 
 Vue.use(Router)
 
@@ -10,18 +10,29 @@ export default new Router({
   routes: [
     {
       path: '/',
+      redirect: '/w5x36'
+    },
+    {
+      path: '/:id',
+      component: Games
+    },
+    
+    /*
+    {
+      path: '/',
       name: 'BookList',
       component: BookList
     },
     {
       path: '/login',
       name: 'Login',
-      component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+      component: () => import('../views/Login.vue')
     },
     {
       path: '/register',
       name: 'Register',
-      component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
+      component: () => import('../views/Register.vue')
     }
+    */
   ]
 })

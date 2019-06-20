@@ -2,8 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Book = require('../models/Book.js')
 
-const passport = require('passport')
-require('../config/passport')(passport)
+
 
 /* GET ALL BOOKS */
 router.get('/', passport.authenticate('jwt', { session: false}), function(req, res) {

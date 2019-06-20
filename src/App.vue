@@ -1,17 +1,20 @@
 <template>
   <div id="app">
     <TheHeader/>
+    <GameMenu/>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
 import TheHeader from './components/TheHeader.vue'
+import GameMenu from './components/GameMenu.vue'
 
 export default {
   name: 'app',
   components: {
     TheHeader,
+    GameMenu,
   },
 }
 </script>
@@ -26,5 +29,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   min-width: 768px;
+  padding-top: 114px;
 }
 </style>

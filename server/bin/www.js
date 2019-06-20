@@ -10,7 +10,7 @@ app.set('port', port)
 
 // Create HTTP server & socket connection
 const server = http.createServer(app)
-const io = require('socket.io').listen(server, { path: '/ws' })
+const io = require('socket.io').listen(server, /* { path: '/ws' } */)
 require('../sockets/sockets')(io)
 
 // Listen on provided port, on all network interfaces.

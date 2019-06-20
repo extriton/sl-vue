@@ -18,7 +18,7 @@ Vue.use(new VueSocketIO({
       actionPrefix: 'SOCKET_',
       mutationPrefix: 'SOCKET_'
   },
-  options: { path: '/ws' } 
+  // options: { path: '/ws' } 
 }))
 
 Vue.config.productionTip = false

@@ -9,10 +9,10 @@
             </div>
             <div class="menu-wrapper">
                 <ul class="menu">
-                    <li><a class="link_play" href="#play">{{ dict.menu_play }}</a></li>
-                    <li><a class="link_rules" href="#rules">{{ dict.menu_rules }}</a></li>
-                    <li><a class="link_history" href="#history">{{ dict.menu_history }}</a></li>
-                    <li><a class="link_statistics" href="#statistics">{{ dict.menu_statistics }}</a></li>
+                    <li><a class="link_play" href="#game-play">{{ dict.menu_play }}</a></li>
+                    <li><a class="link_rules" href="#game-rules">{{ dict.menu_rules }}</a></li>
+                    <li><a class="link_history" href="#game-history">{{ dict.menu_history }}</a></li>
+                    <li><a class="link_statistics" href="#game-statistics">{{ dict.menu_statistics }}</a></li>
                 </ul>
             </div>
         </div>
@@ -23,7 +23,6 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 import TheLanguage from './TheLanguage.vue';
-import Language from '../lib/language.js';
 
 export default {
     name: 'TheHeader',
@@ -34,9 +33,6 @@ export default {
     data () {
         return {
         }
-    },
-    mounted () {
-        this.dict = Language.getDictonary()
     },
     computed: {
         dict () {

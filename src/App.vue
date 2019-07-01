@@ -1,20 +1,13 @@
 <template>
   <div id="app">
-    <TheHeader/>
-    <GameMenu/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-import TheHeader from './components/TheHeader.vue'
-import GameMenu from './components/GameMenu.vue'
-
 export default {
   name: 'app',
   components: {
-    TheHeader,
-    GameMenu,
   },
 }
 </script>

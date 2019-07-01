@@ -61,15 +61,15 @@ export default {
 
     methods: {
         hideContainer () {
-            this.open = false;
+            this.open = false
         },
 
         toggleContainer () {
-            this.open = !this.open;
+            this.open = !this.open
         },
 
         selectLang (index) {
-            this.open = false;
+            this.open = false
             
             Language.setLanguage(this.lang_list[index])
             $cookies.set('language', Language.getLanguage())
@@ -78,10 +78,10 @@ export default {
         },
 
         getLangClass (lang) {
-            let className = 'flag-' + lang;
-            let classObj = {};
-            classObj[className] = true;
-            return classObj;
+            let className = 'flag-' + lang
+            let classObj = {}
+            classObj[className] = true
+            return classObj
         },
 
     },

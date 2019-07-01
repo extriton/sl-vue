@@ -3,6 +3,7 @@ const path = require('path')
 const favicon = require('serve-favicon')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const config = require('./server/config/config')
 
 // Mongoose
@@ -18,6 +19,7 @@ const game = require('./server/routes/game')
 // App
 const app = express()
 app.use(logger('dev'))
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({'extended':'false'}))
 app.use(express.static(path.join(__dirname, 'dist')))

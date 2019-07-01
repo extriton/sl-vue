@@ -16,7 +16,7 @@ dicts.ru = {
     menu_statistics                     : 'Статистика',
           
     // Играть
-    play_title1                         : 'Еженедельная лотерея 5 из 36, основанная на',
+    play_title1                         : 'Лотерея, основанная на',
     play_title2                         : 'смарт-контракте Ethereum',
     play_title3                         : 'с открытым',
     play_title4                         : 'исходным кодом',
@@ -87,7 +87,7 @@ dicts.en = {
     menu_statistics                     : 'Statistics',
           
     // Играть
-    play_title1                         : 'Weekly lottery 5 of 36, based on ',
+    play_title1                         : 'Lottery, based on ',
     play_title2                         : 'Ethereum smart contract',
     play_title3                         : 'with an open',
     play_title4                         : 'source code',

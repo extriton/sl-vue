@@ -25,3 +25,6 @@ yarn-error.log*
 
 # Exclude game-settings
 server/config/game-settings-*
+
+# Exclude contracts source
+contracts

@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Game from '@/views/Game.vue'
+import GameWrapper from '@/views/GameWrapper.vue'
+import GameDefault from '@/components/GameDefault.vue'
+import GameBody from '@/components/GameBody.vue'
 
 Vue.use(Router)
 
@@ -8,32 +10,25 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    /*
     {
       path: '/',
-      redirect: '/w5x36'
+      name: 'GameWrapper',
+      component: GameWrapper,
+      children: [
+        {
+          path: '',
+          component: GameDefault
+        },
+        {
+          path: ':id',
+          component: GameBody
+        },
+      ]
     },
     {
-      path: '/:id',
-      component: Game
+      path: '*',
+      redirect: '/',
     },
-    */
-    /*
-    {
-      path: '/',
-      name: 'BookList',
-      component: BookList
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: () => import('../views/Login.vue')
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: () => import('../views/Register.vue')
-    }
-    */
+    
   ]
 })

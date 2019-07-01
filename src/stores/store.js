@@ -7,16 +7,34 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // For TheLanguage.vue component
     language: '',
     dict: Language.getDictonary(),
+    // For Game
+    gameSettingsLoaded: false,
     gameSettings: null,
+    gamesCount: 0,
+    gameCurrentIndex: null,
+    gameCurrent: null,
   },
   getters: {
+    gameSettingsLoaded: state => {
+      return state.gameSettingsLoaded
+    },
+    gameSettings: state => {
+      return state.gameSettings
+    },
     gamesCount: state => {
-      if (state.gameSettings !== null)
-        return state.gameSettings.games.length
-      else
-        return 0
+      return state.gamesCount
+    },
+    gameCurrentIndex: state => {
+      return state.gameCurrentIndex
+    },
+    gameCurrent: state => {
+      return state.gameCurrent
+    },
+    slideDirection: state => {
+      return  state.slideDirection
     }
   },
   mutations: {
@@ -24,9 +42,25 @@ export default new Vuex.Store({
       state.language = Language.getLanguage()
       state.dict = Language.getDictonary()
     },
+    // Load Game settings
     loadGameSettings (state, payload) {
       state.gameSettings = payload
-    }
+      // Define gamesCount
+      if (state.gameSettings !== null && Array.isArray(state.gameSettings.games)) {
+        state.gamesCount = state.gameSettings.games.length
+      }
+      // Define gameCurrentIndex & gameCurrent
+      if(state.gamesCount > 0) {
+        state.gameCurrentIndex = 0
+        state.gameCurrent = state.gameSettings.games[0]
+      }
+      state.gameSettingsLoaded = true
+    },
+    gameCurrentChange (state, payload) {
+      const index = parseInt(payload)
+      state.gameCurrentIndex = index
+      state.gameCurrent = state.gameSettings.games[index]
+    },
   },
   actions: {
     loadGameSettings ({ commit }) {
@@ -35,7 +69,6 @@ export default new Vuex.Store({
         if(response.data !== null) commit('loadGameSettings', response.data)
       })
       .catch(e => console.log(e))
-    }
-
+    },
   }
 })

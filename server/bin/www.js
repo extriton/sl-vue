@@ -3,6 +3,7 @@
 const app = require('../../app')
 const debug = require('debug')('mean-app:server')
 const http = require('http')
+const contracts = require('../service/contracts')
 // const io = require('socket.io')
 
 const port = normalizePort(process.env.PORT || '3000')
@@ -19,6 +20,9 @@ server.on('listening', onListening)
 // Create socket connection
 const io = require('socket.io').listen(server, /* { path: '/ws' } */)
 require('../sockets/sockets')(io)
+
+// Set contracts listeners
+contracts.setListeners(io)
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

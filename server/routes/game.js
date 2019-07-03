@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const config = require('../config/config')
-const gameSetting = require('../config/game-settings.js')(config.ethNetwork)
+const gameSetting = require('../config/game-settings.js')()
 
 /* GET GAME SETTINGS */
 router.get('/settings', function(req, res) {

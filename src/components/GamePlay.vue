@@ -47,7 +47,7 @@ export default {
         },
         contractUrl () {
             if(this.gameSettings !== null && this.gameCurrent !== null)
-                return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#code'
+                return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
             else
                 return '#'
         },

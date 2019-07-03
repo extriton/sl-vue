@@ -1,5 +1,5 @@
-module.exports = env => {
-    if (env == 'development') return require('./game-settings-dev')
-    if (env == 'production') return require('./game-settings-prod')
+module.exports = ethNetwork => {
+    if (ethNetwork == 'mainnet') return require('./game-settings-mainnet')
+    if (ethNetwork == 'ropsten') return require('./game-settings-ropsten')
     return null;
 }

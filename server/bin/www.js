@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const app = require('../../app')
-const debug = require('debug')('mean-app:server')
+const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../service/contracts')
 // const io = require('socket.io')
@@ -23,6 +23,10 @@ require('../sockets/sockets')(io)
 
 // Set contracts listeners
 contracts.setListeners(io)
+
+// Synchronize db & contracts data
+contracts.syncData()
+setInterval(contracts.syncData, 24 * 60 * 60 * 1000)
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

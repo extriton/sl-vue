@@ -10,12 +10,14 @@ export default new Vuex.Store({
     // For TheLanguage.vue component
     language: '',
     dict: Language.getDictonary(),
-    // For Game
+    // For Game Settings
     gameSettingsLoaded: false,
     gameSettings: null,
     gamesCount: 0,
     gameCurrentIndex: null,
     gameCurrent: null,
+    // For contracts data
+    
   },
   getters: {
     gameSettingsLoaded: state => {

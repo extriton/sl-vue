@@ -7,6 +7,7 @@ var MemberSchema = new Schema({
     ticket:             { type: Number, default: 0 },
     address:            { type: String, default: '' },
     numbers:            { type: Array, default: [] },
+    winNumbers:         { type: Array, default: [] },
     matchNumbers:       { type: Number, default: 0 },
     prize:              { type: Number, default: 0 },
     payout:             { type: Number, default: 0 },

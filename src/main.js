@@ -10,16 +10,7 @@ import VueSocketIO from 'vue-socket.io'
 
 Vue.use(VueCookies)
 
-Vue.use(new VueSocketIO({
-  debug: true,
-  connection: 'http://localhost:3000',
-  vuex: {
-      store,
-      actionPrefix: 'SOCKET_',
-      mutationPrefix: 'SOCKET_'
-  },
-  // options: { path: '/ws' } 
-}))
+Vue.use(new VueSocketIO({ debug: true, connection: 'http://localhost:3000' }))
 
 Vue.config.productionTip = false
 

@@ -4,7 +4,7 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const config = require('./server/config/config')
+const config = require('./config/config')
 
 // Mongoose
 const mongoose = require('mongoose')
@@ -14,7 +14,7 @@ mongoose.connect(config.dbURL, config.dbOptions)
   .catch((err) => console.error('MongoDB: ' + err))
 
 // Routes
-const game = require('./server/routes/game')
+const game = require('./routes/game')
 
 // App
 const app = express()
@@ -22,10 +22,10 @@ app.use(logger('dev'))
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({'extended':'false'}))
-app.use(express.static(path.join(__dirname, 'dist')))
+app.use(express.static(path.join(__dirname, '../dist')))
 
 app.use('/api/game', game)
-app.use('/*', express.static(path.join(__dirname, 'dist')))
+app.use('/*', express.static(path.join(__dirname, '../dist')))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

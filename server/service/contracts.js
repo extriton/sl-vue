@@ -91,12 +91,12 @@ function setContractListeners(type, contract) {
 
         dbPrevGame.type = type
         dbPrevGame.totalFund = web3.utils.fromWei(contractPrevGame[0], 'ether')
-        dbPrevGame.win_numbers = []
-	    dbPrevGame.win_numbers.push(parseInt(contractPrevGame[2]))
-	    dbPrevGame.win_numbers.push(parseInt(contractPrevGame[3]))
-	    dbPrevGame.win_numbers.push(parseInt(contractPrevGame[4]))
-	    dbPrevGame.win_numbers.push(parseInt(contractPrevGame[5]))
-	    dbPrevGame.win_numbers.push(parseInt(contractPrevGame[6]))
+        dbPrevGame.winNumbers = []
+	    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[2]))
+	    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[3]))
+	    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[4]))
+	    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[5]))
+	    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[6]))
 	    dbPrevGame.status = parseInt(contractPrevGame[7])
 	        
 	    dbPrevGame.p2 = web3.utils.fromWei(contractPrevGame[8], 'ether')
@@ -117,11 +117,11 @@ function setContractListeners(type, contract) {
         
         await Member.deleteOne({ game_type: type, game_id: parseInt(res._gamenum), ticket: parseInt(res._ticket) })
                 
-        const obj = {};
+        const obj = {}
         obj.game_id = parseInt(res._gamenum)
         obj.ticket = parseInt(res._ticket)
         obj.address = res._addr.toLowerCase()
-        obj.numbers = [];
+        obj.numbers = []
         obj.numbers.push(parseInt(res._n1))
         obj.numbers.push(parseInt(res._n2))
         obj.numbers.push(parseInt(res._n3))
@@ -150,21 +150,21 @@ function setContractListeners(type, contract) {
     async function WinNumbers(res) {
         
         const dbGame = await Game.findOne({ type: type, id: res._gamenum})
-        dbGame.win_numbers = []
-        dbGame.win_numbers.push(parseInt(res._n1))
-        dbGame.win_numbers.push(parseInt(res._n2))
-        dbGame.win_numbers.push(parseInt(res._n3))
-        dbGame.win_numbers.push(parseInt(res._n4))
-        dbGame.win_numbers.push(parseInt(res._n5))
+        dbGame.winNumbers = []
+        dbGame.winNumbers.push(parseInt(res._n1))
+        dbGame.winNumbers.push(parseInt(res._n2))
+        dbGame.winNumbers.push(parseInt(res._n3))
+        dbGame.winNumbers.push(parseInt(res._n4))
+        dbGame.winNumbers.push(parseInt(res._n5))
         await dbGame.save()
         
-        io.emit('updateWinNumbersSuccess', { win_numbers: dbGame.win_numbers })
+        io.emit('updateWinNumbersSuccess', { winNumbers: dbGame.winNumbers })
                     
         // Find match numbers
         const dbMembers = await Member.find({ game_type: type, game_id: dbGame.id })
         for(let i = 0; i < dbMembers.length; i++) {
-            let mn = findMatch(game.win_numbers, members[i].numbers)
-            dbMembers[i].matchNumbers = mn
+            dbMembers[i].winNumbers = game.winNumbers
+            dbMembers[i].matchNumbers = findMatch(members[i].numbers, members[i].winNumbers)
             dbMembers[i].save()
         }
 
@@ -218,16 +218,16 @@ async function addGame(contract, type, game_id) {
     const contractGameInfo = await contract.methods.getGameInfo(game_id).call()
             
         const obj = {}
-        obj.win_numbers = []
+        obj.winNumbers = []
         
         obj.type = type
         obj.id = game_id
         obj.totalFund = parseFloat(web3.utils.fromWei('' + contractGameInfo[0], 'ether'))
-        obj.win_numbers.push(parseInt(contractGameInfo[2]))
-        obj.win_numbers.push(parseInt(contractGameInfo[3]))
-        obj.win_numbers.push(parseInt(contractGameInfo[4]))
-        obj.win_numbers.push(parseInt(contractGameInfo[5]))
-        obj.win_numbers.push(parseInt(contractGameInfo[6]))
+        obj.winNumbers.push(parseInt(contractGameInfo[2]))
+        obj.winNumbers.push(parseInt(contractGameInfo[3]))
+        obj.winNumbers.push(parseInt(contractGameInfo[4]))
+        obj.winNumbers.push(parseInt(contractGameInfo[5]))
+        obj.winNumbers.push(parseInt(contractGameInfo[6]))
         obj.status = parseInt(contractGameInfo[7])
         
         obj.p2 = parseFloat(web3.utils.fromWei('' + contractGameInfo[8], 'ether'))
@@ -264,9 +264,9 @@ async function addMember(contract, game, ticket) {
     obj.numbers.push(parseInt(contractMember[4]))
     obj.numbers.push(parseInt(contractMember[5]))
     obj.numbers.push(parseInt(contractMember[6]))
-    /* obj.prize = parseFloat(web3.utils.fromWei(contractMember[7], 'ether')) */
+    obj.winNumbers = game.winNumbers
+    obj.matchNumbers = findMatch(obj.numbers, obj.winNumbers)
     obj.payout = parseInt(contractMember[8])
-    obj.matchNumbers = findMatch(game.win_numbers, obj.numbers)
 
     if(obj.matchNumbers === 5) { obj.prize = game.p5 }
     if(obj.matchNumbers === 4) { obj.prize = game.p4 }

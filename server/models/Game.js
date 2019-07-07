@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 var GameSchema = new Schema({
     type:           { type: String, default: ''},                   // w5x36 и т.д.
     id:             { type: Number, default: 0 },
-    win_numbers:    { type: Array, default: [] },
+    winNumbers:     { type: Array, default: [] },
     totalFund:      { type: Number, default: 0 },
     p5:             { type: Number, default: 0 },
     p4:             { type: Number, default: 0 },

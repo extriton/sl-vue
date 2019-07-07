@@ -1,12 +1,167 @@
+const Game = require('../models/Game.js')
+const Member = require('../models/Member.js')
+const Ip = require('../models/Ip.js')
+
+const Web3 = require('web3')
+const gameSetting = require('../config/game-settings.js')()
+const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
+
+var Web3 = require('web3');
+    
+    const web3 = new Web3(new Web3.providers.WebsocketProvider(config.eth.websocketProvider));
+
+    // Contract    
+    var contract = new web3.eth.Contract(config.eth.contractAbi, config.eth.contractAddress);
+
+const IPs = []
+
+// Export function
 module.exports = io => {
     io.sockets.on('connection', socket => {
 
-        console.log('New client connected!')
-        socket.emit('customEmit', {})
-      
-        socket.on('toServer:send', data => {
-          console.log('toServer:send received')
-        })
-      
+      const realSocketIP = getRealSocketIP(socket)
+      if(realSocketIP !== '') addSocketIP(realSocketIP)
+
+      socket.on('disconnect', () => {
+        if(realSocketIP !== '') removeSocketIP(realSocketIP)
+      })
+
+      socket.on('getGameData', getGameData)
+
+      socket.on('getPlayerData', getPlayerData)
+        
     })
+}
+
+// Return game data by game type to client socket
+async function getGameData(data) {
+  
+  // Define game by type
+  let game = null
+  for(let i = 0; i < gameSetting.games.length; i++)
+    if(gameSetting.games[i].type === data.type) {
+      game = gameSetting.games[i]
+      break
+    }
+  
+  // If game type not found in settings
+  if(game === null) {
+    console.log(`Game type ${data.type} not found ib games settings`)
+    return
+  }
+
+  // Check game status (isActive)
+  if(!game.isActive) {
+    console.log(`Game type ${data.type} is not active`)
+    return
+  }
+  
+  const contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
+  
+  const jackpotPromise = contract.methods.JACKPOT().call()
+  const historyPromise = Game.find({ type: game.type }).sort({ id: -1 }).limit(10)
+  
+  let Jackpot = await jackpotPromise
+  Jackpot = web3.utils.fromWei(Jackpot, 'ether')
+  const history = await historyPromise
+
+  const result = {
+    GameNum: history[0].id,
+    Jackpot: Jackpot,
+    Fund: history[0].totalFund,
+    History: history,
+    etherscanAddressUrl: gameSetting.etherscanAddressUrl,
+    contractAddress: game.contractAddress,
+    metamaskNetId: gameSetting.metamaskNetId,
+    // diffTime: timer.getDiffTime(),
+  }
+
+  socket.emit('getGameDataSuccess', result)
+
+}
+
+// Return player data by game type & player address to client socket
+async function getPlayerData(data) {
+
+  if(!data.type || !data.address) {
+    console.log(`getPlayerData: Invalid data`)
+    return
+  }
+
+  if(!data.page) data.page = 1
+
+  const countPromise = Member.find({ game_type: data.type, address: data.address.toLowerCase() }).count()
+  const ticketsPromise = Member.find({ game_type: data.type, address: data.address.toLowerCase() })
+                                .sort({ game_id: -1, ticket: 1 }).skip((parseInt(data.page) - 1)*10).limit(10)
+
+  const count = await countPromise
+  const tickets = await ticketsPromise
+
+  let ticketsCount = tickets.length
+  // Loop tickets
+  for(let i = 0; i < tickets.length; i++) {
+    // Loop ticket numbers and change numeric array to array of obects
+    for(let j = 0; j < tickets[i].numbers.length; j++) {
+      let tmp = {
+        num: tickets[i].numbers[j],
+        match: (tickets[i].winNumbers.indexOf(tickets[i].numbers[j]) === -1) ? false : true
+      }
+      tickets[i].numbers[j] = tmp
+    }
+  }
+
+  socket.emit('getPlayerDataSuccess', { tickets: tickets, page_max: Math.ceil(count / 10) })
+
+}
+
+// Add socket IP to IPs array and DB
+function addSocketIP(socketIP) {
+  // Search socketIP in IPs array
+  if(IPs.indexOf(socketIP) === -1) {
+    // Add in IPs array
+    IPs.push(socketIP)
+    // Add in DB
+    Ip.findOne({ ip: socketIP }).exec((err, ip) => {
+        if(err) return
+        
+        if(!ip) {
+            ip = new Ip({
+                ip: socketIP,
+                cnt: 1,
+                updated: new Date()
+            })
+            ip.save()
+        } else {
+            ip.cnt = ip.cnt + 1
+            ip.updated = new Date()
+            ip.save()
+        }
+    })
+  }
+
+}
+
+// Remove socket IP from IPs array
+function removeSocketIP(socketIP) {
+  if(IPs.indexOf(socketIP) !== -1) {
+    let pos = IPs.indexOf(socketIP)
+    IPs.splice(pos, 1);
+  }
+}
+
+// Return real socket IP
+function getRealSocketIP(socket) {
+        
+  let origin_client_ip = ''
+  const x_forwarded_for = []
+  
+  if(socket.handshake.headers['x-forwarded-for']) {
+      x_forwarded_for = socket.handshake.headers['x-forwarded-for'].split(', ')
+      origin_client_ip = x_forwarded_for[0]
+  } else {
+      origin_client_ip = socket.handshake.address
+  }
+  
+  return origin_client_ip
+
 }

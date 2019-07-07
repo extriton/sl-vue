@@ -24,6 +24,7 @@
                 <span class="number">{{ timerStr.charAt(7) }}</span>
             </div>
         </div>
+        <pre style="text-align: left;">{{ gameCurrentDetail }}</pre>
     </div>
 </template>
 
@@ -69,7 +70,7 @@ export default {
 
             return (days + hours + minutes + seconds)            
         },
-        ...mapGetters(['gameSettings', 'gameCurrent'])
+        ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail'])
     },
     methods: {
     },

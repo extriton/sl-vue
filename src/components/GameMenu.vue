@@ -56,7 +56,14 @@ export default {
         else
           return 'No games'
       },
-      ...mapGetters(['gamesCount', 'gameSettings', 'gameCurrent', 'gameCurrentIndex', 'gameSettingsLoaded'])
+      ...mapGetters([
+                    'gamesCount', 
+                    'gameSettings', 
+                    'gameCurrent', 
+                    'gameCurrentIndex', 
+                    'gameSettingsLoaded',
+                    'gameCurrentDetail'
+                    ])
   },
   mounted () {
     this.$store.dispatch('loadGameSettings')
@@ -65,9 +72,16 @@ export default {
     gameCurrentIndex: function(val) {
       if(val !== null) {
         this.$router.push({ path: this.gameCurrent.type })
+        this.$socket.emit('getGameData', { type: this.gameCurrent.type })
       }
     }
+  },
+  sockets: {
+    getGameDataSuccess (data) {
+      this.$store.commit('getGameDataSuccess', data)
+    }
   }
+
 }
 </script>
 

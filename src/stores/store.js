@@ -17,7 +17,7 @@ export default new Vuex.Store({
     gameCurrentIndex: null,
     gameCurrent: null,
     // For contracts data
-    
+    gameCurrentDetail: null
   },
   getters: {
     gameSettingsLoaded: state => {
@@ -34,6 +34,9 @@ export default new Vuex.Store({
     },
     gameCurrent: state => {
       return state.gameCurrent
+    },
+    gameCurrentDetail: state => {
+      return state.gameCurrentDetail
     },
     slideDirection: state => {
       return  state.slideDirection
@@ -62,6 +65,9 @@ export default new Vuex.Store({
       const index = parseInt(payload)
       state.gameCurrentIndex = index
       state.gameCurrent = state.gameSettings.games[index]
+    },
+    getGameDataSuccess (state, payload) {
+      state.gameCurrentDetail = payload
     },
   },
   actions: {

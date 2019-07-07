@@ -15,15 +15,6 @@ Vue.use(new VueSocketIO({ debug: true, connection: 'http://localhost:3000' }))
 Vue.config.productionTip = false
 
 new Vue({
-  sockets: {
-    connect: function() {
-        console.log('Socket connected!')
-    },
-    customEmit: function(data) {
-        console.log('customEmit received!')
-        this.$socket.emit('toServer:send', data)
-    }
-  },
   router,
   store,
   render: h => h(App)

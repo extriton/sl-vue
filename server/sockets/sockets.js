@@ -3,15 +3,8 @@ const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
 
 const Web3 = require('web3')
-const gameSetting = require('../config/game-settings.js')()
+const gameSettings = require('../config/game-settings.js')()
 const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
-
-var Web3 = require('web3');
-    
-    const web3 = new Web3(new Web3.providers.WebsocketProvider(config.eth.websocketProvider));
-
-    // Contract    
-    var contract = new web3.eth.Contract(config.eth.contractAbi, config.eth.contractAddress);
 
 const IPs = []
 
@@ -26,21 +19,21 @@ module.exports = io => {
         if(realSocketIP !== '') removeSocketIP(realSocketIP)
       })
 
-      socket.on('getGameData', getGameData)
+      socket.on('getGameData', data => { getGameData(data, socket) })
 
-      socket.on('getPlayerData', getPlayerData)
+      socket.on('getPlayerData', data => { getPlayerData(data, socket) })
         
     })
 }
 
 // Return game data by game type to client socket
-async function getGameData(data) {
+async function getGameData(data, socket) {
   
   // Define game by type
   let game = null
-  for(let i = 0; i < gameSetting.games.length; i++)
-    if(gameSetting.games[i].type === data.type) {
-      game = gameSetting.games[i]
+  for(let i = 0; i < gameSettings.games.length; i++)
+    if(gameSettings.games[i].type === data.type) {
+      game = gameSettings.games[i]
       break
     }
   
@@ -62,7 +55,7 @@ async function getGameData(data) {
   const historyPromise = Game.find({ type: game.type }).sort({ id: -1 }).limit(10)
   
   let Jackpot = await jackpotPromise
-  Jackpot = web3.utils.fromWei(Jackpot, 'ether')
+  Jackpot = web3.utils.fromWei('' + Jackpot, 'ether')
   const history = await historyPromise
 
   const result = {
@@ -70,9 +63,9 @@ async function getGameData(data) {
     Jackpot: Jackpot,
     Fund: history[0].totalFund,
     History: history,
-    etherscanAddressUrl: gameSetting.etherscanAddressUrl,
-    contractAddress: game.contractAddress,
-    metamaskNetId: gameSetting.metamaskNetId,
+    // etherscanAddressUrl: gameSettings.etherscanAddressUrl,
+    // contractAddress: game.contractAddress,
+    // metamaskNetId: gameSettings.metamaskNetId,
     // diffTime: timer.getDiffTime(),
   }
 
@@ -81,7 +74,7 @@ async function getGameData(data) {
 }
 
 // Return player data by game type & player address to client socket
-async function getPlayerData(data) {
+async function getPlayerData(data, socket) {
 
   if(!data.type || !data.address) {
     console.log(`getPlayerData: Invalid data`)

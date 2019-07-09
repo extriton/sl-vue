@@ -4,7 +4,7 @@ const gameSetting = require('../config/game-settings.js')()
 
 /* GET GAME SETTINGS */
 router.get('/settings', function(req, res) {
-  const retJson = JSON.parse(JSON.stringify(gameSetting))
+    const retJson = JSON.parse(JSON.stringify(gameSetting))
 
     // Loop games array
     if(retJson.games !== undefined) {

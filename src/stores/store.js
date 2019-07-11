@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Language from '../lib/language.js'
 import axios from 'axios'
+import getWeb3 from '../util/getWeb3'
 
 Vue.use(Vuex)
 
@@ -16,8 +17,16 @@ export default new Vuex.Store({
     gamesCount: 0,
     gameCurrentIndex: null,
     gameCurrent: null,
-    // For contracts data
-    gameCurrentDetail: null
+    // For current contract data
+    gameCurrentDetail: null,
+    // For Metamask / Mist
+    web3: {
+      isInjected: false,
+      web3Instance: null,
+      networkId: null,
+      coinbase: null,
+      error: null,
+    }
   },
   getters: {
     gameSettingsLoaded: state => {
@@ -40,7 +49,10 @@ export default new Vuex.Store({
     },
     slideDirection: state => {
       return  state.slideDirection
-    }
+    },
+    web3: state => {
+      return  state.web3
+    },
   },
   mutations: {
     setLanguage (state) {
@@ -69,6 +81,24 @@ export default new Vuex.Store({
     getGameDataSuccess (state, payload) {
       state.gameCurrentDetail = payload
     },
+    registerWeb3Instance (state, payload) {
+      // console.log('registerWeb3instance Mutation being executed', payload)
+      let result = payload
+      let web3Copy = state.web3
+      web3Copy.coinbase = result.coinbase
+      web3Copy.networkId = result.networkId
+      web3Copy.isInjected = result.injectedWeb3
+      web3Copy.web3Instance = result.web3
+
+      web3Copy.web3Instance().currentProvider.on('accountsChanged', (accounts) => {
+        state.web3.coinbase = accounts[0]
+      })
+      web3Copy.web3Instance().currentProvider.on('networkChanged', (networkId) => {
+        state.web3.networkId = networkId
+      })
+
+      state.web3 = web3Copy
+    }
   },
   actions: {
     loadGameSettings ({ commit }) {
@@ -78,5 +108,12 @@ export default new Vuex.Store({
       })
       .catch(e => console.log(e))
     },
+    registerWeb3 ({commit}) {
+      getWeb3.then(result => {
+        commit('registerWeb3Instance', result)
+      }).catch(e => {
+        console.log('Error in action registerWeb3' + e)
+      })
+    }
   }
 })

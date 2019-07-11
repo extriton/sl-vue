@@ -23,6 +23,10 @@ export default {
   data () {
     return {}
   },
+  beforeCreate () {
+    // Register web3 metamask / mist
+    this.$store.dispatch('registerWeb3')
+  },
 }
 </script>
 

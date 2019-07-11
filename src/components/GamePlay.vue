@@ -92,7 +92,7 @@
                             <i class="fa fa-files-o" aria-hidden="true"></i>
                     </div>
                     <div class="m-btn btn-ctrl btn-play" 
-                         :class="{ disabled: leftNumbers > 0 || !metamaskInstalled }"
+                         :class="{ disabled: leftNumbers > 0 || !web3.isInjected }"
                          @click="playWithMetamask()">
                             <p>{{ dict.play_play }}</p>
                     </div>
@@ -101,8 +101,11 @@
             
 
         </div>
-        <div style="clear: both;">Test next</div>
-        
+        <div class='metamask-info' style="text-align: left;">
+            <p>Metamask: {{ web3.isInjected }}</p>
+            <p>Network: {{ web3.networkId }}</p>
+            <p>Account: {{ web3.coinbase }}</p>
+        </div>
         <!--
         <pre style="text-align: left;">{{ gameCurrentDetail }}</pre>
         -->
@@ -125,7 +128,7 @@ export default {
             numbers: [],
             reqNumbers: 0,
             leftNumbers: 0,
-            metamaskInstalled: false
+            metamaskInstalled: false,
         }
     },
     computed: {
@@ -168,7 +171,7 @@ export default {
             if(this.gameCurrentDetail === null) return null
             else return this.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
-        ...mapGetters(['gameSettings', 'gameCurrentIndex', 'gameCurrent', 'gameCurrentDetail', 'gameSettingsLoaded'])
+        ...mapGetters(['gameSettings', 'gameCurrentIndex', 'gameCurrent', 'gameCurrentDetail', 'gameSettingsLoaded', 'web3'])
     },
     methods: {
         formatNumber (value, int, frac) {
@@ -285,9 +288,12 @@ export default {
             for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0
         },
         playWithMetamask () {
-            console.log('Play with Metamask')
-            if(!this.metamaskInstalled || this.leftNumbers > 0) return
-            console.log('Metamask active')
+            if(!this.web3.isInjected) {
+                console.log('Metamask not installed')
+                return
+            }
+            console.log(this.web3.web3Instance().eth.getAccounts().then(console.log))
+
             /*
             // Check Metamask installed
             if(!web3m.getDefaultAccount()) {

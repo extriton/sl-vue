@@ -2,7 +2,7 @@
 const app = require('../app')
 const debug = require('debug')('mevn-app:server')
 const http = require('http')
-const contracts = require('../service/contracts')
+const contracts = require('../util/contracts')
 // const io = require('socket.io')
 
 const port = normalizePort(process.env.PORT || '3000')

@@ -1,9 +1,9 @@
 <template>
     <div class="game-body">
-      <div v-if="gameSettingsLoaded">
+      <div v-if="gameCurrentIndex !== null">
         <GamePlay />
       </div>
-      <div v-if="!gameSettingsLoaded">
+      <div v-if="gameCurrentIndex === null">
         <GameDefault />
       </div>
     </div>
@@ -25,7 +25,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['gameSettingsLoaded'])
+    ...mapGetters(['gameCurrentIndex'])
   },
   beforeCreate () {
     // Register web3 metamask / mist

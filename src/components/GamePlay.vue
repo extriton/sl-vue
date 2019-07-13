@@ -138,7 +138,6 @@ export default {
             timerInterval: null,
             dataString: '',
             numbers: [],
-            reqNumbers: 0,
             leftNumbers: 0,
         }
     },
@@ -147,10 +146,7 @@ export default {
             return this.$store.state.dict
         },
         contractUrl () {
-            if(this.gameSettings !== null && this.gameCurrent !== null)
-                return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
-            else
-                return '#'
+            return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
         },
         timerString () {
             return util.timerToStr(this.timer)
@@ -171,11 +167,8 @@ export default {
             // Run Timer
             this.runTimer()
             // Init Numbers array and numbers data
-            this.numbers = new Array(this.gameCurrent.padSize)
-            for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0        
-                
-            this.reqNumbers = this.gameCurrent.reqNumbers
-            this.leftNumbers = this.reqNumbers
+            this.numbers = new Array(this.gameCurrent.padSize).fill(0)
+            this.leftNumbers = this.gameCurrent.reqNumbers
         },
         runTimer () {
             this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute)
@@ -198,7 +191,7 @@ export default {
                 this.numbers[index] = 0
                 this.leftNumbers++
             }
-        
+
             this.dataString = util.calcDataString(this.numbers)
         },
         doAuto () {
@@ -206,7 +199,7 @@ export default {
             let num = 0
             let selectedNumbers = []
             this.leftNumbers = 0
-            for(let i = 0; i < this.gameCurrent.padSize; i++) this.numbers[i] = 0;
+            this.numbers.fill(0)
         
             // Generate random numbers
             for(let i = 0; i < this.gameCurrent.reqNumbers; i++) {
@@ -226,11 +219,11 @@ export default {
         doClear () {
             this.dataString = ''
             this.leftNumbers = this.gameCurrent.reqNumbers
-            for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0
+            this.numbers.fill(0)
         },
         doCopy () {
             if(this.leftNumbers > 0) {
-                this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `You must select ${this.reqNumbers} numbers` })
+                this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `You must select ${this.gameCurrent.reqNumbers} numbers` })
                 return
             }
             
@@ -245,7 +238,7 @@ export default {
         doPlay () {
             // Check selected numbers
             if(this.leftNumbers > 0) {
-                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `You must select ${this.reqNumbers} numbers` })
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `You must select ${this.gameCurrent.reqNumbers} numbers` })
                 return
             }
 
@@ -275,16 +268,8 @@ export default {
         },
         ...mapMutations(['newNotify'])
     },
-    /*
-    watch: {
-        gameCurrent (value) {                        // For path /:id in browser
-            if(value !== null) this.init()
-        }
-    },
-    */
     mounted () {
-        // this.init()
-        if(this.gameCurrent !== null) this.init()
+        this.init()
     },
     beforeDestroy () {
         if(this.timerInterval !== null) clearInterval(this.timerInterval)

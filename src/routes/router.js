@@ -13,7 +13,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'GameWrapper',
       component: GameWrapper,
       children: [
         {

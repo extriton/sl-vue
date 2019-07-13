@@ -30,7 +30,7 @@ export default {
   methods: {
     prevGame () {
       let index = 0
-      if(this.gameCurrentIndex == 0)
+      if(this.gameCurrentIndex === 0)
         index = this.gamesCount - 1
       else
         index = this.gameCurrentIndex - 1
@@ -39,7 +39,7 @@ export default {
     },
     nextGame () {
       let index = 0
-      if(this.gameCurrentIndex == this.gamesCount - 1)
+      if(this.gameCurrentIndex === this.gamesCount - 1)
         index = 0
       else
         index = this.gameCurrentIndex + 1
@@ -50,11 +50,8 @@ export default {
   computed: {
       currentName () {
         if(!this.gameSettingsLoaded) return 'Loading...'
-        
-        if(this.gameCurrentIndex !== null)
-          return this.gameCurrent.name
-        else
-          return 'No games'
+        if(this.gameCurrentIndex === null) return 'No games'
+        return this.gameCurrent.name
       },
       ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex', 'gameSettingsLoaded'])
   },

@@ -117,9 +117,6 @@
             <p>Network: {{ web3.networkId }}</p>
             <p>Account: {{ web3.coinbase }}</p>
         </div>
-        <!--
-        <pre style="text-align: left;">{{ gameCurrentDetail }}</pre>
-        -->
     </div>
 </template>
 
@@ -195,25 +192,15 @@ export default {
             this.dataString = util.calcDataString(this.numbers)
         },
         doAuto () {
-            // Init params
-            let num = 0
-            let selectedNumbers = []
-            this.leftNumbers = 0
-            this.numbers.fill(0)
-        
             // Generate random numbers
-            for(let i = 0; i < this.gameCurrent.reqNumbers; i++) {
-                num = Math.floor(Math.random() * this.gameCurrent.padSize)
-                if(num >= this.gameCurrent.padSize || selectedNumbers.indexOf(num) !== -1) {
+            this.numbers.fill(0)
+            for (let i = 0; i < this.gameCurrent.reqNumbers; i++) {
+                let num = Math.floor(Math.random() * this.gameCurrent.padSize)
+                if (this.numbers[num] === 1) {
                     i--
                     continue
                 }
-                selectedNumbers.push(num)
             }
-        
-            for(var i = 0; i < selectedNumbers.length; i++)
-                this.numbers[selectedNumbers[i]] = 1
-
             this.dataString = util.calcDataString(this.numbers)
         },
         doClear () {

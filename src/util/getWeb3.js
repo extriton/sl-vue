@@ -15,7 +15,7 @@ let getWeb3 = new Promise(function (resolve, reject) {
   if (typeof web3js !== 'undefined') {
     const web3 = new Web3(web3js.currentProvider)
     
-    // Disable refresh page if network id changed in metamask (only in window[ethereum])
+    // Disable refreshing page if network id changed in metamask (only in window[ethereum])
     if (window['ethereum']) window['ethereum'].autoRefreshOnNetworkChange = false
 
     // Check for Mitamask / Mist unlocked

@@ -97,7 +97,6 @@ export default new Vuex.Store({
             break
           }
         }
-          console.log('index: ' + index)
         state.gameCurrentIndex = index
         state.gameCurrent = state.gameSettings.games[index]
       }
@@ -112,7 +111,6 @@ export default new Vuex.Store({
       state.gameCurrentDetail = payload
     },
     registerWeb3Instance (state, payload) {
-      // console.log('registerWeb3instance Mutation being executed', payload)
       let result = payload
       let web3Copy = state.web3
       web3Copy.coinbase = result.coinbase
@@ -139,10 +137,12 @@ export default new Vuex.Store({
       .catch(e => console.log(e))
     },
     registerWeb3 ({commit}) {
-      getWeb3.then(result => {
+      getWeb3
+      .then(result => {
         commit('registerWeb3Instance', result)
-      }).catch(e => {
-        console.log('Error in action registerWeb3' + e)
+      })
+      .catch(() => {
+        // console.log('Error in action registerWeb3' + e)
       })
     }
   }

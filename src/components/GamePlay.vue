@@ -109,14 +109,20 @@
                     </div>
                 </div>
             </div>
-            
-
         </div>
-        <div class='metamask-info' style="text-align: left;">
-            <p>Metamask: {{ web3.isInjected }}</p>
-            <p>Network: {{ web3.networkId }}</p>
-            <p>Account: {{ web3.coinbase }}</p>
+        <!-- Additional info -->
+        <div class="loto-info-bottom">
+            {{ dict.play_txt1 }} 
+            <strong>
+                <a :href="contractUrl" target="_blank">{{ gameCurrent.contractAddress }}</a>
+            </strong>
+            {{ dict.play_txt2 }}<br />
+            <span v-show="!web3.isInjected" style="color: #EECA57">
+                {{ dict.play_txt3 }} 
+                <a href="https://metamask.io/" target="_blank">{{ dict.play_txt3link }}</a>
+            </span>
         </div>
+        
     </div>
 </template>
 
@@ -125,6 +131,7 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import { mapGetters, mapMutations } from 'vuex'
 import util from '@/util/util'
+import ethNetworks from '@/util/constants/networks'
 
 export default {
     name: 'GamePlay',
@@ -199,8 +206,11 @@ export default {
                 if (this.numbers[num] === 1) {
                     i--
                     continue
+                } else {
+                    this.numbers[num] = 1
                 }
             }
+            this.leftNumbers = 0
             this.dataString = util.calcDataString(this.numbers)
         },
         doClear () {
@@ -223,14 +233,15 @@ export default {
             })
         },
         doPlay () {
+            this.$store.dispatch('registerWeb3')
             // Check selected numbers
-            if(this.leftNumbers > 0) {
+            if (this.leftNumbers > 0) {
                 this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `You must select ${this.gameCurrent.reqNumbers} numbers` })
                 return
             }
 
             // Check Metamask install
-            if(!this.web3.isInjected) {
+            if (!this.web3.isInjected) {
                 this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank">https://metamask.io/</a>` })
                 return
             }
@@ -239,19 +250,47 @@ export default {
             this.web3.web3Instance().eth.getAccounts()
             .then((result) => {
 
-                if(!Array.isArray(result) || result.length <= 0) {
+                if (!Array.isArray(result) || result.length <= 0) {
                     this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask is locked!` })
                     return
                 }
-
-                // Send transaction for confirmation !!!
-                // web3m.sendTransaction(vm.data_string)
+                
+                // Check Metamask network
+                if (this.gameSettings.metamaskNetId != this.web3.networkId) {
+                    const netId = '' + this.gameSettings.metamaskNetId
+                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Choose ${ethNetworks[netId]} network in Metamask!` })
+                    return
+                }
+                
+                // Create transaction for confirmation
+                this.createTransaction()
 
             })
             .catch((error) => {
                 this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error })
                 return
             })
+        },
+        createTransaction () {
+
+            const transactionObj = {
+                from: this.web3.coinbase,
+                to: this.gameCurrent.contractAddress,
+                value: window.web3.toWei("0.01", "ether"),
+                gas: 400000,
+                gasPrice: window.web3.toWei("6", "gwei"),
+                data: this.dataString
+            }
+
+            const callback = (error, result) => {
+                if (error)
+                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error })
+                else
+                    this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
+            }
+
+            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
+
         },
         ...mapMutations(['newNotify'])
     },
@@ -405,20 +444,31 @@ export default {
                 color: #D5D6D6;
                 -moz-user-select: none;
                 -webkit-user-select: none;
+                transition: border-color 0.3s ease-in;
                 &:hover {
                     cursor: pointer;
-                    background-color: #191B1C;
-                    color: #FAFAFA;
+                    color: #CC6311;
+                    /* border-color: #CC6311; */
                     font-weight: bold;
+                    /* 
+                    background-color: #191B1C;
                     color: #57B3FF;
                     border-color: #57B3FF;
+                    */
                 }
             }
             .loto-pad-item.selected {
+                border-radius: 50px;
+                border-color: #CC6311;
+                border-width: 2px;
+                padding: 14px 0;
+                color: #CC6311;
+                /*
                 color: #57B3FF;
                 border-color: #57B3FF;
                 border-width: 5px;
                 padding: 11px 0;
+                */
             }
             .control-bar {
                 position: absolute;
@@ -475,7 +525,18 @@ export default {
                 }
             }
         }
-        
+    }
+    .loto-info-bottom {
+        width: 800px; 
+        margin: 20px auto;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        color: #FAFAFA;
+        strong {
+            color: #34bbff;
+        }
     }
 }
 </style>

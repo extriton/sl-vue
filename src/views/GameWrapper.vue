@@ -3,7 +3,7 @@
         <TheHeader />
         <GameMenu />
         <transition name="fade" mode="out-in">
-          <div :key="$route.params.id">
+          <div :key="gameCurrentIndex">
             <router-view></router-view>
           </div>
         </transition>
@@ -14,8 +14,10 @@
 import TheHeader from '@/components/TheHeader.vue'
 import GameMenu from '@/components/GameMenu.vue'
 
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'Game',
+  name: 'GameWrapper',
   components: {
     TheHeader,
     GameMenu
@@ -23,6 +25,9 @@ export default {
   data () {
     return {}
   },
+  computed: {
+    ...mapGetters(['gameCurrentIndex'])
+  }
 }
 </script>
 

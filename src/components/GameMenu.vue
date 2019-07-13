@@ -1,12 +1,12 @@
 <template>
-    <div class="game-menu" v-show="gamesCount > 0">
+    <div class="game-menu">
         <div class="prev-arrow"
           v-show="gamesCount > 1"
           @click="prevGame"
         ></div>
         <div class="game-name">
           <transition :name="slideDirection" mode="out-in">
-            <div :key="$route.params.id">{{ currentName }}</div>
+            <div :key="gameCurrentIndex">{{ currentName }}</div>
           </transition>
         </div>
         <div class="next-arrow"
@@ -56,17 +56,10 @@ export default {
         else
           return 'No games'
       },
-      ...mapGetters([
-                    'gamesCount', 
-                    'gameSettings', 
-                    'gameCurrent', 
-                    'gameCurrentIndex', 
-                    'gameSettingsLoaded',
-                    'gameCurrentDetail'
-                    ])
+      ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex', 'gameSettingsLoaded'])
   },
   mounted () {
-    this.$store.dispatch('loadGameSettings')
+    this.$store.dispatch('loadGameSettings', this.$route.params.id)
   },
   watch: {
     gameCurrentIndex: function(val) {
@@ -155,17 +148,4 @@ export default {
 .slide-left-leave-to {
   transform: translateX(-100%);
 }
-/*
-.slide-right-leave-to {
-  transform: trasnlateX(200%);
-}
-*/
-/*
-.slide-left-enter {
-  transform: trasnlateX(-100%);
-}
-.slide-left-leave-to {
-  transform: trasnlateX(-100%);
-}
-*/
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="game-default">
-        <div class="not-found-text" v-show="showNotFound">Games not found</div>
+        <div class="not-found-text" v-show="gameSettingsLoaded && gameCurrent === null">Games not found</div>
         <img v-show="!gameSettingsLoaded" src="../../public/img/loading.svg" alt="Loading..." title="Loading..." />
     </div>
 </template>
@@ -9,27 +9,15 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Game',
+  name: 'GameDefault',
   components: {},
   data () {
     return {
-        showNotFound: false
     }
   },
   computed: {
     ...mapGetters(['gameSettingsLoaded', 'gameCurrent'])
   },
-  watch: {
-    gameSettingsLoaded: function(val) {
-        if(val === true) {
-            if(this.gameCurrent === null) {
-                this.showNotFound = true
-            } else {
-                this.$router.push({ path: this.gameCurrent.type })
-            }
-        }
-    }
-  }
 }
 </script>
 

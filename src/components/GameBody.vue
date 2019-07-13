@@ -1,18 +1,11 @@
 <template>
     <div class="game-body">
-      <GamePlay />
-      <!--
       <div v-if="gameSettingsLoaded">
-        {{ gameSettingsLoaded }}
         <GamePlay />
       </div>
-      -->
-      <!--
       <div v-if="!gameSettingsLoaded">
-        {{ gameSettingsLoaded }}
         <GameDefault />
       </div>
-      -->
     </div>
 </template>
 
@@ -23,7 +16,7 @@ import GamePlay from '@/components/GamePlay.vue'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Game',
+  name: 'GameBody',
   components: {
     GameDefault,
     GamePlay,

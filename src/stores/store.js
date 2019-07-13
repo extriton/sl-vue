@@ -65,9 +65,6 @@ export default new Vuex.Store({
     gameCurrentDetail: state => {
       return state.gameCurrentDetail
     },
-    slideDirection: state => {
-      return  state.slideDirection
-    },
     web3: state => {
       return  state.web3
     },
@@ -85,15 +82,24 @@ export default new Vuex.Store({
     },
     // Load Game settings
     loadGameSettings (state, payload) {
-      state.gameSettings = payload
+      state.gameSettings = payload.settings
       // Define gamesCount
       if (state.gameSettings !== null && Array.isArray(state.gameSettings.games)) {
         state.gamesCount = state.gameSettings.games.length
       }
+      
       // Define gameCurrentIndex & gameCurrent
       if(state.gamesCount > 0) {
-        state.gameCurrentIndex = 0
-        state.gameCurrent = state.gameSettings.games[0]
+        let index = 0
+        for (let i = 0; i < state.gamesCount; i++) {
+          if (state.gameSettings.games[i].type === payload.routerId) {
+            index = i
+            break
+          }
+        }
+          console.log('index: ' + index)
+        state.gameCurrentIndex = index
+        state.gameCurrent = state.gameSettings.games[index]
       }
       state.gameSettingsLoaded = true
     },
@@ -125,10 +131,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadGameSettings ({ commit }) {
+    loadGameSettings ({ commit }, payload) {
       axios.get(`http://localhost:3000/api/game/settings`)
       .then(response => {
-        if(response.data !== null) commit('loadGameSettings', response.data)
+        if(response.data !== null) commit('loadGameSettings', { settings: response.data, routerId: payload})
       })
       .catch(e => console.log(e))
     },

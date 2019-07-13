@@ -11,17 +11,17 @@
         <!-- Timer -->
         <div class="timer-wrapper">
             <div class="timer">
-                <span class="number">{{ timerStr.charAt(0) }}</span>
-                <span class="number">{{ timerStr.charAt(1) }}</span>
+                <span class="number">{{ timerString.charAt(0) }}</span>
+                <span class="number">{{ timerString.charAt(1) }}</span>
                 <span>:</span>
-                <span class="number">{{ timerStr.charAt(2) }}</span>
-                <span class="number">{{ timerStr.charAt(3) }}</span>
+                <span class="number">{{ timerString.charAt(2) }}</span>
+                <span class="number">{{ timerString.charAt(3) }}</span>
                 <span>:</span>
-                <span class="number">{{ timerStr.charAt(4) }}</span>
-                <span class="number">{{ timerStr.charAt(5) }}</span>
+                <span class="number">{{ timerString.charAt(4) }}</span>
+                <span class="number">{{ timerString.charAt(5) }}</span>
                 <span>:</span>
-                <span class="number">{{ timerStr.charAt(6) }}</span>
-                <span class="number">{{ timerStr.charAt(7) }}</span>
+                <span class="number">{{ timerString.charAt(6) }}</span>
+                <span class="number">{{ timerString.charAt(7) }}</span>
             </div>
         </div>
         <!-- Loto numeric pad wrapper -->
@@ -70,30 +70,41 @@
                     <span v-show="leftNumbers === 0">{{ dict.play_ready }}</span>
                 </div>
                 <!-- Loto pad items -->
-                <div class="loto-pad-item" :class="{ selected:  n == 1 }" v-for="(n, index) in numbers" @click="selectNumber(index)" :key="index">
+                <div class="loto-pad-item" 
+                     :class="{ selected:  n == 1 }" 
+                     v-for="(n, index) in numbers" 
+                     @click="doSelect(index)" 
+                     :key="index"
+                >
                     <span>{{ index + 1 }}</span>
                 </div>
                 <!-- Control panel -->
                 <div class="control-bar">
-                    <div class="m-btn btn-ctrl btn-auto" @click="selectAuto()">Auto</div>
+                    <div class="m-btn btn-ctrl btn-auto" 
+                         @click="doAuto()"
+                    >
+                        Auto
+                    </div>
                     <div class="data-string">
                         <span v-show="dataString" id="data-string-text">{{ dataString }}</span>
                         <span v-show="!dataString"><i>{{ dict.play_no_numbers }}</i></span>        
                     </div>
                     <div class="m-btn btn-ctrl btn-clear" 
                          :class="{ disabled: gameCurrent !== null && leftNumbers >= gameCurrent.reqNumbers }" 
-                         @click="clearNumbers()">
+                         @click="doClear()"
+                    >
                             <i class="glyphicon glyphicon-trash"></i>
                     </div>
                     <div id="copy-button" 
                          class="m-btn btn-ctrl btn-copy" 
                          data-clipboard-target="#data-string-text" 
-                         :class="{ disabled: leftNumbers > 0 }">
+                         :class="{ disabled: leftNumbers > 0 }"
+                         @click="doCopy()">
                             <i class="fa fa-files-o" aria-hidden="true"></i>
                     </div>
                     <div class="m-btn btn-ctrl btn-play" 
                          :class="{ disabled: leftNumbers > 0 || !web3.isInjected }"
-                         @click="playWithMetamask()">
+                         @click="doPlay()">
                             <p>{{ dict.play_play }}</p>
                     </div>
                 </div>
@@ -115,7 +126,8 @@
 <script>
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import util from '@/util/util'
 
 export default {
     name: 'GamePlay',
@@ -128,7 +140,6 @@ export default {
             numbers: [],
             reqNumbers: 0,
             leftNumbers: 0,
-            metamaskInstalled: false,
         }
     },
     computed: {
@@ -141,87 +152,33 @@ export default {
             else
                 return '#'
         },
-        timerStr () {
-            let days = '', hours = '', minutes = '', seconds = '';    
-            if(this.timer <= 0) return '00000000'
-
-            const time_left = new Date(this.timer)
-            days = '0' + (time_left.getUTCDate() - 1)               // days
-
-            hours = '' + time_left.getUTCHours()                    // hours
-            if(hours.length === 1) hours = '0' + hours
-
-            minutes = '' + time_left.getUTCMinutes()                // minutes
-            if(minutes.length == 1) minutes = '0' + minutes
-
-            seconds = '' + time_left.getUTCSeconds()                // seconds
-            if(seconds.length == 1) seconds = '0' + seconds
-
-            return (days + hours + minutes + seconds)            
+        timerString () {
+            return util.timerToStr(this.timer)
         },
         GameNum () {
-            if(this.gameCurrentDetail === null) return null
-            else return this.formatNumber(this.gameCurrentDetail.GameNum, 7, 0)
+            return util.formatNumber(this.gameCurrentDetail.GameNum, 7, 0)
         },
         Fund () {
-            if(this.gameCurrentDetail === null) return null
-            else return this.formatNumber(this.gameCurrentDetail.Fund, 1, 4)
+            return util.formatNumber(this.gameCurrentDetail.Fund, 1, 4)
         },
         Jackpot () {
-            if(this.gameCurrentDetail === null) return null
-            else return this.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
+            return util.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
-        ...mapGetters(['gameSettings', 'gameCurrentIndex', 'gameCurrent', 'gameCurrentDetail', 'gameSettingsLoaded', 'web3'])
+        ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },
     methods: {
-        formatNumber (value, int, frac) {
-            if(!value) return ''
-            const zeroString = '000000000'
-            let _value = '' + value
-            let _int = '' + parseInt(value)
-            let _frac = '' + (value - parseInt(value))
-            _frac = _frac.substr(2)
-
-            // Integer part
-            if(int > _int.length) _int = zeroString.substr(0, int - _int.length) + _int
-            
-            // Fractional part
-            if(frac === 0) return _int
-            if(frac === _frac.length) return _int + '.' + _frac
-
-            if(frac > _frac.length) 
-                _frac += zeroString.substr(0, frac - _frac.length)
-            else
-                _frac = _frac.substr(0, frac)
-
-            return _int + '.' + _frac
-        },
-        calcTimerStart (drawDow, drawHour, drawMinute) {
-            
-            const MS_IN_DAY = 1 * 24 * 60 * 60 * 1000                           // 86 400 000
-            const blockedPeriod = 2 * 60 * 1000                            // 1 hour
-            const now = new Date()
-
-            let timeToDraw = (drawHour * 60 + drawMinute) * 60 * 1000
-            let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 * 1000 + now.getUTCSeconds() * 1000
-            if(drawDow >= 1 && drawDow <= 7) {                                  // For weekly game
-                timeToDraw += drawDow * MS_IN_DAY
-                timeCurrent += now.getUTCDay() * MS_IN_DAY
-            }
-
-            // If blocked period, set timer to 0
-            if(timeCurrent > (timeToDraw - blockedPeriod) && timeCurrent < (timeToDraw - 2 * blockedPeriod)) return 0
-
-            // Else, return timer value
-            if(timeToDraw > timeCurrent) return (timeToDraw - timeCurrent - blockedPeriod)
-            if(drawDow >= 1 && drawDow <= 7)                                    // Weekly game
-                return (timeToDraw + 7 * MS_IN_DAY - timeCurrent - blockedPeriod)    
-            else                                                                // Daily game
-                return (timeToDraw + MS_IN_DAY - timeCurrent - blockedPeriod)
-            
+        init () {
+            // Run Timer
+            this.runTimer()
+            // Init Numbers array and numbers data
+            this.numbers = new Array(this.gameCurrent.padSize)
+            for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0        
+                
+            this.reqNumbers = this.gameCurrent.reqNumbers
+            this.leftNumbers = this.reqNumbers
         },
         runTimer () {
-            this.timer = this.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute)
+            this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute)
             this.timerInterval = setInterval(() => {
                 if(this.timer > 1000) this.timer -= 1000
                 else {
@@ -231,7 +188,7 @@ export default {
                 }
             }, 1000)
         },
-        selectNumber (index) {
+        doSelect (index) {
             if(this.numbers[index] === 0 && this.leftNumbers === 0) return
 
             if(this.numbers[index] === 0) {
@@ -242,25 +199,9 @@ export default {
                 this.leftNumbers++
             }
         
-            this.dataString = this.generateDataString()
-
+            this.dataString = util.calcDataString(this.numbers)
         },
-        generateDataString () {
-            let dataString = ''
-            let hex = ''
-        
-            for(let i = 0; i < this.gameCurrent.padSize; i++) {
-                if(this.numbers[i] === 1) {
-                    hex = Number(i + 1).toString(16)
-                    hex = hex.toUpperCase()
-                    if(hex.length === 1) hex = '0' + hex
-                    dataString += hex
-                }
-            }
-        
-            return dataString
-        },
-        selectAuto () {
+        doAuto () {
             // Init params
             let num = 0
             let selectedNumbers = []
@@ -280,57 +221,70 @@ export default {
             for(var i = 0; i < selectedNumbers.length; i++)
                 this.numbers[selectedNumbers[i]] = 1
 
-            this.dataString = this.generateDataString()
+            this.dataString = util.calcDataString(this.numbers)
         },
-        clearNumbers () {
+        doClear () {
             this.dataString = ''
             this.leftNumbers = this.gameCurrent.reqNumbers
             for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0
         },
-        playWithMetamask () {
-            if(!this.web3.isInjected) {
-                console.log('Metamask not installed')
+        doCopy () {
+            if(this.leftNumbers > 0) {
+                this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `You must select ${this.reqNumbers} numbers` })
                 return
             }
-            console.log(this.web3.web3Instance().eth.getAccounts().then(console.log))
+            
+            this.$copyText(this.dataString)
+            .then((e) => {
+                this.newNotify({ type: 'success', title: '<b>:: Copy ::</b>', text: `DATA string successfull copied!` })
+            })
+            .catch((e) => {
+                this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `DATA string not copied!` })
+            })
+        },
+        doPlay () {
+            // Check selected numbers
+            if(this.leftNumbers > 0) {
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `You must select ${this.reqNumbers} numbers` })
+                return
+            }
 
-            /*
-            // Check Metamask installed
-            if(!web3m.getDefaultAccount()) {
-                Notification.error({ message: 'Oшибка подключения к Metamask', delay: 2000 })
+            // Check Metamask install
+            if(!this.web3.isInjected) {
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank">https://metamask.io/</a>` })
                 return
             }
-        
-            // Send transaction for confirmation
-            web3m.sendTransaction(vm.data_string)
-            */
-        }
+            
+            // Check Metamask lock
+            this.web3.web3Instance().eth.getAccounts()
+            .then((result) => {
+
+                if(!Array.isArray(result) || result.length <= 0) {
+                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask is locked!` })
+                    return
+                }
+
+                // Send transaction for confirmation !!!
+                // web3m.sendTransaction(vm.data_string)
+
+            })
+            .catch((error) => {
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error })
+                return
+            })
+        },
+        ...mapMutations(['newNotify'])
     },
+    /*
     watch: {
         gameCurrent (value) {                        // For path /:id in browser
-            if(value !== null) {
-                // Run Timer
-                this.runTimer()
-                // Init Numbers array and numbers data
-                this.numbers = new Array(this.gameCurrent.padSize)
-                for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0        
-                
-                this.reqNumbers = this.gameCurrent.reqNumbers
-                this.leftNumbers = this.reqNumbers
-            }
+            if(value !== null) this.init()
         }
     },
+    */
     mounted () {
-        if(this.gameCurrent !== null) {
-            // Run Timer
-            this.runTimer()
-            // Init Numbers array and numbers data
-            this.numbers = new Array(this.gameCurrent.padSize)
-            for(let i = 0; i < this.numbers.length; i++) this.numbers[i] = 0
-
-            this.reqNumbers = this.gameCurrent.reqNumbers
-            this.leftNumbers = this.reqNumbers
-        }
+        // this.init()
+        if(this.gameCurrent !== null) this.init()
     },
     beforeDestroy () {
         if(this.timerInterval !== null) clearInterval(this.timerInterval)

@@ -8,6 +8,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // For Notification
+    notification: {
+      counter: 0,
+      type: '',
+      title: '',
+      text: ''
+    },
     // For TheLanguage.vue component
     language: '',
     dict: Language.getDictonary(),
@@ -18,7 +25,12 @@ export default new Vuex.Store({
     gameCurrentIndex: null,
     gameCurrent: null,
     // For current contract data
-    gameCurrentDetail: null,
+    gameCurrentDetail: {
+      GameNum: 0,
+      Jackpot: 0,
+      Fund: 0,
+      History: []
+    },
     // For Metamask / Mist
     web3: {
       isInjected: false,
@@ -29,6 +41,12 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    notification: state => {
+      return state.notification
+    },
+    notificationCounter: state => {
+      return state.notification.counter
+    },
     gameSettingsLoaded: state => {
       return state.gameSettingsLoaded
     },
@@ -55,6 +73,12 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    newNotify (state, payload) {
+      state.notification.type = payload.type
+      state.notification.title = payload.title
+      state.notification.text = payload.text
+      state.notification.counter++
+    },
     setLanguage (state) {
       state.language = Language.getLanguage()
       state.dict = Language.getDictonary()

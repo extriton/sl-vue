@@ -1,20 +1,43 @@
 <template>
     <div class="game-body">
       <GamePlay />
+      <!--
+      <div v-if="gameSettingsLoaded">
+        {{ gameSettingsLoaded }}
+        <GamePlay />
+      </div>
+      -->
+      <!--
+      <div v-if="!gameSettingsLoaded">
+        {{ gameSettingsLoaded }}
+        <GameDefault />
+      </div>
+      -->
     </div>
 </template>
 
 <script>
+import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
+
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Game',
   components: {
+    GameDefault,
     GamePlay,
   },
   data () {
     return {}
-  }
+  },
+  computed: {
+    ...mapGetters(['gameSettingsLoaded'])
+  },
+  beforeCreate () {
+    // Register web3 metamask / mist
+    this.$store.dispatch('registerWeb3')
+  },
 }
 </script>
 

@@ -1,14 +1,33 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <notifications group="main" position="right bottom"/>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'app',
   components: {
   },
+  computed: {
+    ...mapGetters(['notification', 'notificationCounter'])
+  },
+  watch: {
+    notificationCounter (value) {
+      if (value > 0) {
+        this.$notify({  group: 'main',
+                        type: this.notification.type,
+                        title: this.notification.title,
+                        text: this.notification.text,
+                        duration: 3000,
+                        speed: 1000
+                    })
+      }
+    }
+  }
 }
 </script>
 

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import GameWrapper from '@/views/GameWrapper.vue'
-import GameDefault from '@/components/GameDefault.vue'
-import GameBody from '@/components/GameBody.vue'
+// import GameDefault from '@/components/GameDefault.vue'
+// import GameBody from '@/components/GameBody.vue'
 
 Vue.use(Router)
 
@@ -14,21 +14,15 @@ export default new Router({
       path: '/',
       name: 'GameWrapper',
       component: GameWrapper,
-      children: [
-        {
-          path: '',
-          component: GameDefault
-        },
-        {
-          path: ':id',
-          component: GameBody
-        },
-      ]
+    },
+    {
+      path: '/:id',
+      name: 'GameWrapper',
+      component: GameWrapper,
     },
     {
       path: '*',
       redirect: '/',
     },
-    
   ]
 })

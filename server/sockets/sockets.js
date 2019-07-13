@@ -63,10 +63,6 @@ async function getGameData(data, socket) {
     Jackpot: Jackpot,
     Fund: history[0].totalFund,
     History: history,
-    // etherscanAddressUrl: gameSettings.etherscanAddressUrl,
-    // contractAddress: game.contractAddress,
-    // metamaskNetId: gameSettings.metamaskNetId,
-    // diffTime: timer.getDiffTime(),
   }
 
   socket.emit('getGameDataSuccess', result)

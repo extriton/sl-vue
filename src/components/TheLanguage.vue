@@ -27,7 +27,7 @@
 <script>
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
-import Language from '../lib/language.js';
+import Language from '@/util/language.js';
 
 export default {
     name: 'TheLanguage',

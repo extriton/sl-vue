@@ -84,4 +84,18 @@ export default {
         return dataString
     },
 
+    getGameType (game) {
+        if (game.drawDow >= 1 && game.drawDow <= 7)                 // If draw day of week equal 1...7, it`s Weekly lottery, else Daily lottery
+            return ('w' + game.reqNumbers + 'x' + game.padSize)
+        else
+            return ('d' + game.reqNumbers + 'x' + game.padSize)
+    },
+
+    getGameName (game) {                                            // If draw day of week equal 1...7, it`s Weekly lottery, else Daily lottery
+        if (game.drawDow >= 1 && game.drawDow <= 7)
+            return ('Weekly ' + game.reqNumbers + '/' + game.padSize)
+        else
+            return ('Daily ' + game.reqNumbers + '/' + game.padSize)
+    },
+
 }

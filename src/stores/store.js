@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Language from '../lib/language.js'
 import axios from 'axios'
-import getWeb3 from '../util/getWeb3'
+
+import Language from '@/util/language'
+import getWeb3 from '@/util/getWeb3'
+import util from '@/util/util'
 
 Vue.use(Vuex)
 
@@ -92,9 +94,10 @@ export default new Vuex.Store({
       if(state.gamesCount > 0) {
         let index = 0
         for (let i = 0; i < state.gamesCount; i++) {
+          state.gameSettings.games[i].type = util.getGameType(state.gameSettings.games[i])
+          state.gameSettings.games[i].name = util.getGameName(state.gameSettings.games[i])
           if (state.gameSettings.games[i].type === payload.routerId) {
             index = i
-            break
           }
         }
         state.gameCurrentIndex = index

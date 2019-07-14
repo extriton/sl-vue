@@ -444,7 +444,8 @@ export default {
                 color: #D5D6D6;
                 -moz-user-select: none;
                 -webkit-user-select: none;
-                transition: border-color 0.3s ease-in;
+                transition: border-color 0.3s ease-in-out;
+                transition: border-radius 0.3s ease-in-out;
                 &:hover {
                     cursor: pointer;
                     color: #CC6311;

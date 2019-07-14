@@ -69,6 +69,13 @@ export default {
   sockets: {
     getGameDataSuccess (data) {
       this.$store.commit('getGameDataSuccess', data)
+    },
+    refreshContractData (data) {
+      console.log(`data.type: ${data.type}`)
+      console.log(`this.gameCurrent.type: ${this.gameCurrent.type}`)
+      if(data.type === this.gameCurrent.type) {
+        this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+      }
     }
   }
 

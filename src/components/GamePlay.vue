@@ -1,6 +1,6 @@
 <template>
     <div id="game-play" class="game-play-wrapper">
-        <canvas class="game-play-background"></canvas>
+        <!-- <canvas class="game-play-background"></canvas> -->
         <!-- Title -->
         <h3 class="title-text">
             {{ dict.play_title1 }} <strong class="template-color">{{ dict.play_title2 }}</strong> 
@@ -299,7 +299,7 @@ export default {
     },
     beforeDestroy () {
         if(this.timerInterval !== null) clearInterval(this.timerInterval)
-    }
+    },
 }
 </script>
 

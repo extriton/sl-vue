@@ -2,6 +2,7 @@
     <div class="game-body">
       <div v-if="gameCurrentIndex !== null">
         <GamePlay />
+        <GameRules />
       </div>
       <div v-if="gameCurrentIndex === null">
         <GameDefault />
@@ -12,6 +13,7 @@
 <script>
 import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
+import GameRules from '@/components/GameRules.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -20,6 +22,7 @@ export default {
   components: {
     GameDefault,
     GamePlay,
+    GameRules,
   },
   data () {
     return {}
@@ -73,4 +76,32 @@ export default {
 .m-btn.disabled:hover {
   cursor: not-allowed;
 }
+.center-line {
+  width: 800px;
+  margin: 0 auto;
+  height: 2px;
+  background-color: #EFCB46;
+}
+.page-caption {
+  color: #9B3200;
+  h3 {
+    text-align: center;
+    :before {
+      content: "";
+      position: absolute;
+      top: calc(50% - 5px);
+      left: 0;
+      right: 0;
+      height: 6px;
+      border-top: 2px solid #9B3200;
+      border-bottom: 2px solid #9B3200;
+      z-index: -1;    
+    }
+  }
+  span {
+    background: white;
+    padding: 0 20px;
+  }
+}
+
 </style>

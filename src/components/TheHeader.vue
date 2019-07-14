@@ -9,8 +9,8 @@
             </div>
             <div class="menu-wrapper">
                 <ul class="menu">
-                    <li><a class="link_play" href="#game-play">{{ dict.menu_play }}</a></li>
-                    <li><a class="link_rules" href="#game-rules">{{ dict.menu_rules }}</a></li>
+                    <li><a class="link_play" href="#" v-scroll-to="{ el: '#game-play', offset: -105 }">{{ dict.menu_play }}</a></li>
+                    <li><a class="link_rules" href="#" v-scroll-to="{ el: '#game-rules', offset: -105 }">{{ dict.menu_rules }}</a></li>
                     <li><a class="link_history" href="#game-history">{{ dict.menu_history }}</a></li>
                     <li><a class="link_statistics" href="#game-statistics">{{ dict.menu_statistics }}</a></li>
                 </ul>
@@ -58,19 +58,23 @@ export default {
     -o-transition: all ease 0.4s;
     transition: all ease 0.4s;
     .site-logo {
+        position: absolute;
+        top: 0;
+        left: 20px;
         padding: 15px;
         height: 50px;
         width: 200px;
-        float: left;
     }
     .language-wrapper {
         display: block;
-        margin-top: 40px;
-        position: relative;
-        float: left;
+        position: absolute;
+        top: 40px;
+        left: 250px;
     }
     .menu-wrapper {
-        float: right;
+        position: absolute;
+        top: 0;
+        right: 20px;
         .menu {
             padding-top: 20px;
             > li {

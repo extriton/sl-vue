@@ -9,10 +9,12 @@ import VueCookies from 'vue-cookies'
 import VueSocketIO from 'vue-socket.io'
 import VueClipboard from 'vue-clipboard2'
 import Notifications from 'vue-notification'
+import VueScrollTo from 'vue-scrollto'
 
 Vue.use(VueCookies)
 Vue.use(VueClipboard)
 Vue.use(Notifications)
+Vue.use(VueScrollTo)
 
 Vue.use(new VueSocketIO({ debug: true, connection: 'http://localhost:3000' }))
 

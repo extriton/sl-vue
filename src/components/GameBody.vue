@@ -76,32 +76,16 @@ export default {
 .m-btn.disabled:hover {
   cursor: not-allowed;
 }
-.center-line {
-  width: 800px;
-  margin: 0 auto;
-  height: 2px;
-  background-color: #EFCB46;
-}
 .page-caption {
-  color: #9B3200;
+  color: #CC6610;
   h3 {
-    text-align: center;
-    :before {
-      content: "";
-      position: absolute;
-      top: calc(50% - 5px);
-      left: 0;
-      right: 0;
-      height: 6px;
-      border-top: 2px solid #9B3200;
-      border-bottom: 2px solid #9B3200;
-      z-index: -1;    
-    }
-  }
-  span {
-    background: white;
-    padding: 0 20px;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 40px;
+    font-size: 48px;
+    padding: 8px 20px 7px 20px;
+    border-top: 4px solid;
+    border-left: 4px solid;
   }
 }
-
 </style>

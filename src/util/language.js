@@ -74,6 +74,22 @@ dicts.ru = {
     statisctics_col4                    : 'Выигрыш',
     statistics_update                   : 'Обновить',
     statisctics_no_draw                 : 'Нет розыгрыша',
+
+    // Прочее
+    monday                              : 'Понедельник', 
+    tuesday                             : 'Вторник', 
+    wednesday                           : 'Среду', 
+    thursday                            : 'Четверг', 
+    friday                              : 'Пятницу', 
+    saturday                            : 'Субботу', 
+    sunday                              : 'Воскресенье',
+
+    every                               : 'каждый',
+    everyday                            : 'ежедневно',
+
+    from                                : 'с',
+    to                                  : 'до',
+    of                                  : 'из'
   
 };
       
@@ -107,7 +123,7 @@ dicts.en = {
     play_play                           : 'Play with Metamask',
           
     // Правила
-    rules_play_time1                    : 'Lottery time',
+    rules_play_time1                    : 'Lottery draw time',
     rules_play_time2                    : 'every Thursday from 10-00 to 13-00 GMT',
     rules_play_time3                    : 'Do not buy tickets during the draw!',
     rules_ticket_cost                   : 'The cost of one ticket',
@@ -145,6 +161,21 @@ dicts.en = {
     statisctics_col4                    : 'Prize',
     statistics_update                   : 'Refresh',
     statisctics_no_draw                 : 'No draw',
+
+    // Прочее
+    monday                              : 'Monday', 
+    tuesday                             : 'Tuesday', 
+    wednesday                           : 'Wednesday', 
+    thursday                            : 'Thursday', 
+    friday                              : 'Friday', 
+    saturday                            : 'Saturday', 
+    sunday                              : 'Sunday',
+
+    every                               : 'every',
+    everyday                            : 'everyday',
+    from                                : 'from',
+    to                                  : 'to',
+    of                                  : 'of'
   
 };
 

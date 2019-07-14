@@ -1,6 +1,5 @@
 <template>
     <div id="game-play" class="game-play-wrapper">
-        <!-- <canvas class="game-play-background"></canvas> -->
         <!-- Title -->
         <h3 class="title-text">
             {{ dict.play_title1 }} <strong class="template-color">{{ dict.play_title2 }}</strong> 
@@ -306,7 +305,7 @@ export default {
 <style lang="scss">
 .game-play-wrapper {
     min-height: 100vh;
-    padding-top: 40px;
+    padding: 40px 0 20px 0;
     color: white;
     background-color: rgba(16, 24, 30, 0.98);
     background-image: url('../../public/img/bg/3.png');
@@ -358,7 +357,7 @@ export default {
     }
     .loto-pad-wrapper {
         width: 800px;
-        margin: 30px auto 20px auto;
+        margin: 30px auto 0 auto;
         position: relative;
         margin: 40px auto 20px auto;
         .loto-info {
@@ -449,13 +448,7 @@ export default {
                 &:hover {
                     cursor: pointer;
                     color: #CC6311;
-                    /* border-color: #CC6311; */
                     font-weight: bold;
-                    /* 
-                    background-color: #191B1C;
-                    color: #57B3FF;
-                    border-color: #57B3FF;
-                    */
                 }
             }
             .loto-pad-item.selected {
@@ -464,12 +457,6 @@ export default {
                 border-width: 2px;
                 padding: 14px 0;
                 color: #CC6311;
-                /*
-                color: #57B3FF;
-                border-color: #57B3FF;
-                border-width: 5px;
-                padding: 11px 0;
-                */
             }
             .control-bar {
                 position: absolute;
@@ -529,7 +516,7 @@ export default {
     }
     .loto-info-bottom {
         width: 800px; 
-        margin: 20px auto;
+        margin: 20px auto 0 auto;
         padding: 20px;
         background-color: rgba(0, 0, 0, 0.7);
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);

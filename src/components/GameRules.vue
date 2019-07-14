@@ -1,12 +1,13 @@
 <template>
     <div id="game-rules">
     <div class="game-rules-wrapper">
-        <div class="page-caption"><h3><span>{{ dict.menu_rules }}</span></h3></div>
+        <div class="page-caption"><h3>{{ dict.menu_rules }}</h3></div>
         <div class="rules-row">
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_clock.png"  alt="" title="" width="50" height="50" />
             </span>
-            {{ dict.rules_play_time1 }}: <span class="blue">{{ dict.rules_play_time2 }}.</span><br />{{ dict.rules_play_time3 }}
+            {{ dict.rules_play_time1 }}: <span class="blue">{{ drawTime }}.</span><br />
+            {{ dict.rules_play_time3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
@@ -29,8 +30,8 @@
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" width="50" height="50" />
             </span>
-            {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank">MyEtherWallet</a>, <br /><a href="https://metamask.io/" target="_blank">MetaMask</a></span>
-            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign" style="color: #EFCC44;"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
+            {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank">MetaMask</a></span>
+            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
@@ -55,16 +56,15 @@
             </span>
             {{ dict.rules_prize_pool_distr }}: 
             <div class="column blue">
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 15% - {{ dict.rules_jackpot_inc }}<br />
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 35% - {{ dict.rules_match }} 4 из 5<br />
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 30% - {{ dict.rules_match }} 3 из 5<br />
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 20% - {{ dict.rules_match }} 2 из 5
+                <span v-for="(item, index) in distribFunds" :key="index">
+                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; {{ item }}<br />
+                </span>
             </div>
             <div style="min-height: 20px;"></div>
             <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt1 }}<br />
             <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt2 }}
         </div>
-    </div>    
+    </div>
     </div>
 </template>
 
@@ -87,6 +87,34 @@ export default {
         contractUrl () {
             return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
         },
+        drawTime () {
+            const dows = { '1': 'monday', '2': 'tuesday', '3': 'wednesday', '4': 'thursday', '5': 'friday', '6': 'saturday', '7': 'sunday' }
+            let res = ''
+            if (this.gameCurrent.drawDow >= 1 && this.gameCurrent.drawDow <= 7) 
+                res = this.dict[dows[this.gameCurrent.drawDow]] + ' '
+            else
+                res = this.dict.everyday + ' '
+            
+            res += this.dict.from + ' '
+            res += (this.gameCurrent.drawHour - 1) + '-00 '
+            res += this.dict.to + ' '
+            res += (this.gameCurrent.drawHour + 2) + '-00 GMT'
+
+            return res
+        },
+        distribFunds () {
+            const res = []
+            for (let key in this.gameCurrent.distribFund) {
+                let str = ''
+                if (+key === this.gameCurrent.reqNumbers)
+                    str += this.gameCurrent.distribFund[key] + '% - ' + this.dict.rules_jackpot_inc
+                else
+                    str += this.gameCurrent.distribFund[key] + '% - ' + this.dict.rules_match + ' ' + key + ' ' + this.dict.of + ' ' + this.gameCurrent.reqNumbers
+                res.push(str)
+            }
+            res.reverse()
+            return res
+        },
         ...mapGetters(['gameSettings', 'gameCurrent'])
     },
     methods: {
@@ -98,27 +126,24 @@ export default {
 
 <style lang="scss">
 #game-rules {
-    background-color: #1B1B1D;
-    background: linear-gradient(to right, black -50%, #10191E 150%);
     min-height: 100vh;
-    color: #FAFAFA;
+    padding: 20px;
+    background: linear-gradient(to right, black -50%, rgb(50, 73, 85) 150%);
+    text-align: left;
 }
 .game-rules-wrapper {
     width: 800px;
     margin: 0 auto;
-    min-height: 100vh;
-    padding: 20px;
-    text-align: left;
     .rules-row {
         width: 100%;
         min-height: 100px;
         font-size: 16px;
-        color: #222;
+        color: #000;
         position: relative;
         margin-bottom: 20px;
         padding: 10px 30px 10px 80px;
-        background: linear-gradient(to right, #10191E 0%, #CCC, #10191E);
-        border-bottom: 1px solid grey;
+        background: linear-gradient(to right, rgb(23, 32, 37) 0%, rgb(72, 93, 107), #10191E);
+        border-bottom: 1px solid #10191E;
         .rules-dotter {
             position: absolute;
             width: 50px;
@@ -127,11 +152,8 @@ export default {
             left: 10px;
             top: 10px;
         }
-        a {
-            color: #9B3200;
-        }
-        .blue {
-            color: #9B3200;
+        a, .blue {
+            color: #CC6610;
         }
         .column {
             padding-left: 10%;

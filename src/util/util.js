@@ -10,7 +10,10 @@ export default {
         let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 * 1000 + now.getUTCSeconds() * 1000
         if(drawDow >= 1 && drawDow <= 7) {                                  // For weekly game
             timeToDraw += drawDow * MS_IN_DAY
-            timeCurrent += now.getUTCDay() * MS_IN_DAY
+            if (now.getUTCDay() === 0)                                      // Change Sunday from 0 to 7
+                timeCurrent += 7 * MS_IN_DAY
+            else
+                timeCurrent += now.getUTCDay() * MS_IN_DAY
         }
 
         // If blocked period, set timer to 0

@@ -30,7 +30,10 @@ export default new Vuex.Store({
     gameCurrentDetail: {
       GameNum: 0,
       Jackpot: 0,
-      Fund: 0,
+      Fund: 0
+    },
+    gameCurrentHistory: {
+      HistoryCount: 0,
       History: []
     },
     // For Metamask / Mist
@@ -66,6 +69,9 @@ export default new Vuex.Store({
     },
     gameCurrentDetail: state => {
       return state.gameCurrentDetail
+    },
+    gameCurrentHistory: state => {
+      return state.gameCurrentHistory
     },
     web3: state => {
       return  state.web3
@@ -112,6 +118,10 @@ export default new Vuex.Store({
     },
     getGameDataSuccess (state, payload) {
       state.gameCurrentDetail = payload
+    },
+    getGameHistorySuccess (state, payload) {
+      state.gameCurrentHistory = payload
+      for (let i = 0; i < 12; i++) state.gameCurrentHistory.History.push(state.gameCurrentHistory.History[0])
     },
     registerWeb3Instance (state, payload) {
       let result = payload

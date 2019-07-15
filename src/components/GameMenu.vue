@@ -63,6 +63,7 @@ export default {
       if(val !== null) {
         this.$router.push({ path: this.gameCurrent.type })
         this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+        this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: 1 })
       }
     }
   },
@@ -70,12 +71,13 @@ export default {
     getGameDataSuccess (data) {
       this.$store.commit('getGameDataSuccess', data)
     },
+    getGameHistorySuccess (data) {
+      this.$store.commit('getGameHistorySuccess', data)
+    },
     refreshContractData (data) {
-      console.log(`data.type: ${data.type}`)
-      console.log(`this.gameCurrent.type: ${this.gameCurrent.type}`)
-      if(data.type === this.gameCurrent.type) {
+      if(data.type === this.gameCurrent.type)
         this.$socket.emit('getGameData', { type: this.gameCurrent.type })
-      }
+        this.$socket.emit('getGameHistory', { type: this.gameCurrent.type })
     }
   }
 

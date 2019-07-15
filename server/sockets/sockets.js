@@ -21,6 +21,8 @@ module.exports = io => {
 
       socket.on('getGameData', data => { getGameData(data, socket) })
 
+      socket.on('getGameHistory', data => { getGameHistory(data, socket) })
+
       socket.on('getPlayerData', data => { getPlayerData(data, socket) })
         
     })
@@ -29,6 +31,8 @@ module.exports = io => {
 // Return game data by game type to client socket
 async function getGameData(data, socket) {
   
+  if (!data.type) return
+
   // Define game by type
   let game = null
   for(let i = 0; i < gameSettings.games.length; i++)
@@ -52,21 +56,46 @@ async function getGameData(data, socket) {
   const contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
   
   const jackpotPromise = contract.methods.JACKPOT().call()
-  const historyPromise = Game.find({ type: game.type }).sort({ id: -1 }).limit(10)
-  
+  const lastGamePromise = Game.findOne({ type: data.type }).sort({ id: -1 })
+
   let Jackpot = await jackpotPromise
   Jackpot = web3.utils.fromWei('' + Jackpot, 'ether')
-  const history = await historyPromise
+
+  const lastGame = await lastGamePromise
 
   const result = {
-    GameNum: history[0].id,
+    GameNum: lastGame.id,
     Jackpot: Jackpot,
-    Fund: history[0].totalFund,
-    History: history,
+    Fund: lastGame.totalFund
   }
 
   socket.emit('getGameDataSuccess', result)
 
+}
+
+// Return game history by game type to client socket
+async function getGameHistory(data, socket) {
+
+  if (!data.type) return
+
+  try {
+    data.page = parseInt(data.page)
+  } catch(e) {
+    data.page = 1
+  }
+
+  const historyCountPromise = Game.countDocuments({ type: data.type })
+  const historyPromise = Game.find({ type: data.type }).skip((data.page - 1) * 10).limit(10)
+
+  const historyCount = await historyCountPromise
+  const history = await historyPromise
+
+  const result = {
+    HistoryCount: historyCount,
+    History: history
+  }
+
+  socket.emit('getGameHistorySuccess', result)
 }
 
 // Return player data by game type & player address to client socket

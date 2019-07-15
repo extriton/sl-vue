@@ -81,6 +81,7 @@ export default {
 }
 .page-caption {
   color: #CC6610;
+  position: relative;
   h3 {
     text-align: left;
     margin-top: 0;

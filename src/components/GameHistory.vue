@@ -1,7 +1,12 @@
 <template>
     <div id="game-history">
         <div class="game-history-wrapper">
-            <div class="page-caption"><h3>{{ dict.history_title }}</h3></div>
+            <div class="page-caption">
+                <h3>{{ dict.history_title }}</h3>
+                <div class="paginator-wrapper">
+                    <ThePaginator :max-page="maxPage" :on-change="onChangePage" />
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -10,20 +15,22 @@
                         <th>{{ dict.history_col3 }}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <transition name="fade" mode="out-in">
+                <tbody :key="page">
                     <tr v-for="(item, index) in history" :key="index">
                         <td>{{ formatNumber(item.id, 7, 0) }}</td>
                         <td>
-                            <span class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
+                            <span class="win-numbers-pad" v-show="item.winNumbers[0] === 0">
                                 <i>{{ dict.statisctics_no_draw }}</i>
                             </span>
-                            <span class="win-numbers-pad" v-show="item.winNumbers[0] === 0">
+                            <span class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
                                 <span class="win-number" v-for="(i, index) in item.winNumbers" :key="index">{{ i }}</span>
                             </span>
                         </td>
                         <td>{{ formatNumber(item.totalFund, 1, 4) }}</td>
                     </tr>
                 </tbody>
+                </transition>
             </table>
         </div>
     </div>
@@ -34,12 +41,17 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import util from '@/util/util'
 import { mapGetters } from 'vuex'
+import ThePaginator from '@/components/ThePaginator.vue'
 
 export default {
     name: 'GameHistory',
+    components: {
+        ThePaginator
+    },
     props: {},
     data () {
         return {
+            page: 1
         }
     },
     computed: {
@@ -49,12 +61,31 @@ export default {
         history () {
             return this.gameCurrentHistory.History
         },
-        ...mapGetters(['gameCurrentHistory'])
+        maxPage () {
+            return parseInt(this.gameCurrentHistory.HistoryCount / 10) + 1
+        },
+        ...mapGetters(['gameCurrent', 'gameCurrentHistory'])
     },
     methods: {
         formatNumber (value, int, frac) {
             return util.formatNumber(value, int, frac)
         },
+        onChangePage(page) {
+            this.page = page
+            this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: this.page })
+        }
+    },
+    mounted () {
+        this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: this.page })
+    },
+    sockets: {
+        getGameHistorySuccess (data) {
+            this.$store.commit('getGameHistorySuccess', data)
+        },
+        refreshContractData (data) {
+            if(data.type === this.gameCurrent.type)
+                this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: this.page })
+        }
     }
 }
 </script>
@@ -71,6 +102,12 @@ export default {
     margin: 0 auto;
     color: #CC6610;
     font-size: 20px;
+    .paginator-wrapper {
+        position: absolute;
+        width: 220px;
+        right: 0;
+        top: 10px;
+    }
     table {
         width: 100%;
     }
@@ -78,7 +115,8 @@ export default {
         width: 100%;
     }
     table thead tr {
-        border-bottom: 2px solid #34BBFF;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
         color: #34BBFF;
         margin-bottom: 15px;
     }
@@ -89,6 +127,7 @@ export default {
     table td, table th {
         padding: 10px;
         text-align: center;
+        height: 61px;
     }
     table tr td:nth-child(1) {
         width: 120px;
@@ -96,6 +135,9 @@ export default {
     table tr td:nth-child(3) {
         width: 120px;
         text-align: right;
+    }
+    table tbody tr {
+        border-bottom: 1px solid black;
     }
     .win-numbers-pad {
          /* display: inline-block;
@@ -110,11 +152,15 @@ export default {
             background: linear-gradient(-45deg, #FEE864, #F5965E);
             padding-top: 8px;
             text-align: center;
-            color: rgb(51, 79, 238);
             color: black;
-            /* text-shadow: -1px -1px white, 1px 1px gray, 2px 2px #7a7a7a, 3px 3px #757575; */
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
          }
     }
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 1s
+}
+.fade-enter, .fade-leave-active {
+    opacity: 0
 }
 </style>

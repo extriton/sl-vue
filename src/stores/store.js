@@ -121,7 +121,6 @@ export default new Vuex.Store({
     },
     getGameHistorySuccess (state, payload) {
       state.gameCurrentHistory = payload
-      for (let i = 0; i < 12; i++) state.gameCurrentHistory.History.push(state.gameCurrentHistory.History[0])
     },
     registerWeb3Instance (state, payload) {
       let result = payload

@@ -17,15 +17,50 @@
                 </thead>
                 <transition name="fade" mode="out-in">
                 <tbody :key="page">
-                    <tr v-for="(item, index) in history" :key="index">
+                    <tr v-for="(item, index) in history" 
+                        :key="index"
+                        @click="onShowDetails(index)">
                         <td>{{ formatNumber(item.id, 7, 0) }}</td>
                         <td>
                             <span class="win-numbers-pad" v-show="item.winNumbers[0] === 0">
                                 <i>{{ dict.statisctics_no_draw }}</i>
                             </span>
-                            <span class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
+                            <div class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
                                 <span class="win-number" v-for="(i, index) in item.winNumbers" :key="index">{{ i }}</span>
-                            </span>
+                                <div class="game-detail" :class="{ opened: showingIndex === index }" >
+                                    <table class='small-table'>
+                                        <thead>
+                                            <tr>
+                                                <td></td>
+                                                <td>Призовой фонд</td>
+                                                <td>Победителей</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Jackpot</td>
+                                                <td>0.5555</td>
+                                                <td>Не разыгран</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4 из 5</td>
+                                                <td>0.4444</td>
+                                                <td>2</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3 из 5</td>
+                                                <td>0.3333</td>
+                                                <td>8</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2 из 5</td>
+                                                <td>0.2222</td>
+                                                <td>25</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </td>
                         <td>{{ formatNumber(item.totalFund, 1, 4) }}</td>
                     </tr>
@@ -51,7 +86,8 @@ export default {
     props: {},
     data () {
         return {
-            page: 1
+            page: 1,
+            showingDetailIndex: null
         }
     },
     computed: {
@@ -64,22 +100,30 @@ export default {
         maxPage () {
             return parseInt(this.gameCurrentHistory.HistoryCount / 10) + 1
         },
+        showingIndex () {
+            return this.showingDetailIndex
+        },
         ...mapGetters(['gameCurrent', 'gameCurrentHistory'])
     },
     methods: {
         formatNumber (value, int, frac) {
             return util.formatNumber(value, int, frac)
         },
-        onChangePage(page) {
+        onChangePage (page) {
             this.page = page
             this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: this.page })
-        }
+        },
+        onShowDetails (index) {
+            if (this.showingDetailIndex === index) this.showingDetailIndex = null
+            else this.showingDetailIndex = index
+        },
     },
     mounted () {
         this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: this.page })
     },
     sockets: {
         getGameHistorySuccess (data) {
+            this.showingDetailIndex = null
             this.$store.commit('getGameHistorySuccess', data)
         },
         refreshContractData (data) {
@@ -120,6 +164,12 @@ export default {
         color: #34BBFF;
         margin-bottom: 15px;
     }
+    table tbody tr {
+        &:hover {
+            cursor: pointer;
+            background-color: rgba(0, 0 ,0 , 0.2)
+        }
+    }
     table thead th {
         text-align: center;
         padding-bottom: 10px;
@@ -131,10 +181,14 @@ export default {
     }
     table tr td:nth-child(1) {
         width: 120px;
+        vertical-align: top;
+        padding-top: 17px;
     }
     table tr td:nth-child(3) {
         width: 120px;
         text-align: right;
+        vertical-align: top;
+        padding-top: 17px;
     }
     table tbody tr {
         border-bottom: 1px solid black;
@@ -155,6 +209,40 @@ export default {
             color: black;
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
          }
+    }
+    .game-detail {
+        color: white;
+        transition: height ease 0.5s;
+        height: 0;
+        overflow: hidden;
+        &.opened {
+            height: 170px;
+        }
+        .small-table {
+            margin-top: 20px;
+            width: 100%;
+            color: #CACACA;
+            font-size: 12px;
+            tr {
+                width: 100%;
+            }
+            td {
+                height: auto;
+                padding: 5px;
+                vertical-align: middle;
+            }
+            thead {
+                tr {
+                    border: none;
+                }
+            }
+            tbody {
+                tr {
+                    border: none;
+                    border-top: 1px solid black;
+                }
+            }
+        }
     }
 }
 .fade-enter-active, .fade-leave-active {

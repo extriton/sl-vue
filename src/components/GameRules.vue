@@ -1,70 +1,70 @@
 <template>
     <div id="game-rules">
-    <div class="game-rules-wrapper">
-        <div class="page-caption"><h3>{{ dict.menu_rules }}</h3></div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_clock.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_play_time1 }}: <span class="blue">{{ drawTime }}.</span><br />
-            {{ dict.rules_play_time3 }}
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_cost.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_ticket_cost }}: <span class="blue">0.01 ETH</span><br />
-            {{ dict.rules_ticket_cost1 }}<br />
-            <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;
-            {{ dict.rules_ticket_cost2 }} <span class="blue">0 ETH</span><br />
-            {{ dict.rules_ticket_cost3 }} <span class="blue">200 000 - 700 000</span><br />
-            {{ dict.rules_ticket_cost4 }}
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_address.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_address }}: <a :href="contractUrl" target="_blank">{{ gameCurrent.contractAddress }}</a>
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank">MetaMask</a></span>
-            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_gas.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_gas_limit }}: <span class="blue">350 000</span><br />
-            {{ dict.rules_gas_price }}: <span class="blue">1 Gwei</span>
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_fund1.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_distr_funds }}: 
-            <div class="column blue">
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 85% - {{ dict.rules_prize_fund }}<br />
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 15% - {{ dict.rules_service }}
-            </div>
-        </div>
-        <div class="rules-row">
-            <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_fund2.png"  alt="" title="" width="50" height="50" />
-            </span>
-            {{ dict.rules_prize_pool_distr }}: 
-            <div class="column blue">
-                <span v-for="(item, index) in distribFunds" :key="index">
-                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; {{ item }}<br />
+        <div class="game-rules-wrapper">
+            <div class="page-caption"><h3>{{ dict.menu_rules }}</h3></div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_clock.png"  alt="" title="" width="50" height="50" />
                 </span>
+                {{ dict.rules_play_time1 }}: <span class="blue">{{ drawTime }}.</span><br />
+                {{ dict.rules_play_time3 }}
             </div>
-            <div style="min-height: 20px;"></div>
-            <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt1 }}<br />
-            <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt2 }}
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_cost.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_ticket_cost }}: <span class="blue">0.01 ETH</span><br />
+                {{ dict.rules_ticket_cost1 }}<br />
+                <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;
+                {{ dict.rules_ticket_cost2 }} <span class="blue">0 ETH</span><br />
+                {{ dict.rules_ticket_cost3 }} <span class="blue">200 000 - 700 000</span><br />
+                {{ dict.rules_ticket_cost4 }}
+            </div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_address.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_address }}: <a :href="contractUrl" target="_blank">{{ gameCurrent.contractAddress }}</a>
+            </div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank">MetaMask</a></span>
+                {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
+            </div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_gas.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_gas_limit }}: <span class="blue">350 000</span><br />
+                {{ dict.rules_gas_price }}: <span class="blue">1 Gwei</span>
+            </div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_fund1.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_distr_funds }}: 
+                <div class="column blue">
+                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 85% - {{ dict.rules_prize_fund }}<br />
+                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 15% - {{ dict.rules_service }}
+                </div>
+            </div>
+            <div class="rules-row">
+                <span class="rules-dotter">
+                    <img src="../../public/img/icons/icon_fund2.png"  alt="" title="" width="50" height="50" />
+                </span>
+                {{ dict.rules_prize_pool_distr }}: 
+                <div class="column blue">
+                    <span v-for="(item, index) in distribFunds" :key="index">
+                        <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; {{ item }}<br />
+                    </span>
+                </div>
+                <div style="min-height: 20px;"></div>
+                <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt1 }}<br />
+                <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt2 }}
+            </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -116,10 +116,6 @@ export default {
             return res
         },
         ...mapGetters(['gameSettings', 'gameCurrent'])
-    },
-    methods: {
-    },
-    mounted () {
     }
 }
 </script>

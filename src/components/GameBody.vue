@@ -3,6 +3,7 @@
       <div v-if="gameCurrentIndex !== null">
         <GamePlay />
         <GameRules />
+        <GameHistory />
       </div>
       <div v-if="gameCurrentIndex === null">
         <GameDefault />
@@ -14,6 +15,7 @@
 import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
 import GameRules from '@/components/GameRules.vue'
+import GameHistory from '@/components/GameHistory.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -23,6 +25,7 @@ export default {
     GameDefault,
     GamePlay,
     GameRules,
+    GameHistory,
   },
   data () {
     return {}

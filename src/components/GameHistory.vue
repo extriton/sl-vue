@@ -194,8 +194,6 @@ export default {
         border-bottom: 1px solid black;
     }
     .win-numbers-pad {
-         /* display: inline-block;
-        width: auto; */
         margin: 0 auto;
         .win-number {
             display: inline-block;
@@ -225,6 +223,9 @@ export default {
             font-size: 12px;
             tr {
                 width: 100%;
+                &:hover {
+                    background: none;
+                }
             }
             td {
                 height: auto;

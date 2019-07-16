@@ -32,7 +32,13 @@ export default new Vuex.Store({
       Jackpot: 0,
       Fund: 0
     },
+    // For games history
     gameCurrentHistory: {
+      HistoryCount: 0,
+      History: []
+    },
+    // For player history
+    playerCurrentHistory: {
       HistoryCount: 0,
       History: []
     },
@@ -72,6 +78,9 @@ export default new Vuex.Store({
     },
     gameCurrentHistory: state => {
       return state.gameCurrentHistory
+    },
+    playerCurrentHistory: state => {
+      return state.playerCurrentHistory
     },
     web3: state => {
       return  state.web3
@@ -121,6 +130,9 @@ export default new Vuex.Store({
     },
     getGameHistorySuccess (state, payload) {
       state.gameCurrentHistory = payload
+    },
+    getPlayerHistorySuccess (state, payload) {
+      state.playerCurrentHistory = payload
     },
     registerWeb3Instance (state, payload) {
       let result = payload

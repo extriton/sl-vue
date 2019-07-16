@@ -4,6 +4,7 @@
         <GamePlay />
         <GameRules />
         <GameHistory />
+        <PlayerHistory />
       </div>
       <div v-if="gameCurrentIndex === null">
         <GameDefault />
@@ -16,6 +17,7 @@ import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
 import GameRules from '@/components/GameRules.vue'
 import GameHistory from '@/components/GameHistory.vue'
+import PlayerHistory from '@/components/PlayerHistory.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -26,6 +28,7 @@ export default {
     GamePlay,
     GameRules,
     GameHistory,
+    PlayerHistory
   },
   data () {
     return {}
@@ -86,10 +89,11 @@ export default {
     text-align: left;
     margin-top: 0;
     margin-bottom: 40px;
-    font-size: 48px;
+    font-size: 42px;
     padding: 8px 20px 7px 20px;
-    border-top: 4px solid;
-    border-left: 4px solid;
+    border-top: 3px solid;
+    border-left: 3px solid;
+    padding-top: 17px;
   }
 }
 </style>

@@ -23,7 +23,7 @@ module.exports = io => {
 
       socket.on('getGameHistory', data => { getGameHistory(data, socket) })
 
-      socket.on('getPlayerData', data => { getPlayerData(data, socket) })
+      socket.on('getPlayerHistory', data => { getPlayerHistory(data, socket) })
         
     })
 }
@@ -85,7 +85,7 @@ async function getGameHistory(data, socket) {
   }
 
   const historyCountPromise = Game.countDocuments({ type: data.type })
-  const historyPromise = Game.find({ type: data.type }).skip((data.page - 1) * 10).limit(10)
+  const historyPromise = Game.find({ type: data.type }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
@@ -123,52 +123,47 @@ async function getGameHistory(data, socket) {
   socket.emit('getGameHistorySuccess', result)
 }
 
-/*
-[ { type: 'w5x36',
-    id: 1,
-    winNumbers: [ 0, 0, 0, 0, 0 ],
-    totalFund: 0.1105,
-    p5: 0,
-    p4: 0,
-    p3: 0,
-    p2: 0,
-    status: 1,
-    _id: 5d2c65ce35d49532508f6495,
-    created: 2019-07-15T11:38:54.144Z,
-    __v: 0 } ]
-*/
-
 // Return player data by game type & player address to client socket
-async function getPlayerData(data, socket) {
+async function getPlayerHistory(data, socket) {
 
   if(!data.type || !data.address) {
-    console.log(`getPlayerData: Invalid data`)
+    console.log(`getPlayerHistory: Invalid data`)
     return
   }
 
-  if(!data.page) data.page = 1
+  data.address = data.address.toLowerCase()
 
-  const countPromise = Member.find({ game_type: data.type, address: data.address.toLowerCase() }).count()
-  const ticketsPromise = Member.find({ game_type: data.type, address: data.address.toLowerCase() })
-                                .sort({ game_id: -1, ticket: 1 }).skip((parseInt(data.page) - 1)*10).limit(10)
+  try {
+    data.page = parseInt(data.page)
+  } catch(e) {
+    data.page = 1
+  }
 
-  const count = await countPromise
-  const tickets = await ticketsPromise
+  const historyCountPromise = Member.countDocuments({ game_type: data.type, address: data.address })
+  const historyPromise = Member.find({ game_type: data.type, address: data.address }).sort({ game_id: -1, ticket: 1 }).skip((data.page - 1) * 10).limit(10)
 
-  let ticketsCount = tickets.length
+  const historyCount = await historyCountPromise
+  const history = await historyPromise
+
+  let ticketsCount = history.length
   // Loop tickets
-  for(let i = 0; i < tickets.length; i++) {
+  for(let i = 0; i < history.length; i++) {
     // Loop ticket numbers and change numeric array to array of obects
-    for(let j = 0; j < tickets[i].numbers.length; j++) {
+    for(let j = 0; j < history[i].numbers.length; j++) {
       let tmp = {
-        num: tickets[i].numbers[j],
-        match: (tickets[i].winNumbers.indexOf(tickets[i].numbers[j]) === -1) ? false : true
+        num: history[i].numbers[j],
+        match: (history[i].winNumbers.indexOf(history[i].numbers[j]) === -1) ? false : true
       }
-      tickets[i].numbers[j] = tmp
+      history[i].numbers[j] = tmp
     }
   }
 
-  socket.emit('getPlayerDataSuccess', { tickets: tickets, page_max: Math.ceil(count / 10) })
+  const result = {
+    HistoryCount: historyCount,
+    History: history
+  }
+
+  socket.emit('getPlayerHistorySuccess', { tickets: tickets, page_max: Math.ceil(count / 10) })
 
 }
 

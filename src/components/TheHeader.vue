@@ -12,7 +12,7 @@
                     <li><a href="#" v-scroll-to="{ el: '#game-play', offset: -105, duration: 1500 }">{{ dict.menu_play }}</a></li>
                     <li><a href="#" v-scroll-to="{ el: '#game-rules', offset: -105, duration: 1500 }">{{ dict.menu_rules }}</a></li>
                     <li><a href="#" v-scroll-to="{ el: '#game-history', offset: -105, duration: 1500 }" >{{ dict.menu_history }}</a></li>
-                    <li><a href="#" v-scroll-to="{ el: '#game-statistics', offset: -105, duration: 1500 }">{{ dict.menu_statistics }}</a></li>
+                    <li><a href="#" v-scroll-to="{ el: '#player-history', offset: -105, duration: 1500 }">{{ dict.menu_statistics }}</a></li>
                 </ul>
             </div>
         </div>

@@ -65,6 +65,7 @@ dicts.ru = {
     history_col1                        : 'Номер игры',
     history_col2                        : 'Выигрышные номера',
     history_col3                        : 'Призовой фонд',
+    history_no_win                      : 'Нет выигрыша',
           
     // Статистика
     statisctics_title                   : 'Статистика игрока',
@@ -152,6 +153,7 @@ dicts.en = {
     history_col1                        : 'Game number',
     history_col2                        : 'Winning numbers',
     history_col3                        : 'Prize fund',
+    history_no_win                      : 'No win',
           
     // Статистика
     statisctics_title                   : 'Player statistics',

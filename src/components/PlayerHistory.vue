@@ -7,9 +7,11 @@
                     <ThePaginator :max-page="maxPage" :on-change="onChangePage" />
                 </div>
             </div>
-            <input class="i-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+            <input class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
             <div style="text-align: center; margin-bottom: 40px;">
-                <div class="m-btn btn-update" @click="updateHistory">{{ dict.statistics_update }}</div>
+                <div class="m-btn btn-update" @click="onUpdateHistory">
+                    {{ dict.statistics_update }}
+                </div>
             </div>
             <!-- Data table -->
             <table>
@@ -22,7 +24,8 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <transition name="fade" mode="out-in">
+                <tbody :key="page">
                     <tr v-for="(item, index) in history" :key="index">
                         <td>{{ formatNumber(item.game_id, 7, 0) }}</td>
                         <td>{{ formatNumber(item.ticket, 7, 0) }}</td>
@@ -32,15 +35,27 @@
                             </div>
                         </td>
                         <td :class="{ blue: item.prize > 0 }">
-                            <span v-show="item.game_id !== gameCurrentDetail.GameNum">{{ formatNumber(item.prize, 1, 5) }} ETH</span>
-                            <span v-show="item.game_id === gameCurrentDetail.GameNum"><i style="font-size: 10px; color: yellow;">{{ dict.statisctics_no_draw }}</i></span>
+                            <span v-show="item.game_id !== gameCurrentDetail.GameNum && item.prize !== 0">
+                                {{ formatNumber(item.prize, 1, 5) }} ETH
+                            </span>
+                            <span v-show="item.game_id !== gameCurrentDetail.GameNum && item.prize === 0">
+                                <i style="font-size: 10px; color: #33B5F7;">{{ dict.history_no_win }}</i>
+                            </span>
+                            <span v-show="item.game_id === gameCurrentDetail.GameNum">
+                                <i style="font-size: 10px; color: #33B5F7;">{{ dict.statisctics_no_draw }}</i>
+                            </span>
                         </td>
                         <td>
-                            <span v-show="item.game_id != gameCurrentDetail.GameNum && item.payout === 0" style="color: red;"><i class="glyphicon glyphicon-minus"></i></span>
-                            <span v-show="item.game_id != gameCurrentDetail.GameNum && item.payout === 1" style="color: green;"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span v-show="item.game_id != gameCurrentDetail.GameNum && item.prize !== 0 && item.payout === 0" style="color: red;">
+                                <i class="glyphicon glyphicon-minus"></i>
+                            </span>
+                            <span v-show="item.game_id != gameCurrentDetail.GameNum && item.prize !== 0 && item.payout === 1" style="color: green;">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </span>
                         </td>
                     </tr>
                 </tbody>
+                </transition>
             </table>
             
         </div>
@@ -82,19 +97,21 @@ export default {
         formatNumber (value, int, frac) {
             return util.formatNumber(value, int, frac)
         },
+        updateHistory () {
+            this.$socket.emit('getPlayerHistory', { type: this.gameCurrent.type, address: this.playerAddress, page: this.page })
+        },
         onChangePage (page) {
             this.page = page
             this.updateHistory()
         },
-        updateHistory () {
-            this.$socket.emit('getPlayerHistory', { type: this.gameCurrent.type, address: this.playerAddress, page: this.page })
-        }
+        onUpdateHistory () {
+            this.page = 1
+            this.updateHistory()
+        },
     },
     mounted () {
-        if (this.web3.coinbase) {
             this.playerAddress = this.web3.coinbase
-            this.$socket.emit('getPlayerHistory', { type: this.gameCurrent.type, address: this.playerAddress, page: this.page })
-        }
+            this.updateHistory()
     },
     sockets: {
         getPlayerHistorySuccess (data) {
@@ -102,7 +119,14 @@ export default {
         },
         refreshContractData (data) {
             if(data.type === this.gameCurrent.type && this.playerAddress)
-                this.$socket.emit('getPlayerHistory', { type: this.gameCurrent.type, address: this.playerAddress, page: this.page })
+                this.updateHistory()
+        }
+    },
+    watch: {
+        'web3.coinbase': function (value) {
+            this.page = 1
+            this.playerAddress = value
+            this.updateHistory()
         }
     }
 }
@@ -112,7 +136,7 @@ export default {
 #player-history {
     min-height: 100vh;
     padding: 20px 20px 40px 20px;
-    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
+    background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
     text-align: left;
 }
 .player-history-wrapper {
@@ -126,82 +150,78 @@ export default {
         right: 0;
         top: 10px;
     }
-    .i-address {
+    .player-address {
         width: 100%;
         margin: 20px 0 25px 0;
         border: 2px solid #34BBFF;
         border-radius: 7px;
-        font-size: 20px;
+        font-size: 32px;
         padding: 20px;
         text-align: center;
         background-color: transparent;
         color: #FEC453;
-        .btn-update {
-            color: #33B5F7;
-            border: 1px solid #33B5F7;
-            padding: 5px 10px;
-            width: 200px;
-            height: 52px;
-            padding-top: 15px;
-            margin: 0 auto;
-        }
+    }
+    .btn-update {
+        width: 200px;
+        margin: 0 auto;
+        padding: 15px;
+        color: #33B5F7;
+        border: 1px solid #33B5F7;
     }
     table {
         width: 100%;
-    }
-    table tr {
-        width: 100%;
-    }
-    table thead tr {
-        border-top: 2px solid black;
-        border-bottom: 2px solid black;
-        color: #34BBFF;
-        margin-bottom: 15px;
-    }
-    table tbody tr {
-        &:hover {
-            cursor: pointer;
-            background-color: rgba(0, 0 ,0 , 0.2)
+        th, td {
+            padding: 10px;
+            text-align: center;
+            height: 61px;
+            &:nth-child(1),
+            &:nth-child(2) {
+                width: 90px;
+            }
+            &:nth-child(4) {
+                width: 140px;
+                text-align: right;
+                font-size: 18px;
+            }
         }
-    }
-    table thead th {
-        text-align: center;
-        padding-bottom: 10px;
-    }
-    table td, table th {
-        padding: 10px;
-        text-align: center;
-        height: 61px;
-    }
-    table tr td:nth-child(1) {
-        width: 120px;
-        vertical-align: top;
-        padding-top: 17px;
-    }
-    table tr td:nth-child(3) {
-        width: 120px;
-        text-align: right;
-        vertical-align: top;
-        padding-top: 17px;
-    }
-    table tbody tr {
-        border-bottom: 1px solid black;
+        thead {
+            tr {
+                width: 100%;
+                border-top: 2px solid black;
+                border-bottom: 2px solid black;
+                color: #34BBFF;
+                margin-bottom: 15px;
+                th {
+                    text-align: center;
+                    padding-bottom: 10px;
+                }
+            }
+        }
+        tbody { 
+            tr {
+                border-bottom: 1px solid black;
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(0, 0 ,0 , 0.2)
+                }
+            }
+        }
     }
     .numbers-pad {
         margin: 0 auto;
-        .number {
+        .numbers {
             display: inline-block;
             width: 40px;
             height: 40px;
             border-radius: 40px;
             margin-right: 30px;
-            background: linear-gradient(-45deg, #FEE864, #F5965E);
+            background: white;
             padding-top: 8px;
             text-align: center;
             color: black;
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
             &.matched {
-                color: red;
+                background: linear-gradient(-45deg, #FEE864, #F5965E);
             }
          }
     }

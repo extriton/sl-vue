@@ -50,7 +50,11 @@ export default {
     formatNumber (value, int, frac) {
         const zeroString = '00000000000000000000'
         
-        if(!value) return ''
+        try {
+            value = parseFloat(value)
+        } catch(e) {
+            return ''
+        }
 
         let _int = '' + parseInt(value)
         let _frac = '' + (value - parseInt(value))

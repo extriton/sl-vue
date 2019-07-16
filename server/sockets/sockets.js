@@ -91,6 +91,7 @@ async function getGameHistory(data, socket) {
   const history = await historyPromise
 
   // Заглушка для эмуляции 35 позиций в истории
+  /*
   const tmpCount = 36
   const tmpHistory = []
   for (let i = 1; i <= tmpCount; i++) 
@@ -119,6 +120,12 @@ async function getGameHistory(data, socket) {
     HistoryCount: tmpCount,
     History: tmp
   }
+  */
+  
+  const result = {
+    HistoryCount: historyCount,
+    History: history
+  }
 
   socket.emit('getGameHistorySuccess', result)
 }
@@ -126,12 +133,13 @@ async function getGameHistory(data, socket) {
 // Return player data by game type & player address to client socket
 async function getPlayerHistory(data, socket) {
 
-  if(!data.type || !data.address) {
+  if (!data.type) {
     console.log(`getPlayerHistory: Invalid data`)
     return
   }
 
-  data.address = data.address.toLowerCase()
+  if (data.address === undefined) data.address = ''
+  else data.address = data.address.toLowerCase()
 
   try {
     data.page = parseInt(data.page)
@@ -145,7 +153,6 @@ async function getPlayerHistory(data, socket) {
   const historyCount = await historyCountPromise
   const history = await historyPromise
 
-  let ticketsCount = history.length
   // Loop tickets
   for(let i = 0; i < history.length; i++) {
     // Loop ticket numbers and change numeric array to array of obects
@@ -163,7 +170,7 @@ async function getPlayerHistory(data, socket) {
     History: history
   }
 
-  socket.emit('getPlayerHistorySuccess', { tickets: tickets, page_max: Math.ceil(count / 10) })
+  socket.emit('getPlayerHistorySuccess', result)
 
 }
 

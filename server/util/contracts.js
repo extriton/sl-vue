@@ -188,7 +188,7 @@ async function NewGame(res, type, contract) {
     const dbPrevGame = await dbPrevGamePromise
 
     dbPrevGame.type = type
-    dbPrevGame.totalFund = web3.utils.fromWei(contractPrevGame[0], 'ether')
+    dbPrevGame.totalFund = web3.utils.fromWei('' + contractPrevGame[0], 'ether')
     dbPrevGame.winNumbers = []
     dbPrevGame.winNumbers.push(parseInt(contractPrevGame[2]))
     dbPrevGame.winNumbers.push(parseInt(contractPrevGame[3]))
@@ -265,7 +265,7 @@ async function WinNumbers(res, type) {
     // Find match numbers
     const dbMembers = await Member.find({ game_type: type, game_id: dbGame.id })
     for (let i = 0; i < dbMembers.length; i++) {
-        dbMembers[i].winNumbers = game.winNumbers
+        dbMembers[i].winNumbers = dbGame.winNumbers
         dbMembers[i].matchNumbers = findMatch(members[i].numbers, members[i].winNumbers)
         dbMembers[i].save()
     }
@@ -275,7 +275,7 @@ async function WinNumbers(res, type) {
 async function PayOut(res, type) {
     
     const dbMember = await Member.findOne({ game_type: type, game_id: res._gamenum, ticket: res._ticket })
-    dbMember.prize = web3.utils.fromWei(res._prize, 'ether')
+    dbMember.prize = web3.utils.fromWei('' + res._prize, 'ether')
     dbMember.payout = parseInt(res._payout)
     dbMember.save()
     io.emit('refreshContractData', { type: type })

@@ -295,6 +295,16 @@ export default {
     },
     mounted () {
         this.init()
+        this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+    },
+    sockets: {
+        getGameDataSuccess (data) {
+            this.$store.commit('getGameDataSuccess', data)
+        },
+        refreshContractData (data) {
+            if(data.type === this.gameCurrent.type)
+                this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+        }
     },
     beforeDestroy () {
         if(this.timerInterval !== null) clearInterval(this.timerInterval)
@@ -307,9 +317,12 @@ export default {
     min-height: 100vh;
     padding: 40px 0 20px 0;
     color: white;
+    /*
     background-color: rgba(16, 24, 30, 0.98);
     background-image: url('../../public/img/bg/3.png');
     background-size: cover;
+    */
+    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
     .game-play-background {
         position: absolute;
         top: 0;
@@ -363,7 +376,7 @@ export default {
         .loto-info {
             width: 170px; 
             float: left;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             color: #FAFAFA;
@@ -412,7 +425,7 @@ export default {
             padding: 10px;
             border: 1px solid #191B1C;
             border-radius: 10px 0 10px 10px;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
             padding-bottom: 120px;
             .count-block {
@@ -423,7 +436,7 @@ export default {
                 position: absolute;
                 right: 0;
                 top: -31px;
-                background-color: rgba(0, 0, 0, 0.7);
+                background-color: rgba(0, 0, 0, 0.4);
                 border-radius: 15px 0 0 0;
                 -moz-user-select: none;
                 -webkit-user-select: none;
@@ -518,7 +531,7 @@ export default {
         width: 800px; 
         margin: 20px auto 0 auto;
         padding: 20px;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.4);
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         color: #FAFAFA;

@@ -62,21 +62,9 @@ export default {
     gameCurrentIndex: function(val) {
       if(val !== null) {
         this.$router.push({ path: this.gameCurrent.type })
-        this.$socket.emit('getGameData', { type: this.gameCurrent.type })
       }
     }
-  },
-  sockets: {
-    getGameDataSuccess (data) {
-      this.$store.commit('getGameDataSuccess', data)
-    },
-    refreshContractData (data) {
-      if(data.type === this.gameCurrent.type)
-        this.$socket.emit('getGameData', { type: this.gameCurrent.type })
-        this.$socket.emit('getGameHistory', { type: this.gameCurrent.type, page: 1 })
-    }
   }
-
 }
 </script>
 

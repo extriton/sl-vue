@@ -123,6 +123,7 @@ export default {
     },
     sockets: {
         getGameHistorySuccess (data) {
+            this.page = 1
             this.showingDetailIndex = null
             this.$store.commit('getGameHistorySuccess', data)
         },

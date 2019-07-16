@@ -124,7 +124,8 @@ export default {
 #game-rules {
     min-height: 100vh;
     padding: 20px 20px 40px 20px;
-    background: linear-gradient(to right, black -50%, rgb(50, 73, 85) 150%);
+    /* background: linear-gradient(to right, black -50%, rgb(50, 73, 85) 150%); */
+    background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
     text-align: left;
 }
 .game-rules-wrapper {
@@ -134,11 +135,12 @@ export default {
         width: 100%;
         min-height: 100px;
         font-size: 16px;
-        color: #000;
+        color: #ACACAC;
         position: relative;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         padding: 10px 30px 10px 80px;
-        background: linear-gradient(to right, rgb(23, 32, 37) 0%, rgb(72, 93, 107), #10191E);
+        /* background: linear-gradient(to right, rgb(23, 32, 37) 0%, rgb(72, 93, 107), #10191E); */
+        background: rgba(0, 0, 0, 0.4);
         border-bottom: 1px solid #10191E;
         .rules-dotter {
             position: absolute;

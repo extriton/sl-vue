@@ -84,7 +84,7 @@ function syncData() {
 
     async function syncContractData(type, contract) {
         
-        // Обновяем игры и участников игр
+        // Обновляем игры и участников игр
 		const GAME_NUM = await contract.methods.GAME_NUM().call()
 
 		// Определяем номер последней игры в БД

@@ -69,13 +69,15 @@
                     <span v-show="leftNumbers === 0">{{ dict.play_ready }}</span>
                 </div>
                 <!-- Loto pad items -->
-                <div class="loto-pad-item" 
-                     :class="{ selected:  n == 1 }" 
-                     v-for="(n, index) in numbers" 
-                     @click="doSelect(index)" 
-                     :key="index"
-                >
-                    <span>{{ index + 1 }}</span>
+                <div class="loto-pad-item-adjust"> 
+                    <div class="loto-pad-item" 
+                         :class="{ selected:  n == 1 }" 
+                         v-for="(n, index) in numbers" 
+                         @click="doSelect(index)" 
+                        :key="index"
+                    >
+                        <span>{{ index + 1 }}</span>
+                    </div>
                 </div>
                 <!-- Control panel -->
                 <div class="control-bar">
@@ -443,6 +445,10 @@ export default {
                 .left-numbers-color {
                     color: #34bbff;
                 }
+            }
+            .loto-pad-item-adjust {
+                text-align: left;
+                margin-left: 20px;
             }
             .loto-pad-item {
                 display: inline-block;

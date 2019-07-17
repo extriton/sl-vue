@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <transition name="fade" mode="out-in">
-                <tbody :key="page">
+                <tbody :key="(page, changeHistory)">
                     <tr v-for="(item, index) in history" :key="index">
                         <td>{{ formatNumber(item.game_id, 7, 0) }}</td>
                         <td>{{ formatNumber(item.ticket, 7, 0) }}</td>
@@ -78,7 +78,8 @@ export default {
     data () {
         return {
             page: 1,
-            playerAddress: ''
+            playerAddress: '',
+            changeHistory: false
         }
     },
     computed: {
@@ -116,6 +117,7 @@ export default {
     sockets: {
         getPlayerHistorySuccess (data) {
             this.$store.commit('getPlayerHistorySuccess', data)
+            this.changeHistory = !this.changeHistory
         },
         refreshContractData (data) {
             if(data.type === this.gameCurrent.type && this.playerAddress)
@@ -176,10 +178,15 @@ export default {
             height: 61px;
             &:nth-child(1),
             &:nth-child(2) {
-                width: 90px;
+                width: 100px;
             }
             &:nth-child(4) {
                 width: 140px;
+                text-align: right;
+                font-size: 18px;
+            }
+            &:nth-child(5) {
+                width: 45px;
                 text-align: right;
                 font-size: 18px;
             }

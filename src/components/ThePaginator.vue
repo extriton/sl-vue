@@ -41,6 +41,11 @@ export default {
             this.page++
             this.onChange(this.page)
         },
+    },
+    watch: {
+        maxPage: function(value) {
+            this.page = 1
+        }
     }
 }
 </script>

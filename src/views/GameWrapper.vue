@@ -7,12 +7,14 @@
             <router-view></router-view>
           </div>
         </transition>
+        <TheFooter />
     </div>
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader.vue'
 import GameMenu from '@/components/GameMenu.vue'
+import TheFooter from '@/components/TheFooter.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -20,7 +22,8 @@ export default {
   name: 'GameWrapper',
   components: {
     TheHeader,
-    GameMenu
+    GameMenu,
+    TheFooter
   },
   data () {
     return {}

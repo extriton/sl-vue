@@ -89,38 +89,6 @@ async function getGameHistory(data, socket) {
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
-
-  // Заглушка для эмуляции 35 позиций в истории
-  /*
-  const tmpCount = 36
-  const tmpHistory = []
-  for (let i = 1; i <= tmpCount; i++) 
-    tmpHistory.push({
-      type: 'w5x36',
-      id: i,
-      winNumbers: [ i, i+1, i+2, i+3, i+4 ],
-      totalFund: i * 100,
-      p5: 0,
-      p4: 0,
-      p3: 0,
-      p2: 0,
-      status: 1,
-    })
-
-  for (var i = 0; i < tmpHistory.length; i++) {
-    tmpHistory[i].id = i + 1
-    tmpHistory[i].totalFund += i * 100
-  }
-  
-  tmpHistory[tmpCount-1].winNumbers = [ 0, 0, 0, 0, 0 ]
-  tmpHistory.reverse()
-  const tmp = tmpHistory.splice((data.page - 1) * 10, 10) 
-  
-  const result = {
-    HistoryCount: tmpCount,
-    History: tmp
-  }
-  */
   
   const result = {
     HistoryCount: historyCount,
@@ -139,7 +107,7 @@ async function getPlayerHistory(data, socket) {
   }
 
   if (data.address === undefined) data.address = ''
-  else data.address = data.address.toLowerCase()
+  if (typeof data.address === 'string') data.address.toLowerCase()
 
   try {
     data.page = parseInt(data.page)

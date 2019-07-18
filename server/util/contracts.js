@@ -17,62 +17,171 @@ module.exports = {
 function setListeners(_io) {
     console.log('contracts.setListeners started...')
     io = _io
-    
     gameSettings.games.forEach(el => {
         contracts[el.type] = new web3.eth.Contract(el.contractAbi, el.contractAddress)
         if (!el.isActive) return
         setContractListeners(el.type, contracts[el.type])
     })
-
 }
 
 // Set listeners for contract
 function setContractListeners(type, contract) {
 
-    // Обработка события для новой игры
-    contract.events.NewGame({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event NewGame started... (game_type: ${type})`)
+    // Process event GameChanged
+    contract.events.GameChanged({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
+        console.log(`Event GameChanged started... (game_type: ${type})`)
         if (error) { console.log(error); return; }
-        NewGame(event.returnValues, type, contract)
+        GameChanged(event.returnValues, type, contract)
     })
 
-    // Обработка события для нового игрока 
-    contract.events.NewMember({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event NewMember started... (game_type: ${type})`);
+    // Process event MemberChanged
+    contract.events.MemberChanged({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
+        console.log(`Event MemberChanged started... (game_type: ${type})`);
         if (error) { console.log(error); return; }
-        NewMember(event.returnValues, type)
-    })
-
-    // Обработка события обновления баланса игры
-    contract.events.UpdateFund({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event UpdateFund started... (game_type: ${type})`)
-        if (error) { console.log(error); return; }
-        UpdateFund(event.returnValues, type, contract)
-    })
-
-    // Обработка события обновления джекпота
-    contract.events.UpdateJackpot({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event UpdateJackpot started... (game_type: ${type})`)
-        if (error) { console.log(error); return; }
-        UpdateJackpot(event.returnValues, type)
-    })
-
-    // Обработка события обновления выигрышных номеров
-    contract.events.WinNumbers({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event WinNumbers started... (game_type: ${type})`)
-        if (error) { console.log(error); return; }
-        WinNumbers(event.returnValues, type)        
-    })
-
-    // Обработка события выплаты по билетам
-    contract.events.PayOut({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
-        console.log(`Event PayOut started... (game_type: ${type})`)
-        if (error) { console.log(error); return; }
-        PayOut(event.returnValues, type)
+        MemberChanged(event.returnValues, type, contract)
     })
 
 }
 
+//-------------------------------------------------------------------------------------------------//
+// Events handler functions                                                                        //
+//-------------------------------------------------------------------------------------------------//
+async function GameChanged(res, type, contract) {
+        
+    let game = await Game.findOne({ type: type, id: res._gameNum })
+    
+    console.log('game:')
+    console.log(game)
+    if (game === null) {
+        game = new Game({
+            type                : type,
+            id                  : res._gameNum,
+            membersCounter      : res._membersCounter,
+            totalFund           : web3.utils.fromWei('' + res._totalFund, 'ether'),
+            fundJackpot         : web3.utils.fromWei('' + res._fundJackpot, 'ether'),
+            fund4               : web3.utils.fromWei('' + res._fund4, 'ether'),
+            fund3               : web3.utils.fromWei('' + res._fund3, 'ether'),
+            fund2               : web3.utils.fromWei('' + res._fund2, 'ether'),
+            status              : res._status
+        })
+    } else {
+        game.membersCounter = res._membersCounter
+        game.totalFund = web3.utils.fromWei('' + res._totalFund, 'ether')
+        game.fundJackpot = web3.utils.fromWei('' + res._fundJackpot, 'ether')
+        game.fund4 = web3.utils.fromWei('' + res._fund4, 'ether')
+        game.fund3 = web3.utils.fromWei('' + res._fund3, 'ether')
+        game.fund2 = web3.utils.fromWei('' + res._fund2, 'ether')
+        game.status = res._status
+    }
+
+    // If status == 1 ("Draw") or status == 2 ("Closed") get win numbers
+    if (game.status === 1 || game.status === 2) {
+        const gameWinNumbers = await contract.methods.getGameWinNumbers(game.id).call()
+        game.winNumers = [gameWinNumbers._n1, gameWinNumbers._n2, gameWinNumbers._n3, 
+                          gameWinNumbers._n4, gameWinNumbers._n5, ]
+    }
+    
+    // If status == 2 ("Closed") get detail info
+    if (game.status == 2) {
+        const gameDetail = await contract.methods.getGameDetail(game.id).call()
+        game.countWinJackpot = res._countWinJackpot
+        game.countWin4 = res._countWin4
+        game.countWin3 = res._countWin3
+        game.countWin2 = res._countWin2
+    }
+
+    game.save()
+
+    // Определяем для какого количества совпавших номеров есть призывое фонды
+    const distribFund = {}
+    for (let i = 0; i < gameSettings.games.length; i++)
+        if (gameSettings.games[i].type == type) {
+            distribFund = gameSettings.games[i].distribFund
+            break
+        }
+
+    // If status == 2 caculate matchNumbers and prize for members
+    if (game.status == 2) {
+
+        const members = await Member.find({ game_type: type, game_id: game.id })
+        members.forEach((member) => {
+
+            member.winNumbers = game.winNumbers
+            member.matchNumbers = findMatch(member.numbers, member.winNumbers)
+            // RRR
+            for (key in distribFund) {
+                if (key == member.matchNumbers)
+            }
+
+
+        })
+
+
+    }
+
+
+
+    
+    io.emit('refreshContractData', { type: type })
+}
+
+async function MemberChanged(res, type, contract) {
+    
+    const memberPromise = Member.findOne({ game_type: type, game_id: res._gameNum, ticket: res._ticket })
+    const contractMemberPromise = contract.methods.getMemberInfo(res._gameNum, res._ticket).call()
+
+    let member = await memberPromise
+    const contractMember = await contractMemberPromise
+
+    console.log('member:')
+    console.log(member)
+    if (member === null) {                                      // New member
+        member = new Member({
+            game_type           : type, 
+            game_id             : res._gameNum,
+            ticket              : res._ticket,
+            address             : contractMember._addr,
+            numbers             : [contractMember._n1, contractMember._n2, contractMember._n3, contractMember._n4, contractMember._n5]
+        })
+    } else {                                                    // Payout
+        member.prize = res._prize
+        totalFund = web3.utils.fromWei('' + res._totalFund, 'ether')
+        fundJackpot = web3.utils.fromWei('' + res._fundJackpot, 'ether')
+        fund4 = web3.utils.fromWei('' + res._fund4, 'ether')
+        fund3 = web3.utils.fromWei('' + res._fund3, 'ether')
+        fund2 = web3.utils.fromWei('' + res._fund2, 'ether')
+        status = res._status
+    }
+
+    /// 1) Добавить gamePromise
+    /// 2) Добавить все поля если === null
+    /// 3) Добавить расчёт matchNumbers и winNumbers
+    /// 4) Добавить автоматически выставлять payout если игра сыграна и matchNumbers = 1 или 0, prize = 0;
+
+
+
+    await Member.deleteOne({ game_type: type, game_id: parseInt(res._gamenum), ticket: parseInt(res._ticket) })
+            
+    const obj = {}
+    obj.game_id = parseInt(res._gamenum)
+    obj.ticket = parseInt(res._ticket)
+    obj.address = res._addr.toLowerCase()
+    obj.numbers = []
+    obj.numbers.push(parseInt(res._n1))
+    obj.numbers.push(parseInt(res._n2))
+    obj.numbers.push(parseInt(res._n3))
+    obj.numbers.push(parseInt(res._n4))
+    obj.numbers.push(parseInt(res._n5))
+    obj.matchNumbers = 0
+    obj.prize = 0
+
+    const newMember = new Member(obj)
+    await newMember.save()
+    io.emit('refreshContractData', { type: type })
+    
+}
+
+// Synchronize contracts data (called on start serve and every day interval)
 function syncData() {
         
     console.log('syncData started ...')
@@ -167,119 +276,6 @@ async function addMember(contract, game, ticket) {
     const newMember = new Member(obj)
     newMember.save()
 
-}
-
-//-------------------------------------------------------------------------------------------------//
-// Events handler functions                                                                        //
-//-------------------------------------------------------------------------------------------------//
-async function NewGame(res, type, contract) {
-        
-    const prevGameIndex = parseInt(res._gamenum) - 1
-    
-    const newGame = new Game({ type: type, id: res._gamenum })
-    newGame.save()
-    
-    if (prevGameIndex === 0) return
-
-    const contractPrevGamePromise = contract.methods.getGameInfo(prevGameIndex).call()
-    const dbPrevGamePromise = Game.findOne({ type: type, id: prevGameIndex })
-
-    const contractPrevGame = await contractPrevGamePromise
-    const dbPrevGame = await dbPrevGamePromise
-
-    dbPrevGame.type = type
-    dbPrevGame.totalFund = web3.utils.fromWei('' + contractPrevGame[0], 'ether')
-    dbPrevGame.winNumbers = []
-    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[2]))
-    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[3]))
-    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[4]))
-    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[5]))
-    dbPrevGame.winNumbers.push(parseInt(contractPrevGame[6]))
-    dbPrevGame.status = parseInt(contractPrevGame[7])
-        
-    dbPrevGame.p2 = web3.utils.fromWei(contractPrevGame[8], 'ether')
-    dbPrevGame.p3 = web3.utils.fromWei(contractPrevGame[9], 'ether')
-    dbPrevGame.p4 = web3.utils.fromWei(contractPrevGame[10], 'ether')
-    dbPrevGame.p5 = web3.utils.fromWei(contractPrevGame[11], 'ether')
-    dbPrevGame.save()
-
-    await Member.deleteMany({ game_type: type, game_id: prevGameIndex })
-    for (let i = 1; i <= contractPrevGame[1]; i++)
-        addMember(contract, dbPrevGame, i)
-    
-    io.emit('refreshContractData', { type: type })
-
-}
-
-async function NewMember(res, type) {
-    
-    await Member.deleteOne({ game_type: type, game_id: parseInt(res._gamenum), ticket: parseInt(res._ticket) })
-            
-    const obj = {}
-    obj.game_id = parseInt(res._gamenum)
-    obj.ticket = parseInt(res._ticket)
-    obj.address = res._addr.toLowerCase()
-    obj.numbers = []
-    obj.numbers.push(parseInt(res._n1))
-    obj.numbers.push(parseInt(res._n2))
-    obj.numbers.push(parseInt(res._n3))
-    obj.numbers.push(parseInt(res._n4))
-    obj.numbers.push(parseInt(res._n5))
-    obj.matchNumbers = 0
-    obj.prize = 0
-
-    const newMember = new Member(obj)
-    await newMember.save()
-    io.emit('refreshContractData', { type: type })
-    
-}
-
-async function UpdateFund(res, type, contract) {
-
-    const contractGameNum = await contract.methods.GAME_NUM().call()
-    const dbGame = await Game.findOne({ type: type, id: contractGameNum})
-    
-    dbGame.totalFund = web3.utils.fromWei('' + res._fund, 'ether')
-    dbGame.save()
-
-}
-
-// ?????? Возможно не нужен этот хандлер, обновление произойдёт итак
-function UpdateJackpot(res, type) {
-    io.emit('refreshContractData', { type: type })
-}
-
-async function WinNumbers(res, type) {
-    
-    const dbGame = await Game.findOne({ type: type, id: res._gamenum})
-    dbGame.winNumbers = []
-    dbGame.winNumbers.push(parseInt(res._n1))
-    dbGame.winNumbers.push(parseInt(res._n2))
-    dbGame.winNumbers.push(parseInt(res._n3))
-    dbGame.winNumbers.push(parseInt(res._n4))
-    dbGame.winNumbers.push(parseInt(res._n5))
-    await dbGame.save()
-    
-    io.emit('refreshContractData', { type: type })
-                
-    // Find match numbers
-    const dbMembers = await Member.find({ game_type: type, game_id: dbGame.id })
-    for (let i = 0; i < dbMembers.length; i++) {
-        dbMembers[i].winNumbers = dbGame.winNumbers
-        dbMembers[i].matchNumbers = findMatch(members[i].numbers, members[i].winNumbers)
-        dbMembers[i].save()
-    }
-
-}
-
-async function PayOut(res, type) {
-    
-    const dbMember = await Member.findOne({ game_type: type, game_id: res._gamenum, ticket: res._ticket })
-    dbMember.prize = web3.utils.fromWei('' + res._prize, 'ether')
-    dbMember.payout = parseInt(res._payout)
-    dbMember.save()
-    io.emit('refreshContractData', { type: type })
-    
 }
 
 // Find match numbers function

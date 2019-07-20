@@ -1,4 +1,3 @@
-const config = require('../config/config')
 const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
@@ -48,6 +47,8 @@ function setContractListeners(_game, _contract) {
 //-------------------------------------------------------------------------------------------------//
 async function GameChanged(res, _game, _contract) {
     
+    console.log(`Game ${res._gameNum} changed. (${_game.type})`)
+
     const game = gameSaveOrUpdate(_game, _contract, res._gameNum, res._membersCounter, res._totalFund, res._status)
     
     // If status == 2 caculate matchNumbers and prize for members
@@ -55,14 +56,16 @@ async function GameChanged(res, _game, _contract) {
         for (let i = 1; i <= game.membersCounter; i++)
             memberSaveOrUpdate(_game, _contract, game.id, i)
     
-    io.emit('refreshContractData', { type: type })    
+    io.emit('refreshContractData', { type: _game.type })    
 
 }
 
 async function MemberChanged(res, _game, _contract) {
+
+    console.log(`Member ${res._gameNum}, ${res._member} changed. (${_game.type})`)
     
     memberSaveOrUpdate(_game, _contract, res._gameNum, res._member)
-    io.emit('refreshContractData', { type: type })
+    io.emit('refreshContractData', { type: _game.type })
 }
 
 // Synchronize contracts data (called on start serve and every day interval)
@@ -92,7 +95,7 @@ function syncData() {
         for (let i = _from; i <= _to; i++) {
             gameContract = await _contract.methods.getGameInfo(i).call()
             gameSaveOrUpdate(_game, _contract, i, gameContract._membersCounter, gameContract._totalFund, gameContract._status)
-            for (let j = 1; j < gameContract._membersCounter; j++)
+            for (let j = 1; j <= gameContract._membersCounter; j++)
                 memberSaveOrUpdate(_game, _contract, i, j)
         }
         
@@ -100,24 +103,22 @@ function syncData() {
 
 }
 
-async function gameSaveOrUpdate(_game, _contract, gameNum, membersCounter, totalFund, status) {
-
-    let game = await Game.findOne({ type: _game.type, id: gameNum })
+async function gameSaveOrUpdate(_game, _contract, _gameNum, _membersCounter, _totalFund, _status) {
+    console.log(`gameSaveOrUpdate: ${_gameNum}. (${_game.type})`)
+    let game = await Game.findOne({ type: _game.type, id: _gameNum })
     
-    console.log('game find:')
-    console.log(game)
     if (game === null) {
         game = new Game({
             type                : _game.type,
-            id                  : gameNum,
-            membersCounter      : membersCounter,
-            totalFund           : web3.utils.fromWei('' + totalFund, 'ether'),
-            status              : status
+            id                  : _gameNum,
+            membersCounter      : _membersCounter,
+            totalFund           : web3.utils.fromWei('' + _totalFund, 'ether'),
+            status              : _status
         })
     } else {
-        game.membersCounter = membersCounter
-        game.totalFund = web3.utils.fromWei('' + totalFund, 'ether')
-        game.status = status
+        game.membersCounter = _membersCounter
+        game.totalFund = web3.utils.fromWei('' + _totalFund, 'ether')
+        game.status = _status
     }
 
     const gameFundsPromise = _contract.methods.getGameFunds(game.id).call()
@@ -128,44 +129,43 @@ async function gameSaveOrUpdate(_game, _contract, gameNum, membersCounter, total
     game.winNumbers = await gameWinNumbersPromise
     game.winners = await gameWinnersPromise
 
-    // Convert funds
-    for (let i = 0; i < game.funds.length; i++) 
+    // Convert funds and winners
+    for (let i = 0; i < game.funds.length; i++) {
         game.funds[i] = web3.utils.fromWei('' + game.funds[i], 'ether')
+        game.winners[i] = parseInt(game.winners[i])
+    }
 
     if (game.status == 2) game.checked = 1
 
-    console.log(`Game save: `)
-    console.log(game)
     await game.save()
-
     return game
 }
 
-async function memberSaveOrUpdate(_game, _contract, gameNum, member) {
+async function memberSaveOrUpdate(_game, _contract, _gameNum, _member) {
+
+    console.log(`memberSaveOrUpdate: ${_gameNum}, ${_member}. (${_game.type})`)
     
-    const gamePromise = Game.findOne({ type: _game.type, id: gameNum })
-    const memberPromise = Member.findOne({ game_type: _game.type, game_id: gameNum, id: member })
-    const contractMemberPromise = _contract.methods.getMemberInfo(gameNum, member).call()
+    const gamePromise = Game.findOne({ type: _game.type, id: _gameNum })
+    const memberPromise = Member.findOne({ game_type: _game.type, game_id: _gameNum, id: _member })
+    const contractMemberPromise = _contract.methods.getMemberInfo(_gameNum, _member).call()
 
     const game = await gamePromise
     let member = await memberPromise
     const contractMember = await contractMemberPromise
 
-    console.log('member find:')
-    console.log(member)
     if (member === null) {
         member = new Member({
             game_type           : _game.type,
-            game_id             : gameNum,
-            id                  : member,
+            game_id             : _gameNum,
+            id                  : _member,
             prize               : web3.utils.fromWei('' + contractMember._prize, 'ether'),
             payout              : contractMember._payout
         })
     } else {
         member.address = contractMember._addr
         member.numbers = contractMember._numbers
-        member.prize = web3.utils.fromWei('' + res._prize, 'ether')
-        member.payout = res._payout
+        member.prize = web3.utils.fromWei('' + contractMember._prize, 'ether')
+        member.payout = contractMember._payout
     }
 
     member.address = contractMember._addr

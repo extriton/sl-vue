@@ -30,8 +30,9 @@ export default new Vuex.Store({
     gameCurrentDetail: {
       GameNum: 0,
       Jackpot: 0,
-      Fund: 0
-    },
+      Fund: 0,
+      Status: 0
+    }, 
     // For games history
     gameCurrentHistory: {
       HistoryCount: 0,

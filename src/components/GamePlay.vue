@@ -59,7 +59,7 @@
                 </div>
             </div>
             <!-- Drawing message -->
-            <div class="drawing" :class="{ active: timer === 0 }">
+            <div class="drawing" :class="{ active: isDrawing }">
                 <span class="drawing-text">Drawing...</span>
             </div>
             <!-- Loto pad -->
@@ -165,16 +165,12 @@ export default {
         Jackpot () {
             return util.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
+        isDrawing () {
+            return (this.gameCurrentDetail.Status != 0) ? true : false
+        },
         ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },
     methods: {
-        init () {
-            // Run Timer
-            this.runTimer()
-            // Init Numbers array and numbers data
-            this.numbers = new Array(this.gameCurrent.padSize).fill(0)
-            this.leftNumbers = this.gameCurrent.reqNumbers
-        },
         runTimer () {
             this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute)
             this.timerInterval = setInterval(() => {
@@ -296,7 +292,12 @@ export default {
         ...mapMutations(['newNotify'])
     },
     mounted () {
-        this.init()
+        // Run Timer
+        this.runTimer()
+        // Init Numbers array and numbers data
+        this.numbers = new Array(this.gameCurrent.padSize).fill(0)
+        this.leftNumbers = this.gameCurrent.reqNumbers
+        // Request current game data
         this.$socket.emit('getGameData', { type: this.gameCurrent.type })
     },
     sockets: {

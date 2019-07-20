@@ -33,40 +33,14 @@ async function getGameData(data, socket) {
   
   if (!data.type) return
 
-  // Define game by type
-  let game = null
-  for(let i = 0; i < gameSettings.games.length; i++)
-    if(gameSettings.games[i].type === data.type) {
-      game = gameSettings.games[i]
-      break
-    }
+  const lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 })
   
-  // If game type not found in settings
-  if(game === null) {
-    console.log(`Game type ${data.type} not found ib games settings`)
-    return
-  }
-
-  // Check game status (isActive)
-  if(!game.isActive) {
-    console.log(`Game type ${data.type} is not active`)
-    return
-  }
-  
-  const contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
-  
-  const jackpotPromise = contract.methods.JACKPOT().call()
-  const lastGamePromise = Game.findOne({ type: data.type }).sort({ id: -1 })
-
-  let Jackpot = await jackpotPromise
-  Jackpot = web3.utils.fromWei('' + Jackpot, 'ether')
-
-  const lastGame = await lastGamePromise
-
+  const fundsSize = lastGame.funds.length
   const result = {
     GameNum: lastGame.id,
-    Jackpot: Jackpot,
-    Fund: lastGame.totalFund
+    Jackpot: lastGame.funds[fundsSize - 1],
+    Fund: lastGame.totalFund,
+    Status: lastGame.status
   }
 
   socket.emit('getGameDataSuccess', result)

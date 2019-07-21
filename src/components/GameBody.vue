@@ -2,9 +2,9 @@
     <div class="game-body">
       <div v-if="gameCurrentIndex !== null">
         <GamePlay />
-        <GameRules />
         <GameHistory />
         <PlayerHistory />
+        <GameRules />
       </div>
       <div v-if="gameCurrentIndex === null">
         <GameDefault />
@@ -15,9 +15,9 @@
 <script>
 import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
-import GameRules from '@/components/GameRules.vue'
 import GameHistory from '@/components/GameHistory.vue'
 import PlayerHistory from '@/components/PlayerHistory.vue'
+import GameRules from '@/components/GameRules.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -26,9 +26,9 @@ export default {
   components: {
     GameDefault,
     GamePlay,
-    GameRules,
     GameHistory,
-    PlayerHistory
+    PlayerHistory,
+    GameRules
   },
   data () {
     return {}

@@ -63,11 +63,24 @@ async function getGameHistory(data, socket) {
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
-  
+
   const result = {
-    HistoryCount: historyCount,
-    History: history
+    HistoryCount: 0,
+    History: []
   }
+  
+  result.historyCount = historyCount
+  history.forEach((game) => {
+    result.history.push({
+      id              : game.id,
+      membersCounter  : game.membersCounter,
+      winNumbers      : game.winNumbers,
+      totalFund       : game.totalFund,
+      funds           : game.funds,
+      winners         : game.winners,
+      status          : game.status
+    })
+  })
 
   socket.emit('getGameHistorySuccess', result)
 }
@@ -95,21 +108,35 @@ async function getPlayerHistory(data, socket) {
   const historyCount = await historyCountPromise
   const history = await historyPromise
 
-  // Loop tickets
-  for(let i = 0; i < history.length; i++) {
-    // Loop ticket numbers and change numeric array to array of obects
-    for(let j = 0; j < history[i].numbers.length; j++) {
-      let tmp = {
-        num: history[i].numbers[j],
-        match: (history[i].winNumbers.indexOf(history[i].numbers[j]) === -1) ? false : true
-      }
-      history[i].numbers[j] = tmp
-    }
+  const result = {
+    HistoryCount: 0,
+    History: []
   }
 
-  const result = {
-    HistoryCount: historyCount,
-    History: history
+  result.historyCount = historyCount
+  history.forEach((member) => {
+    result.history.push({
+      game_id         : member.game_id,
+      id              : member.id,
+      numbers         : member.numbers,
+      winNumbers      : member.winNumbers,
+      matchNumbers    : member.matchNumbers,
+      prize           : member.prize,
+      payout          : member.payout
+    })
+  })
+
+
+  // Loop tickets
+  for(let i = 0; i < result.history.length; i++) {
+    // Loop ticket numbers and change numeric array to array of obects
+    for(let j = 0; j < result.history[i].numbers.length; j++) {
+      let tmp = {
+        num: result.history[i].numbers[j],
+        match: (result.history[i].winNumbers.indexOf(result.history[i].numbers[j]) === -1) ? false : true
+      }
+      result.history[i].numbers[j] = tmp
+    }
   }
 
   socket.emit('getPlayerHistorySuccess', result)

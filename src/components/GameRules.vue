@@ -13,7 +13,7 @@
                 <span class="rules-dotter">
                     <img src="../../public/img/icons/icon_cost.png"  alt="" title="" width="50" height="50" />
                 </span>
-                {{ dict.rules_ticket_cost }}: <span class="blue">0.01 ETH</span><br />
+                {{ dict.rules_ticket_cost }}: <span class="blue">{{ gameCurrent.ticketPrice }} ETH</span><br />
                 {{ dict.rules_ticket_cost1 }}<br />
                 <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;
                 {{ dict.rules_ticket_cost2 }} <span class="blue">0 ETH</span><br />

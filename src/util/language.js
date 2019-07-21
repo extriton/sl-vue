@@ -90,7 +90,12 @@ dicts.ru = {
 
     from                                : 'с',
     to                                  : 'до',
-    of                                  : 'из'
+    of                                  : 'из',
+
+    matched_numbers                     : 'Совпавших номеров',
+    prize_fund                          : 'Призовой фонд',
+    winners                             : 'Победители',
+    not_played                          : `Не разыгран`
   
 };
       
@@ -177,7 +182,12 @@ dicts.en = {
     everyday                            : 'everyday',
     from                                : 'from',
     to                                  : 'to',
-    of                                  : 'of'
+    of                                  : 'of',
+    
+    matched_numbers                     : 'Matched numbers',
+    prize_fund                          : 'Prize fund',
+    winners                             : 'Winners',
+    not_played                          : `Not played`
   
 };
 

@@ -28,7 +28,7 @@
                 <tbody :key="(page, changeHistory)">
                     <tr v-for="(item, index) in history" :key="index">
                         <td>{{ formatNumber(item.game_id, 7, 0) }}</td>
-                        <td>{{ formatNumber(item.ticket, 7, 0) }}</td>
+                        <td>{{ formatNumber(item.id, 7, 0) }}</td>
                         <td>
                             <div class="numbers-pad">
                                 <span class="numbers" :class="{ matched: i.match}" v-for="(i, index) in item.numbers" :key="index">{{ i.num }}</span>
@@ -137,8 +137,8 @@ export default {
 <style lang="scss">
 #player-history {
     min-height: 100vh;
-    padding: 20px 20px 40px 20px;
-    background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
+    padding: 20px 20px 60px 20px;
+    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
     text-align: left;
 }
 .player-history-wrapper {
@@ -175,7 +175,7 @@ export default {
         th, td {
             padding: 10px;
             text-align: center;
-            height: 61px;
+            height: 56px;
             &:nth-child(1),
             &:nth-child(2) {
                 width: 100px;
@@ -183,12 +183,12 @@ export default {
             &:nth-child(4) {
                 width: 140px;
                 text-align: right;
-                font-size: 18px;
+                font-size: 15px;
             }
             &:nth-child(5) {
                 width: 45px;
                 text-align: right;
-                font-size: 18px;
+                font-size: 15px;
             }
         }
         thead {
@@ -215,15 +215,14 @@ export default {
         }
     }
     .numbers-pad {
-        margin: 0 auto;
         .numbers {
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            margin-right: 30px;
+            width: 35px;
+            height: 35px;
+            border-radius: 35px;
+            margin-right: 25px;
             background: white;
-            padding-top: 8px;
+            padding-top: 6px;
             text-align: center;
             color: black;
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;

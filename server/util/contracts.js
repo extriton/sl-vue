@@ -49,14 +49,20 @@ async function GameChanged(res, _game, _contract) {
     
     console.log(`Game ${res._gameNum} changed. (${_game.type})`)
 
-    const game = gameSaveOrUpdate(_game, _contract, res._gameNum, res._membersCounter, res._totalFund, res._status)
+    gameSaveOrUpdate(_game, _contract, res._gameNum, res._membersCounter, res._totalFund, res._status, next)
     
-    // If status == 2 caculate matchNumbers and prize for members
-    if (game.status == 2)
-        for (let i = 1; i <= game.membersCounter; i++)
-            memberSaveOrUpdate(_game, _contract, game.id, i)
-    
-    io.emit('refreshContractData', { type: _game.type })    
+    function next(game) {
+
+        // If status == 2 caculate matchNumbers and prize for members and update game members
+        if (game.status == 2)
+            for (let i = 1; i <= game.membersCounter; i++)
+                memberSaveOrUpdate(_game, _contract, game.id, i, () => {
+                    io.emit('refreshContractData', { type: _game.type })            
+                })
+
+        io.emit('refreshContractData', { type: _game.type })
+
+    }
 
 }
 
@@ -64,8 +70,11 @@ async function MemberChanged(res, _game, _contract) {
 
     console.log(`Member ${res._gameNum}, ${res._member} changed. (${_game.type})`)
     
-    memberSaveOrUpdate(_game, _contract, res._gameNum, res._member)
-    io.emit('refreshContractData', { type: _game.type })
+    memberSaveOrUpdate(_game, _contract, res._gameNum, res._member, next)
+
+    function next(game) {
+        io.emit('refreshContractData', { type: _game.type })
+    }
 }
 
 // Synchronize contracts data (called on start serve and every day interval)
@@ -103,7 +112,7 @@ function syncData() {
 
 }
 
-async function gameSaveOrUpdate(_game, _contract, _gameNum, _membersCounter, _totalFund, _status) {
+async function gameSaveOrUpdate(_game, _contract, _gameNum, _membersCounter, _totalFund, _status, next) {
     console.log(`gameSaveOrUpdate: ${_gameNum}. (${_game.type})`)
     let game = await Game.findOne({ type: _game.type, id: _gameNum })
     
@@ -138,10 +147,11 @@ async function gameSaveOrUpdate(_game, _contract, _gameNum, _membersCounter, _to
     if (game.status == 2) game.checked = 1
 
     await game.save()
-    return game
+    if (next !== undefined && typeof(next) === 'function') next(game)
+
 }
 
-async function memberSaveOrUpdate(_game, _contract, _gameNum, _member) {
+async function memberSaveOrUpdate(_game, _contract, _gameNum, _member, next) {
 
     console.log(`memberSaveOrUpdate: ${_gameNum}, ${_member}. (${_game.type})`)
     
@@ -162,13 +172,11 @@ async function memberSaveOrUpdate(_game, _contract, _gameNum, _member) {
             payout              : contractMember._payout
         })
     } else {
-        member.address = contractMember._addr
-        member.numbers = contractMember._numbers
         member.prize = web3.utils.fromWei('' + contractMember._prize, 'ether')
         member.payout = contractMember._payout
     }
 
-    member.address = contractMember._addr
+    member.address = contractMember._addr.toLowerCase()
     member.numbers = contractMember._numbers
 
     if (game !== null && game.status == 1) {
@@ -196,7 +204,7 @@ async function memberSaveOrUpdate(_game, _contract, _gameNum, _member) {
     if (member.payout == 1) member.checked = 1
 
     await member.save()
-    return member
+    if (next !== undefined && typeof(next) === 'function') next()
 }
 
 // Find match numbers function

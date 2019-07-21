@@ -31,31 +31,22 @@
                                     <table class='small-table'>
                                         <thead>
                                             <tr>
-                                                <td></td>
-                                                <td>Призовой фонд</td>
-                                                <td>Победителей</td>
+                                                <td>{{ dict.matched_numbers }}</td>
+                                                <td>{{ dict.prize_fund }}</td>
+                                                <td>{{ dict.winners }}</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Jackpot</td>
-                                                <td>0.5555</td>
-                                                <td>Не разыгран</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4 из 5</td>
-                                                <td>0.4444</td>
-                                                <td>2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3 из 5</td>
-                                                <td>0.3333</td>
-                                                <td>8</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2 из 5</td>
-                                                <td>0.2222</td>
-                                                <td>25</td>
+                                            <tr v-for="(fund, index) in item.funds" :key="index">
+                                                <td>
+                                                    <span v-show="index < item.funds.length - 1">{{ gameCurrent.minWinMatch + index }}</span>
+                                                    <span v-show="index === item.funds.length - 1" style="color: #FBCF62;">Jackpot</span>
+                                                </td>
+                                                <td>{{ formatNumber(fund, 1, 5) }}</td>
+                                                <td>
+                                                    <span v-show="item.winners[index] !== 0">{{ item.winners[index] }}</span>
+                                                    <span v-show="item.winners[index] === 0" style="color: #FBCF62;">{{ dict.not_played }}</span>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -138,8 +129,8 @@ export default {
 <style lang="scss">
 #game-history {
     min-height: 100vh;
-    padding: 20px 20px 40px 20px;
-    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
+    padding: 20px 20px 60px 20px;
+    background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
     text-align: left;
 }
 .game-history-wrapper {
@@ -178,32 +169,31 @@ export default {
     table td, table th {
         padding: 10px;
         text-align: center;
-        height: 61px;
+        height: 56px;
     }
     table tr td:nth-child(1) {
         width: 120px;
         vertical-align: top;
-        padding-top: 17px;
+        padding-top: 15px;
     }
     table tr td:nth-child(3) {
         width: 120px;
         text-align: right;
         vertical-align: top;
-        padding-top: 17px;
+        padding-top: 15px;
     }
     table tbody tr {
         border-bottom: 1px solid black;
     }
     .win-numbers-pad {
-        margin: 0 auto;
         .win-number {
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            margin-right: 30px;
+            width: 35px;
+            height: 35px;
+            border-radius: 35px;
+            margin-right: 25px;
             background: linear-gradient(-45deg, #FEE864, #F5965E);
-            padding-top: 8px;
+            padding-top: 6px;
             text-align: center;
             color: black;
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
@@ -218,7 +208,7 @@ export default {
             height: 170px;
         }
         .small-table {
-            margin-top: 20px;
+            margin-top: 15px;
             width: 100%;
             color: #CACACA;
             font-size: 12px;

@@ -43,6 +43,7 @@ async function getGameData(data, socket) {
     Status: lastGame.status
   }
 
+  console.log(`Emit getGameDataSuccess: ${lastGame.totalFund}`)
   socket.emit('getGameDataSuccess', result)
 
 }
@@ -50,7 +51,10 @@ async function getGameData(data, socket) {
 // Return game history by game type to client socket
 async function getGameHistory(data, socket) {
 
-  if (!data.type) return
+  if (!data.type) {
+    console.log(`getPlayerHistory: Invalid data`)
+    return
+  }
 
   try {
     data.page = parseInt(data.page)
@@ -69,19 +73,20 @@ async function getGameHistory(data, socket) {
     History: []
   }
   
-  result.historyCount = historyCount
-  history.forEach((game) => {
-    result.history.push({
-      id              : game.id,
-      membersCounter  : game.membersCounter,
-      winNumbers      : game.winNumbers,
-      totalFund       : game.totalFund,
-      funds           : game.funds,
-      winners         : game.winners,
-      status          : game.status
+  result.HistoryCount = historyCount
+  for (let i = 0; i < history.length; i++)
+    result.History.push({
+      type            : history[i].type,
+      id              : history[i].id,
+      membersCounter  : history[i].membersCounter,
+      winNumbers      : history[i].winNumbers,
+      totalFund       : history[i].totalFund,
+      funds           : history[i].funds,
+      winners         : history[i].winners,
+      status          : history[i].status
     })
-  })
 
+  console.log(`Emit getGameHistorySuccess: ${result.HistoryCount}`)
   socket.emit('getGameHistorySuccess', result)
 }
 
@@ -94,7 +99,7 @@ async function getPlayerHistory(data, socket) {
   }
 
   if (data.address === undefined) data.address = ''
-  if (typeof data.address === 'string') data.address.toLowerCase()
+  if (typeof data.address === 'string') data.address = data.address.toLowerCase()
 
   try {
     data.page = parseInt(data.page)
@@ -113,32 +118,32 @@ async function getPlayerHistory(data, socket) {
     History: []
   }
 
-  result.historyCount = historyCount
-  history.forEach((member) => {
-    result.history.push({
-      game_id         : member.game_id,
-      id              : member.id,
-      numbers         : member.numbers,
-      winNumbers      : member.winNumbers,
-      matchNumbers    : member.matchNumbers,
-      prize           : member.prize,
-      payout          : member.payout
+  result.HistoryCount = historyCount
+  for (let i = 0; i < history.length; i++)
+    result.History.push({
+      game_type       : history[i].game_type,
+      game_id         : history[i].game_id,
+      id              : history[i].id,
+      numbers         : history[i].numbers,
+      winNumbers      : history[i].winNumbers,
+      matchNumbers    : history[i].matchNumbers,
+      prize           : history[i].prize,
+      payout          : history[i].payout
     })
-  })
-
 
   // Loop tickets
-  for(let i = 0; i < result.history.length; i++) {
+  for(let i = 0; i < result.History.length; i++) {
     // Loop ticket numbers and change numeric array to array of obects
-    for(let j = 0; j < result.history[i].numbers.length; j++) {
+    for(let j = 0; j < result.History[i].numbers.length; j++) {
       let tmp = {
-        num: result.history[i].numbers[j],
-        match: (result.history[i].winNumbers.indexOf(result.history[i].numbers[j]) === -1) ? false : true
+        num: result.History[i].numbers[j],
+        match: (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
       }
-      result.history[i].numbers[j] = tmp
+      result.History[i].numbers[j] = tmp
     }
   }
 
+  console.log(`Emit getPlayerHistorySuccess: ${result.HistoryCount}`)
   socket.emit('getPlayerHistorySuccess', result)
 
 }

@@ -318,7 +318,7 @@ export default {
 <style lang="scss">
 .game-play-wrapper {
     min-height: 100vh;
-    padding: 40px 0 20px 0;
+    padding: 40px 0 60px 0;
     color: white;
     /*
     background-color: rgba(16, 24, 30, 0.98);

@@ -123,7 +123,7 @@ export default {
 <style lang="scss">
 #game-rules {
     min-height: 100vh;
-    padding: 20px 20px 40px 20px;
+    padding: 20px 20px 60px 20px;
     /* background: linear-gradient(to right, black -50%, rgb(50, 73, 85) 150%); */
     background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
     text-align: left;

@@ -35,6 +35,8 @@ async function getGameData(data, socket) {
 
   const lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 })
   
+  if (lastGame === null) return
+
   const fundsSize = lastGame.funds.length
   const result = {
     GameNum: lastGame.id,

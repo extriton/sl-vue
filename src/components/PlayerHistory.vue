@@ -42,7 +42,7 @@
                                 <i style="font-size: 10px; color: #33B5F7;">{{ dict.history_no_win }}</i>
                             </span>
                             <span v-show="item.game_id === gameCurrentDetail.GameNum">
-                                <i style="font-size: 10px; color: #33B5F7;">{{ dict.statisctics_no_draw }}</i>
+                                <i style="font-size: 10px; color: #FBCF62;">{{ dict.statisctics_no_draw }}</i>
                             </span>
                         </td>
                         <td>
@@ -90,7 +90,10 @@ export default {
             return this.playerCurrentHistory.History
         },
         maxPage () {
-            return parseInt(this.playerCurrentHistory.HistoryCount / 10) + 1
+            if (this.playerCurrentHistory.HistoryCount % 10 > 0 || this.playerCurrentHistory.HistoryCount == 0)
+                return parseInt(this.playerCurrentHistory.HistoryCount / 10) + 1
+            else
+                return parseInt(this.playerCurrentHistory.HistoryCount / 10)
         },
         ...mapGetters(['gameCurrent', 'playerCurrentHistory', 'gameCurrentDetail', 'web3'])
     },
@@ -157,7 +160,7 @@ export default {
         margin: 20px 0 25px 0;
         border: 2px solid #34BBFF;
         border-radius: 7px;
-        font-size: 32px;
+        font-size: 28px;
         padding: 20px;
         text-align: center;
         background-color: transparent;

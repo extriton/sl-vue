@@ -137,7 +137,9 @@ async function getPlayerHistory(data, socket) {
   for(let i = 0; i < result.History.length; i++) {
     // Loop ticket numbers and change numeric array to array of obects
     for(let j = 0; j < result.History[i].numbers.length; j++) {
-      let tmp = {
+      const match = (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
+      console.log(`${i}, ${j} - ${match}`)
+      const tmp = {
         num: result.History[i].numbers[j],
         match: (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
       }

@@ -89,7 +89,10 @@ export default {
             return this.gameCurrentHistory.History
         },
         maxPage () {
-            return parseInt(this.gameCurrentHistory.HistoryCount / 10) + 1
+            if (this.gameCurrentHistory.HistoryCount % 10 > 0 || this.gameCurrentHistory.HistoryCount == 0)
+                return parseInt(this.gameCurrentHistory.HistoryCount / 10) + 1
+            else
+                return parseInt(this.gameCurrentHistory.HistoryCount / 10)
         },
         showingIndex () {
             return this.showingDetailIndex

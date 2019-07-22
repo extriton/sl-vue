@@ -199,50 +199,39 @@ export default {
     getLangList         :getLangList,
 }
 
-function defineLanguage(next) {
+async function defineLanguage(next) {
 
-    axios
-        .get('http://ip-api.com/json/?fields=country,region,city')
-        .then(response => {
-            
-            let data = response.data;
-            if(data.country == 'Belarus' || data.country == 'Russia' || data.country == 'Ukraine') {
-                setLanguage('ru');
-            } else {
-                setLanguage('en');
-            }
-            if(typeof(next) == 'function') next();
-        })
-        .catch(error => { 
-            setLanguage('en');
-            if(typeof(next) == 'function') next();
-            console.log(error);
-        });
-    
+    const ruCountries = ['Belarus', 'Russia', 'Ukraine']
+    const ipGeo = await axios.get('https://api.sypexgeo.net/json/')
+
+    if (ipGeo === null || ruCountries.indexOf(ipGeo.data.country.name_en) === -1) setLanguage('en');
+    else setLanguage('ru');
+
+    if (typeof(next) == 'function') next()
 }
 
 function setLanguage(lang) {
   
     switch(lang) {
         case 'ru':
-            language = 'ru';
-            break;
+            language = 'ru'
+            break
         case 'en':
-            language = 'en';
-            break;
+            language = 'en'
+            break
         default:
-            language = 'en';
-            break;
+            language = 'en'
+            break
     }
     
 }
       
-function getLanguage() { return language; }
+function getLanguage() { return language }
       
-function getDictonary() { return dicts[language]; }
+function getDictonary() { return dicts[language] }
       
 function getLangList() {
-    var out_arr = [];
-    for(var key in dicts) out_arr.push(key);
-    return out_arr
+    const res = []
+    for(let key in dicts) res.push(key)
+    return res
 }

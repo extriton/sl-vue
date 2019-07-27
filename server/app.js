@@ -19,18 +19,18 @@ const game = require('./routes/game')
 // App
 const app = express()
 app.use(logger('dev'))
-app.use(cors())
+app.use(cors({credentials: true}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({'extended':'false'}))
-app.use(express.static(path.join(__dirname, '../dist')))
+// app.use(express.static(path.join(__dirname, '../dist')))
 
 app.use('/api/game', game)
-app.use('/*', express.static(path.join(__dirname, '../dist')))
+// app.use('/*', express.static(path.join(__dirname, '../dist')))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found')
-  err.status = 404
+  // var err = new Error('Not Found')
+  err.statusCode = 404
   next(err)
 });
 

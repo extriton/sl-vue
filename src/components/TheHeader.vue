@@ -9,10 +9,10 @@
             </div>
             <div class="menu-wrapper">
                 <ul class="menu">
-                    <li><a href="#" v-scroll-to="{ el: '#game-play', offset: -105, duration: 1500 }">{{ dict.menu_play }}</a></li>
-                    <li><a href="#" v-scroll-to="{ el: '#game-history', offset: -105, duration: 1500 }" >{{ dict.menu_history }}</a></li>
-                    <li><a href="#" v-scroll-to="{ el: '#player-history', offset: -105, duration: 1500 }">{{ dict.menu_statistics }}</a></li>
-                    <li><a href="#" v-scroll-to="{ el: '#game-rules', offset: -105, duration: 1500 }">{{ dict.menu_rules }}</a></li>
+                    <li><a href="#" v-scroll-to="{ el: '#game-play' }">{{ dict.menu_play }}</a></li>
+                    <li><a href="#" v-scroll-to="{ el: '#game-history' }" >{{ dict.menu_history }}</a></li>
+                    <li><a href="#" v-scroll-to="{ el: '#player-history' }">{{ dict.menu_statistics }}</a></li>
+                    <li><a href="#" v-scroll-to="{ el: '#game-rules' }">{{ dict.menu_rules }}</a></li>
                 </ul>
             </div>
         </div>

@@ -17,7 +17,10 @@ server.on('error', onError)
 server.on('listening', onListening)
 
 // Create socket connection
-const io = require('socket.io').listen(server, /* { path: '/ws' } */)
+const io = require('socket.io').listen(server, 
+    { secure: false,
+      rejectUnauthorized: false,
+      path: '/ws/socket.io' })
 require('../sockets/sockets')(io)
 
 // Set contracts listeners

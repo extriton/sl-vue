@@ -30,6 +30,9 @@ export default {
   },
   computed: {
     ...mapGetters(['gameCurrentIndex'])
+  },
+  mounted () {
+    this.$scrollTo('.game-body', 0)
   }
 }
 </script>

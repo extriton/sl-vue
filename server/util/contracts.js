@@ -77,13 +77,27 @@ async function GameChanged(_settings, _contract, res) {
     
     console.log(`Game ${res._gameNum} changed. (${_settings.type})`)
 
-    const game = await saveGame(_settings, _contract, res._gameNum)
-    console.log(`game.id: ${res.id}`)
-    console.log(`game.status: ${res.status}`)
-    console.log(`game.membersCounter: ${res.membersCounter}`)
-    if (res.status == 2)
-        for (let i = 1; i <= res.membersCounter; i++)
-            await saveMember(_settings, _contract, res.gameNum, i, game)
+    // 0 - New game
+    if (res._action === 0) {
+        // Save new game
+        await saveGame(_settings, _contract, res._gameNum)
+        // Update prevous game
+        const game = await saveGame(_settings, _contract, res._gameNum - 1)
+        // Update members for prevous game
+        await Member.deleteMany({ game_type: _settings.type, game_id: res._gameNum - 1 })
+        for (let i = 1; i <= game.membersCounter; i++)
+            await saveMember(_settings, _contract, game.id, i, game)
+    }
+
+    // 1 - Change status
+    if (res._action === 1) {
+        await saveGame(_settings, _contract, res._gameNum)
+    }
+    
+    // 2 - Change Jackpot
+    if (res._action === 2) {
+        await saveGame(_settings, _contract, res._gameNum)
+    }
 
     io.emit('refreshContractData', { type: _settings.type })    
 
@@ -93,9 +107,7 @@ async function MemberChanged(_settings, _contract, res) {
 
     console.log(`Member ${res._gameNum}, ${res._member} changed. (${_settings.type})`)
     
-    let game = await Game.findOne({ type: _settings.type, id: res._gameNum })
-    if (game === null) game = await saveGame(_settings, _contract, res._gameNum)
-    
+    const game = await saveGame(_settings, _contract, res._gameNum)
     await saveMember(_settings, _contract, res._gameNum, res._member, game)
 
     io.emit('refreshContractData', { type: _settings.type })
@@ -122,16 +134,47 @@ async function saveGame(_settings, _contract, id) {
     }
 
     let game = await Game.findOne({ type: _settings.type, id: id })
-    if (game === null) game = new Game()
+    
+    console.log(`game: `)
+    console.log(game)
+    let isNew = false 
+    if (game === null) { 
+        game = new Game()
+        isNew = true
+    }
 
-    game.type               = _settings.type
-    game.id                 = gameInfo._gamenum
-    game.membersCounter     = gameInfo._membersCounter
-    game.totalFund          = parseFloat(web3.utils.fromWei('' + gameInfo._totalFund, 'ether'))
-    game.status             = gameInfo._status
-    game.winNumbers         = gameWinNumbers
-    game.funds              = gameFunds
-    game.winners            = gameWinners
+    if (isNew) {
+        game.type               = _settings.type
+        game.id                 = gameInfo._gamenum
+        game.winNumbers         = new Array(_settings.reqNumbers).fill(0)
+        game.funds              = new Array(_settings.arrSize).fill(0)
+        game.winners            = new Array(_settings.arrSize).fill(0)
+    }
+
+    if (gameInfo._status > game.status) {
+        game.status = gameInfo._status
+    }
+
+    if (gameInfo._membersCounter > game.membersCounter) {
+        game.membersCounter = gameInfo._membersCounter
+    }
+
+    if (parseFloat(web3.utils.fromWei('' + gameInfo._totalFund, 'ether')) > game.totalFund) {
+        game.totalFund = parseFloat(web3.utils.fromWei('' + gameInfo._totalFund, 'ether'))
+    }
+
+    game.funds = gameFunds
+
+    // Drawing or closed game
+    if (game.status == 1 || game.status == 2) {
+        game.winNumbers         = gameWinNumbers
+    }
+
+    // Closed game
+    if (game.status == 2) {
+        game.winners            = gameWinners    
+    }
+    
     await game.save()
 
     return game
@@ -140,21 +183,24 @@ async function saveGame(_settings, _contract, id) {
 async function saveMember(_settings, _contract, game_id, id, game) {
     
     console.log(`SaveMember... game_id: ${game_id}, id: ${id} (${_settings.type})`)
-
+    
+    await Member.deleteOne({ game_type: _settings.type, game_id: game_id, id: id })
     const memberInfo = await _contract.methods.getMemberInfo(game_id, id).call()
 
-    let member = await Member.findOne({ type: _settings.type, game_id: game_id, id: id })
-    if (member === null) member = new Member()
+    const member = new Member()
     
     member.game_type        = _settings.type
     member.game_id          = game_id
     member.id               = id
     member.address          = memberInfo._addr.toLowerCase()
     member.numbers          = memberInfo._numbers
-    member.winNumbers       = game.winNumbers
-    member.matchNumbers     = findMatch(memberInfo._numbers, game.winNumbers)
     member.prize            = parseFloat(web3.utils.fromWei('' + memberInfo._prize, 'ether'))
     member.payout           = memberInfo._payout
+
+    if (game.status > 0) {
+        member.winNumbers       = game.winNumbers
+        member.matchNumbers     = findMatch(memberInfo._numbers, game.winNumbers)
+    }
 
     const matchIndex = member.matchNumbers - _settings.minWinMatch
     if (game.status == 2 && member.payout == 0 && matchIndex >= 0)

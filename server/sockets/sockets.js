@@ -45,7 +45,7 @@ async function getGameData(data, socket) {
     Status: lastGame.status
   }
 
-  console.log(`Emit getGameDataSuccess: ${lastGame.totalFund}`)
+  console.log(`Emit getGameDataSuccess: ${result}`)
   socket.emit('getGameDataSuccess', result)
 
 }
@@ -110,7 +110,7 @@ async function getPlayerHistory(data, socket) {
   }
 
   const historyCountPromise = Member.countDocuments({ game_type: data.type, address: data.address })
-  const historyPromise = Member.find({ game_type: data.type, address: data.address }).sort({ game_id: -1, ticket: 1 }).skip((data.page - 1) * 10).limit(10)
+  const historyPromise = Member.find({ game_type: data.type, address: data.address }).sort({ game_id: -1, id: 1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
@@ -138,7 +138,6 @@ async function getPlayerHistory(data, socket) {
     // Loop ticket numbers and change numeric array to array of obects
     for(let j = 0; j < result.History[i].numbers.length; j++) {
       const match = (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
-      console.log(`${i}, ${j} - ${match}`)
       const tmp = {
         num: result.History[i].numbers[j],
         match: (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true

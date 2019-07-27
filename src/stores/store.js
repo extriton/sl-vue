@@ -156,7 +156,7 @@ export default new Vuex.Store({
   },
   actions: {
     loadGameSettings ({ commit }, payload) {
-      axios.get(`${config.protocol}://${config.host}:${config.port}/api/game/settings`)
+      axios.get(`${config.domain}/api/game/settings`)
       .then(response => {
         if(response.data !== null) commit('loadGameSettings', { settings: response.data, routerId: payload})
       })

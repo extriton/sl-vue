@@ -34,7 +34,11 @@
                     </div>
                     <span>
                         {{ dict.play_game_num }} <br />
-                        <strong class="text">{{ GameNum }}</strong>
+                        <transition name="info" mode="out-in" >
+                            <span class="animate-info" :key="GameNum">
+                                <strong class="text">{{ GameNum }}</strong>
+                            </span>
+                        </transition>
                     </span>
                 </div>
                 <!-- Game Number -->
@@ -44,7 +48,11 @@
                     </div>
                     <span>
                         {{ dict.play_prize_fund }} <br />
-                        <strong class="text">{{ Fund }}</strong>
+                        <transition name="info" mode="out-in" >
+                            <span class="animate-info" :key="Fund">
+                                <strong class="text">{{ Fund }}</strong>
+                            </span>
+                        </transition>
                     </span>
                 </div>
                 <!-- Game Number -->
@@ -54,7 +62,11 @@
                     </div>
                     <span>
                         {{ dict.play_jackpot }} <br />
-                        <strong class="text">{{ Jackpot }}</strong>
+                        <transition name="info" mode="out-in" >
+                            <span class="animate-info" :key="Jackpot">
+                                <strong class="text">{{ Jackpot }}</strong>
+                            </span>
+                        </transition>
                     </span>
                 </div>
             </div>
@@ -546,5 +558,20 @@ export default {
             color: #34bbff;
         }
     }
+}
+.animate-info {
+    display: inline-block;
+    position: relative;
+}
+.info-enter-active, .info-leave-active {
+  transition: all 1s ease;
+}
+.info-enter {
+  opacity: 0;
+  margin-left: 50px;
+}
+.info-leave-to {
+  opacity: 0;
+  margin-left: -50px;
 }
 </style>

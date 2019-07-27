@@ -242,7 +242,6 @@ export default {
             })
         },
         doPlay () {
-            this.$store.dispatch('registerWeb3')
             // Check selected numbers
             if (this.leftNumbers > 0) {
                 this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `You must select ${this.gameCurrent.reqNumbers} numbers` })
@@ -281,7 +280,6 @@ export default {
             })
         },
         createTransaction () {
-
             const transactionObj = {
                 from: this.web3.coinbase,
                 to: this.gameCurrent.contractAddress,

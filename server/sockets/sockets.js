@@ -116,7 +116,7 @@ async function getPlayerHistory(data, socket) {
   const unpaidAmounts = await unpaidAmountsPromize
 
   let unpaidAmount = 0
-  for (let i = 0; i < unpaidAmounts.length; i++) unpaidAmount += unpaidAmounts.prize
+  for (let i = 0; i < unpaidAmounts.length; i++) unpaidAmount += unpaidAmounts[i].prize
 
 
   const result = {

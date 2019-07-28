@@ -7,10 +7,16 @@
                     <ThePaginator :max-page="maxPage" :on-change="onChangePage" />
                 </div>
             </div>
-            <input class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
-            <div style="text-align: center; margin-bottom: 40px;">
-                <div class="m-btn btn-update" @click="onUpdateHistory">
-                    {{ dict.statistics_update }}
+            <div class="player-address-wrapper">
+                <input class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                <div class="m-btn btn-update" @click="doUpdateHistory">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                </div>
+            </div>
+            <div v-show="isShowUnpaidAmount" class="unpaid-amount-wrapper">
+                <div class="unpaid-amount">{{ unpaidAmount }} ETH</div>
+                <div class="m-btn btn-payout" @click="doPayout">
+                    {{ dict.pick_up }}
                 </div>
             </div>
             <!-- Data table -->
@@ -66,8 +72,9 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 import util from '@/util/util'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import ThePaginator from '@/components/ThePaginator.vue'
+import axios from 'axios'
 
 export default {
     name: 'PlayerHistory',
@@ -89,13 +96,19 @@ export default {
         history () {
             return this.playerCurrentHistory.History
         },
+        unpaidAmount () {
+            return this.playerCurrentHistory.UnpaidAmount.toFixed(5)
+        },
         maxPage () {
             if (this.playerCurrentHistory.HistoryCount % 10 > 0 || this.playerCurrentHistory.HistoryCount == 0)
                 return parseInt(this.playerCurrentHistory.HistoryCount / 10) + 1
             else
                 return parseInt(this.playerCurrentHistory.HistoryCount / 10)
         },
-        ...mapGetters(['gameCurrent', 'playerCurrentHistory', 'gameCurrentDetail', 'web3'])
+        isShowUnpaidAmount () {
+            return (this.playerCurrentHistory.UnpaidAmount > 0 && this.web3.isInjected) ? true : false
+        },
+        ...mapGetters(['gameSettings', 'gameCurrent', 'playerCurrentHistory', 'gameCurrentDetail', 'web3'])
     },
     methods: {
         formatNumber (value, int, frac) {
@@ -108,10 +121,73 @@ export default {
             this.page = page
             this.updateHistory()
         },
-        onUpdateHistory () {
+        doUpdateHistory () {
             this.page = 1
             this.updateHistory()
         },
+        doPayout () {
+            // Check unpaid amount
+            if (this.playerCurrentHistory.UnpaidAmount <= 0) {
+                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `You have no unpaid winnings` })
+                return
+            }
+
+            // Check Metamask install
+            if (!this.web3.isInjected) {
+                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank">https://metamask.io/</a>` })
+                return
+            }
+            
+            // Check Metamask lock
+            this.web3.web3Instance().eth.getAccounts()
+            .then((result) => {
+
+                if (!Array.isArray(result) || result.length <= 0) {
+                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask is locked!` })
+                    return
+                }
+                
+                // Check Metamask network
+                if (this.gameSettings.metamaskNetId != this.web3.networkId) {
+                    const netId = '' + this.gameSettings.metamaskNetId
+                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Choose ${ethNetworks[netId]} network in Metamask!` })
+                    return
+                }
+                
+                // Create transaction for confirmation
+                this.createTransaction()
+
+            })
+            .catch((error) => {
+                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: error })
+                return
+            })
+        },
+        async createTransaction () {
+            let gasPriceFast = '6'
+            const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
+            if (gasPrice !== null) gasPriceFast = '' + (gasPrice.data.fast / 10)
+
+            const transactionObj = {
+                from: this.web3.coinbase,
+                to: this.gameCurrent.contractAddress,
+                value: '0',
+                gas: 1500000,
+                gasPrice: window.web3.toWei(gasPriceFast, 'gwei'),
+                data: this.dataString
+            }
+
+            const callback = (error, result) => {
+                if (error)
+                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: error })
+                else
+                    this.newNotify({ type: 'success', title: '<b>:: Player history ::</b>', text: `Transaction successfully sent!`  })
+            }
+
+            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
+
+        },
+        ...mapMutations(['newNotify'])
     },
     mounted () {
             this.playerAddress = this.web3.coinbase
@@ -155,23 +231,56 @@ export default {
         right: 0;
         top: 10px;
     }
-    .player-address {
+    .player-address-wrapper {
         width: 100%;
-        margin: 20px 0 25px 0;
-        border: 2px solid #34BBFF;
-        border-radius: 7px;
-        font-size: 28px;
-        padding: 20px;
-        text-align: center;
-        background-color: transparent;
-        color: #FEC453;
+        position: relative;
+        margin: 15px 0;
+        font-size: 26px;
+        min-height: 80px;
+        .player-address {
+            width: calc(100% - 100px);
+            position: absolute;
+            left: 0;
+            padding: 15px;
+            text-align: center;
+            background-color: transparent;
+            color: #FEC453;
+            border: 2px solid #34BBFF;
+            border-radius: 7px;
+        }
+        .btn-update {
+            width: 80px;
+            position: absolute;
+            right: 0;
+            padding: 15px;
+            text-align: center;
+            color: #33B5F7;
+            border: 2px solid #33B5F7;
+        }
     }
-    .btn-update {
-        width: 200px;
-        margin: 0 auto;
-        padding: 15px;
-        color: #33B5F7;
-        border: 1px solid #33B5F7;
+    .unpaid-amount-wrapper {
+        position: relative;
+        margin: 25px 0 5px 0;
+        min-height: 47px;
+        font-size: 18px;
+        .unpaid-amount {
+            position: absolute;
+            right: 149px;
+            width: 200px;
+            text-align: center;
+            padding: 10px;
+            color: #CC6514;
+            border: 1px solid #33B5F7;
+        }
+        .btn-payout {
+            position: absolute;
+            right: 0;
+            width: 150px;
+            text-align: center;
+            padding: 10px;
+            color: #33B5F7;
+            border: 1px solid #33B5F7;
+        }
     }
     table {
         width: 100%;

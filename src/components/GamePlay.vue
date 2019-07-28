@@ -304,11 +304,6 @@ export default {
             this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
 
         },
-        /*
-        async getGasPriceObject () {
-            return await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
-        },
-        */
         ...mapMutations(['newNotify'])
     },
     mounted () {

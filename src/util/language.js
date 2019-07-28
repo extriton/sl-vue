@@ -95,7 +95,8 @@ dicts.ru = {
     matched_numbers                     : 'Совпавших номеров',
     prize_fund                          : 'Призовой фонд',
     winners                             : 'Победители',
-    not_played                          : `Не разыгран`
+    not_played                          : 'Не разыгран',
+    pick_up                             : 'Забрать'
   
 };
       
@@ -187,7 +188,8 @@ dicts.en = {
     matched_numbers                     : 'Matched numbers',
     prize_fund                          : 'Prize fund',
     winners                             : 'Winners',
-    not_played                          : `Not played`
+    not_played                          : 'Not played',
+    pick_up                             : 'Pick up'
   
 };
 

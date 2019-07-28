@@ -145,6 +145,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import util from '@/util/util'
 import ethNetworks from '@/util/constants/networks'
+import axios from 'axios'
 
 export default {
     name: 'GamePlay',
@@ -279,13 +280,17 @@ export default {
                 return
             })
         },
-        createTransaction () {
+        async createTransaction () {
+            let gasPriceFast = '6'
+            const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
+            if (gasPrice !== null) gasPriceFast = '' + (gasPrice.data.fast / 10)
+
             const transactionObj = {
                 from: this.web3.coinbase,
                 to: this.gameCurrent.contractAddress,
-                value: window.web3.toWei("0.01", "ether"),
+                value: window.web3.toWei('' + this.gameCurrent.ticketPrice, 'ether'),
                 gas: 400000,
-                gasPrice: window.web3.toWei("6", "gwei"),
+                gasPrice: window.web3.toWei(gasPriceFast, 'gwei'),
                 data: this.dataString
             }
 
@@ -299,6 +304,11 @@ export default {
             this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
 
         },
+        /*
+        async getGasPriceObject () {
+            return await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
+        },
+        */
         ...mapMutations(['newNotify'])
     },
     mounted () {

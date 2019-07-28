@@ -14,7 +14,6 @@ module.exports = {
 
 // Set listeners for all contracts
 function setListeners(_io) {
-    console.log('contracts.setListeners started...')
     io = _io
     gameSettings.games.forEach(el => {
         if (!el.isActive) return
@@ -45,8 +44,6 @@ function setContractListeners(_settings, _contract) {
 // Synchronize contracts data (called on start serve and every day interval)
 function syncAllContracts() {
         
-    console.log('syncAllContracts started ...')
-
     gameSettings.games.forEach(el => {
         if(!el.isActive) return
         syncContract(el, contracts[el.type])
@@ -135,8 +132,6 @@ async function saveGame(_settings, _contract, id) {
 
     let game = await Game.findOne({ type: _settings.type, id: id })
     
-    console.log(`game: `)
-    console.log(game)
     let isNew = false 
     if (game === null) { 
         game = new Game()

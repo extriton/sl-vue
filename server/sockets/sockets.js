@@ -45,7 +45,6 @@ async function getGameData(data, socket) {
     Status: lastGame.status
   }
 
-  console.log(`Emit getGameDataSuccess: ${result}`)
   socket.emit('getGameDataSuccess', result)
 
 }
@@ -88,7 +87,6 @@ async function getGameHistory(data, socket) {
       status          : history[i].status
     })
 
-  console.log(`Emit getGameHistorySuccess: ${result.HistoryCount}`)
   socket.emit('getGameHistorySuccess', result)
 }
 
@@ -111,16 +109,23 @@ async function getPlayerHistory(data, socket) {
 
   const historyCountPromise = Member.countDocuments({ game_type: data.type, address: data.address })
   const historyPromise = Member.find({ game_type: data.type, address: data.address }).sort({ game_id: -1, id: 1 }).skip((data.page - 1) * 10).limit(10)
+  const unpaidAmountsPromize = Member.find({ game_type: data.type, address: data.address, prize: { $gt: 0 }, payout: 0 })
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
+  const unpaidAmounts = await unpaidAmountsPromize
+
+  let unpaidAmount = 0
+  for (let i = 0; i < unpaidAmounts.length; i++) unpaidAmount += unpaidAmounts.prize
+
 
   const result = {
-    HistoryCount: 0,
-    History: []
+    HistoryCount: historyCount,
+    History: [],
+    UnpaidAmount: unpaidAmount
   }
 
-  result.HistoryCount = historyCount
+  // Copy and transform history data
   for (let i = 0; i < history.length; i++)
     result.History.push({
       game_type       : history[i].game_type,
@@ -146,9 +151,7 @@ async function getPlayerHistory(data, socket) {
     }
   }
 
-  console.log(`Emit getPlayerHistorySuccess: ${result.HistoryCount}`)
   socket.emit('getPlayerHistorySuccess', result)
-
 }
 
 // Add socket IP to IPs array and DB

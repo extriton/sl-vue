@@ -42,7 +42,8 @@ export default new Vuex.Store({
     // For player history
     playerCurrentHistory: {
       HistoryCount: 0,
-      History: []
+      History: [],
+      UnpaidAmount: 0
     },
     // For Metamask / Mist
     web3: {

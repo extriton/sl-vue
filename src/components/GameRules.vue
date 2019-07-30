@@ -88,9 +88,9 @@ export default {
             return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
         },
         drawTime () {
-            const dows = { '1': 'monday', '2': 'tuesday', '3': 'wednesday', '4': 'thursday', '5': 'friday', '6': 'saturday', '7': 'sunday' }
+            const dows = { '1': 'monday', '2': 'tuesday', '3': 'wednesday', '4': 'thursday', '5': 'friday', '6': 'saturday', '0': 'sunday' }
             let res = ''
-            if (this.gameCurrent.drawDow >= 1 && this.gameCurrent.drawDow <= 7) 
+            if (this.gameCurrent.drawDow >= 0 && this.gameCurrent.drawDow <= 6) 
                 res = this.dict[dows[this.gameCurrent.drawDow]] + ' '
             else
                 res = this.dict.everyday + ' '

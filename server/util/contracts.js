@@ -206,6 +206,13 @@ async function saveMember(_settings, _contract, game_id, id, game) {
     return member
 }
 
+// Check drawing time or no
+function checkDrawing(_settings) {
+
+    
+
+}
+
 // Find match numbers function
 function findMatch(arr1, arr2) {
     let cnt = 0

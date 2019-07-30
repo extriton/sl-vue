@@ -12,6 +12,7 @@ var GameSchema = new Schema({
     winners:            { type: Array, default: [] },
     status:             { type: Number, default: 0 },                   // Game status: 0 - created/ready, 1 - draw, 2 - closed
     checked:            { type: Number, default: 0 },                   // 0 - Not checked, 1 - Checked
+    blocked:            { type: Boolean, default: false },
     created:            { type: Date, default: Date.now }
 })
 

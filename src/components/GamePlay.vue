@@ -185,10 +185,12 @@ export default {
     },
     methods: {
         runTimer () {
-            this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute)
+            this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute, 
+                                             this.gameCurrent.preDrawPeriod, this.gameCurrent.postDrawPeriod)
             this.timerInterval = setInterval(() => {
-                if(this.timer > 1000) this.timer -= 1000
-                else {
+                if(this.timer > 1000) {
+                    this.timer -= 1000
+                } else {
                     this.timer = 0
                     clearInterval(this.timerInterval)
                     this.timerInterval = null

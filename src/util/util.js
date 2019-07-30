@@ -1,31 +1,31 @@
 export default {
     
-    calcTimerStart (drawDow, drawHour, drawMinute) {
-            
-        const MS_IN_DAY = 1 * 24 * 60 * 60 * 1000                           // 86 400 000
-        const blockedPeriod = 2 * 60 * 1000                            // 1 hour
+    // Return time to draw in secods or 0 if game drawing 
+    // preDrawPeriod, postDrawPeriod params in minutes
+    calcTimerStart (drawDow, drawHour, drawMinute, preDrawPeriod, postDrawPeriod) {
+        
+        const SEC_IN_DAY = 24 * 60 * 60                                     // 86 400
+        const SEC_IN_WEEK = 7 * SEC_IN_DAY                                  // 604 800
         const now = new Date()
 
-        let timeToDraw = (drawHour * 60 + drawMinute) * 60 * 1000
-        let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 * 1000 + now.getUTCSeconds() * 1000
-        if(drawDow >= 1 && drawDow <= 7) {                                  // For weekly game
-            timeToDraw += drawDow * MS_IN_DAY
-            if (now.getUTCDay() === 0)                                      // Change Sunday from 0 to 7
-                timeCurrent += 7 * MS_IN_DAY
-            else
-                timeCurrent += now.getUTCDay() * MS_IN_DAY
+        let timeToDraw = (drawHour * 60 + drawMinute) * 60
+        let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
+        if (isWeeklyGame(drawDow)) {
+            timeToDraw += drawDow * SEC_IN_DAY
+            timeCurrent += now.getUTCDay() * SEC_IN_DAY
         }
 
         // If blocked period, set timer to 0
-        if(timeCurrent > (timeToDraw - blockedPeriod) && timeCurrent < (timeToDraw - 2 * blockedPeriod)) return 0
+        if(timeCurrent > (timeToDraw - preDrawPeriod * 60) && timeCurrent < (timeToDraw + postDrawPeriod * 60)) return 0
 
         // Else, return timer value
-        if(timeToDraw > timeCurrent) return (timeToDraw - timeCurrent - blockedPeriod)
-        if(drawDow >= 1 && drawDow <= 7)                                    // Weekly game
-            return (timeToDraw + 7 * MS_IN_DAY - timeCurrent - blockedPeriod)    
-        else                                                                // Daily game
-            return (timeToDraw + MS_IN_DAY - timeCurrent - blockedPeriod)
-        
+        let result = timeToDraw - timeCurrent - preDrawPeriod * 60
+        if (timeCurrent > timeToDraw) {                                     // Add week or day to result      
+            if (isWeeklyGame(drawDow)) result += SEC_IN_WEEK                         // Weekly game
+            else result += SEC_IN_DAY                                       // Daily game
+        }
+
+        return result
     },
 
     timerToStr (timer) {
@@ -92,17 +92,19 @@ export default {
     },
 
     getGameType (game) {
-        if (game.drawDow >= 1 && game.drawDow <= 7)                 // If draw day of week equal 1...7, it`s Weekly lottery, else Daily lottery
-            return ('w' + game.reqNumbers + 'x' + game.padSize)
-        else
-            return ('d' + game.reqNumbers + 'x' + game.padSize)
+        let result = game.reqNumbers + 'x' + game.padSize
+        let freq = isWeeklyGame(game.drawDow) ? 'w' : 'd'
+        return (freq + result)
     },
 
-    getGameName (game) {                                            // If draw day of week equal 1...7, it`s Weekly lottery, else Daily lottery
-        if (game.drawDow >= 1 && game.drawDow <= 7)
-            return ('Weekly ' + game.reqNumbers + '/' + game.padSize)
-        else
-            return ('Daily ' + game.reqNumbers + '/' + game.padSize)
+    getGameName (game) {
+        let result = game.reqNumbers + '/' + game.padSize
+        let freq = isWeeklyGame(game.drawDow) ? 'Weekly ' : 'Daily '
+        return (freq + result)
     },
 
+}
+
+function isWeeklyGame(dow) {
+    return (dow >= 0 && dow <= 6) ? true : false
 }

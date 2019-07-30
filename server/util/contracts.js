@@ -138,12 +138,26 @@ async function saveGame(_settings, _contract, id) {
         isNew = true
     }
 
+    // Если прокрутка игры произошла в drawing период то выставляем blocked новой игры в true
+    // и запускаем таймер для изменения этого статуса после drawing
+    let timeToEndDrawing = isDrawing(_settings)
+
     if (isNew) {
         game.type               = _settings.type
         game.id                 = gameInfo._gamenum
         game.winNumbers         = new Array(_settings.reqNumbers).fill(0)
         game.funds              = new Array(_settings.arrSize).fill(0)
         game.winners            = new Array(_settings.arrSize).fill(0)
+
+        if (timeToEndDrawing > 0) {
+            game.blocked = true
+            setTimeout(() => {
+                game.blocked = false
+                await game.save()
+                io.emit('refreshContractData', { type: _settings.type })
+            }, timeToEndDrawing * 1000)
+        }
+
     }
 
     if (gameInfo._status > game.status) {
@@ -207,10 +221,25 @@ async function saveMember(_settings, _contract, game_id, id, game) {
 }
 
 // Check drawing time or no
-function checkDrawing(_settings) {
+function isDrawing(_settings) {
 
-    
+    const SEC_IN_DAY = 24 * 60 * 60                                     // 86 400
+    const now = new Date()
 
+    let isWeeklyGame = (_settings.drawDow >= 0 && _settings.drawDow <= 6) ? true : false
+
+    let timeToDraw = (_settings.drawHour * 60 + _settings.drawMinute) * 60
+    let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
+    if (isWeeklyGame) {
+        timeToDraw += _settings.drawDow * SEC_IN_DAY
+        timeCurrent += now.getUTCDay() * SEC_IN_DAY
+    }
+
+    // If drawing period, return time to end drawing, Else return 0
+    if(timeCurrent > (timeToDraw - _settings.preDrawPeriod * 60) && timeCurrent < (timeToDraw + _settings.postDrawPeriod * 60))
+        return (timeToDraw + _settings.postDrawPeriod * 60 - timeCurrent)
+    else
+        return 0
 }
 
 // Find match numbers function

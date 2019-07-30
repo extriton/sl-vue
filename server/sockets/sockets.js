@@ -2,10 +2,6 @@ const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
 
-const Web3 = require('web3')
-const gameSettings = require('../config/game-settings.js')()
-const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
-
 const IPs = []
 
 // Export function
@@ -33,7 +29,7 @@ async function getGameData(data, socket) {
   
   if (!data.type) return
 
-  const lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 })
+  const lastGame = await Game.findOne({ type: data.type, blocked: false }).sort({ id: -1 })
   
   if (lastGame === null) return
 
@@ -63,8 +59,8 @@ async function getGameHistory(data, socket) {
     data.page = 1
   }
 
-  const historyCountPromise = Game.countDocuments({ type: data.type })
-  const historyPromise = Game.find({ type: data.type }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
+  const historyCountPromise = Game.countDocuments({ type: data.type, blocked: false })
+  const historyPromise = Game.find({ type: data.type, blocke: false }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise

@@ -179,7 +179,7 @@ export default {
             return util.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
         isDrawing () {
-            return (this.gameCurrentDetail.Status != 0) ? true : false
+            return (this.timer == 0 || this.gameCurrentDetail.Status != 0) ? true : false
         },
         ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },

@@ -96,7 +96,10 @@ async function GameChanged(_settings, _contract, res) {
         await saveGame(_settings, _contract, res._gameNum)
     }
 
-    io.emit('refreshContractData', { type: _settings.type })    
+    io.emit('refreshContractData', { 
+                                    type: _settings.type,
+                                    runTimer: (res._action === 0) ? true : false
+                                 })    
 
 }
 
@@ -153,8 +156,9 @@ async function saveGame(_settings, _contract, id) {
             game.blocked = true
             setTimeout(() => {
                 game.blocked = false
-                await game.save()
-                io.emit('refreshContractData', { type: _settings.type })
+                game.save(() => {
+                    io.emit('refreshContractData', { type: _settings.type, runTimer: true })    
+                })
             }, timeToEndDrawing * 1000)
         }
 

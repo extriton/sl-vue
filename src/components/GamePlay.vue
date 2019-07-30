@@ -179,22 +179,21 @@ export default {
             return util.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
         isDrawing () {
-            return (this.timer == 0 || this.gameCurrentDetail.Status != 0) ? true : false
+            return (this.timer === 0 || this.gameCurrentDetail.Status !== 0) ? true : false
         },
         ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },
     methods: {
         runTimer () {
+            if (this.timerInterval !== null) {
+                clearInterval(this.timerInterval)
+                this.timerInterval = null
+            }
             this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute, 
-                                             this.gameCurrent.preDrawPeriod, this.gameCurrent.postDrawPeriod)
+                                             this.gameCurrent.preDrawPeriod, this.gameCurrent.postDrawPeriod) * 1000
             this.timerInterval = setInterval(() => {
-                if(this.timer > 1000) {
-                    this.timer -= 1000
-                } else {
-                    this.timer = 0
-                    clearInterval(this.timerInterval)
-                    this.timerInterval = null
-                }
+                if(this.timer > 1000) this.timer -= 1000
+                else this.timer = 0
             }, 1000)
         },
         doSelect (index) {
@@ -322,8 +321,10 @@ export default {
             this.$store.commit('getGameDataSuccess', data)
         },
         refreshContractData (data) {
-            if(data.type === this.gameCurrent.type)
+            if (data.type === this.gameCurrent.type)
                 this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+            if (data.runTimer)
+                this.runTimer()
         }
     },
     beforeDestroy () {

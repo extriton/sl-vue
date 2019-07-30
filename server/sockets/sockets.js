@@ -60,7 +60,7 @@ async function getGameHistory(data, socket) {
   }
 
   const historyCountPromise = Game.countDocuments({ type: data.type, blocked: false })
-  const historyPromise = Game.find({ type: data.type, blocke: false }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
+  const historyPromise = Game.find({ type: data.type, blocked: false }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise

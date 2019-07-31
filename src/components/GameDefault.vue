@@ -25,9 +25,7 @@ export default {
 .game-default {
     min-height: 100vh;
     padding-top: 40px;
-    background-color: rgba(16, 24, 30, 0.98);
-    background-image: url('../../public/img/bg/3.png');
-    background-size: cover;
+    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
     position: relative;
     img {
         position: absolute;

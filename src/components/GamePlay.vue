@@ -296,10 +296,14 @@ export default {
             }
 
             const callback = (error, result) => {
-                if (error)
-                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error })
-                else
+                if (error) {
+                    error = '' + error
+                    error = error.substr(error.indexOf('{'))
+                    error = JSON.parse(error)
+                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error.message })
+                } else {
                     this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
+                }
             }
 
             this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)

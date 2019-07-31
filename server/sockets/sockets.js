@@ -189,7 +189,7 @@ function removeSocketIP(socketIP) {
 function getRealSocketIP(socket) {
         
   let origin_client_ip = ''
-  const x_forwarded_for = []
+  let x_forwarded_for = []
   
   if(socket.handshake.headers['x-forwarded-for']) {
       x_forwarded_for = socket.handshake.headers['x-forwarded-for'].split(', ')

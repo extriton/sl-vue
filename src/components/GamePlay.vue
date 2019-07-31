@@ -342,11 +342,6 @@ export default {
     min-height: 100vh;
     padding: 40px 0 60px 0;
     color: white;
-    /*
-    background-color: rgba(16, 24, 30, 0.98);
-    background-image: url('../../public/img/bg/3.png');
-    background-size: cover;
-    */
     background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
     .game-play-background {
         position: absolute;

@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="container">
-            <a href="#play" class="site-logo">
+            <a href="#game-play" class="site-logo">
                 <img src="/img/brand/logo.png" alt="Logo" title="SmartLotto" />
             </a>
             <div class="language-wrapper">

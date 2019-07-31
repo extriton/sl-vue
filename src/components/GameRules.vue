@@ -24,13 +24,13 @@
                 <span class="rules-dotter">
                     <img src="../../public/img/icons/icon_address.png"  alt="" title="" width="50" height="50" />
                 </span>
-                {{ dict.rules_address }}: <a :href="contractUrl" target="_blank">{{ gameCurrent.contractAddress }}</a>
+                {{ dict.rules_address }}: <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
             </div>
             <div class="rules-row">
                 <span class="rules-dotter">
                     <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" width="50" height="50" />
                 </span>
-                {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank">MetaMask</a></span>
+                {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank" rel="noreferrer">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank" rel="noreferrer">MetaMask</a></span>
                 {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
             </div>
             <div class="rules-row">

@@ -8,7 +8,8 @@
                 </div>
             </div>
             <div class="player-address-wrapper">
-                <input class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                <label  for="player-address"></label>
+                <input id="player-address" class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
                 <div class="m-btn btn-update" @click="doUpdateHistory">
                     <i class="glyphicon glyphicon-refresh"></i>
                 </div>
@@ -134,7 +135,7 @@ export default {
 
             // Check Metamask install
             if (!this.web3.isInjected) {
-                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank">https://metamask.io/</a>` })
+                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank" rel="noreferrer">https://metamask.io/</a>` })
                 return
             }
             

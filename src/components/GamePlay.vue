@@ -3,7 +3,7 @@
         <!-- Title -->
         <h3 class="title-text">
             {{ dict.play_title1 }} <strong class="template-color">{{ dict.play_title2 }}</strong> 
-            {{ dict.play_title3 }} <a :href="contractUrl" target="_blank">{{ dict.play_title4 }}</a>
+            {{ dict.play_title3 }} <a :href="contractUrl" target="_blank" rel="noreferrer">{{ dict.play_title4 }}</a>
         </h3>
         <!-- Description -->
         <h4 class="title-desc">{{ dict.play_title5 }}</h4>
@@ -127,12 +127,12 @@
         <div class="loto-info-bottom">
             {{ dict.play_txt1 }} 
             <strong>
-                <a :href="contractUrl" target="_blank">{{ gameCurrent.contractAddress }}</a>
+                <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
             </strong>
             {{ dict.play_txt2 }}<br />
             <span v-show="!web3.isInjected" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
-                <a href="https://metamask.io/" target="_blank">{{ dict.play_txt3link }}</a>
+                <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
             </span>
         </div>
         
@@ -252,7 +252,7 @@ export default {
 
             // Check Metamask install
             if (!this.web3.isInjected) {
-                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank">https://metamask.io/</a>` })
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank rel="noreferrer"">https://metamask.io/</a>` })
                 return
             }
             

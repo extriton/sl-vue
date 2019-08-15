@@ -125,7 +125,7 @@
         </div>
         <!-- Additional info -->
         <div class="loto-info-bottom">
-            {{ dict.play_txt1 }} 
+            {{ dict.play_txt1 }} {{ gameCurrent.ticketPrice }} {{ dict.play_txt1a }} 
             <strong>
                 <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
             </strong>

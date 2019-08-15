@@ -8,8 +8,12 @@
                 </div>
             </div>
             <div class="player-address-wrapper">
-                <label  for="player-address"></label>
-                <input id="player-address" class="player-address" type="text" v-model="playerAddress" maxlength="42" placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                <input  class="player-address" 
+                        name="player-address" 
+                        type="text" 
+                        v-model="playerAddress" 
+                        maxlength="42" 
+                        placeholder="0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
                 <div class="m-btn btn-update" @click="doUpdateHistory">
                     <i class="glyphicon glyphicon-refresh"></i>
                 </div>

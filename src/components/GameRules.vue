@@ -38,7 +38,7 @@
                     <img src="../../public/img/icons/icon_gas.png"  alt="" title="" width="50" height="50" />
                 </span>
                 {{ dict.rules_gas_limit }}: <span class="blue">350 000</span><br />
-                {{ dict.rules_gas_price }}: <span class="blue">1 Gwei</span>
+                {{ dict.rules_gas_price }}: <span class="blue">{{ gasPriceFast }} Gwei</span>
             </div>
             <div class="rules-row">
                 <span class="rules-dotter">
@@ -46,8 +46,8 @@
                 </span>
                 {{ dict.rules_distr_funds }}: 
                 <div class="column blue">
-                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 85% - {{ dict.rules_prize_fund }}<br />
-                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 15% - {{ dict.rules_service }}
+                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 80% - {{ dict.rules_prize_fund }}<br />
+                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 20% - {{ dict.rules_service }}
                 </div>
             </div>
             <div class="rules-row">
@@ -72,12 +72,15 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
     name: 'GameRules',
     props: {},
     data () {
         return {
+            gasPriceFast: '1',
+            gasPriceInterval: null
         }
     },
     computed: {
@@ -116,7 +119,22 @@ export default {
             return res
         },
         ...mapGetters(['gameSettings', 'gameCurrent'])
-    }
+    },
+    methods: {
+        async getGasPriceFast () {
+            const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
+            if (gasPrice !== null) this.gasPriceFast = '' + (gasPrice.data.fast / 10)
+        }
+    },
+    mounted () {
+        this.getGasPriceFast()
+        this.gasPriceInterval = setInterval(() => {
+            this.getGasPriceFast()
+        }, 5 * 60 * 1000)
+    },
+    beforeDestroy () {
+        if(this.gasPriceInterval !== null) clearInterval(this.gasPriceInterval)
+    },
 }
 </script>
 

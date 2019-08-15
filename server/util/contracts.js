@@ -1,7 +1,7 @@
 const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
-const gameSettings = require('../config/game-settings')('all')
+const gameSettings = require('../config/game-settings')()
 const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
 
 let io = null
@@ -96,10 +96,10 @@ async function GameChanged(_settings, _contract, res) {
         await saveGame(_settings, _contract, res._gameNum)
     }
 
-    io.emit('refreshContractData', { 
-                                    type: _settings.type,
-                                    runTimer: (res._action === 0) ? true : false
-                                 })    
+    io.emit('refreshContractData',  { 
+                                        type: _settings.type,
+                                        runTimer: (res._action === 0) ? true : false
+                                    })    
 
 }
 

@@ -23,11 +23,14 @@ yarn-error.log*
 *.sln
 *.sw?
 
+# Exclude server config
+config/config-server.js
+
 # Exclude game-settings
-server/config/game-settings-*
+config/game-settings-*
 
 # Exclude contracts ABI
-server/config/abi
+config/abi
 
 # Exclude contracts source
 contracts

@@ -79,7 +79,7 @@ export default {
     props: {},
     data () {
         return {
-            gasPriceFast: '1',
+            gasPriceFast: '4',
             gasPriceInterval: null
         }
     },
@@ -121,9 +121,14 @@ export default {
         ...mapGetters(['gameSettings', 'gameCurrent'])
     },
     methods: {
-        async getGasPriceFast () {
-            const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
-            if (gasPrice !== null) this.gasPriceFast = '' + (gasPrice.data.fast / 10)
+        getGasPriceFast () {
+            axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+            .then(result => {
+                this.gasPriceFast = '' + (result.data.fast / 10)
+            })
+            .catch((error) => {
+                console.log('Error: ' + error)
+            })
         }
     },
     mounted () {

@@ -206,10 +206,14 @@ export default {
 async function defineLanguage(next) {
 
     const ruCountries = ['Belarus', 'Russia', 'Ukraine']
-    const ipGeo = await axios.get('https://api.sypexgeo.net/json/')
-
-    if (ipGeo === null || ruCountries.indexOf(ipGeo.data.country.name_en) === -1) setLanguage('en');
-    else setLanguage('ru');
+    
+    try {
+        const ipGeo = await axios.get('https://api.sypexgeo.net/json/')
+        if (ipGeo === null || ruCountries.indexOf(ipGeo.data.country.name_en) === -1) setLanguage('en')
+        else setLanguage('ru')
+    } catch(e) {
+        setLanguage('en')
+    }
 
     if (typeof(next) == 'function') next()
 }

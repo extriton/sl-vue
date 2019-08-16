@@ -32,6 +32,8 @@ contracts.syncAllContracts()
 setInterval(contracts.syncAllContracts, 24 * 60 * 60 * 1000)
 */
 
+contracts.showSettings()
+
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {
   const port = parseInt(val, 10)

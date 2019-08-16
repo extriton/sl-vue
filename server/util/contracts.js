@@ -2,24 +2,14 @@ const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
 const gameSettings = require('../../config/game-settings-server')()
-const gameSettingsClient = require('../../config/game-settings')()
 const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
 
 let io = null
 const contracts = {}
 
 module.exports = {
-    showSettings            : showSettings,
     setListeners            : setListeners,
     syncAllContracts        : syncAllContracts
-}
-
-// Temporary
-function showSettings() {
-    console.log('gameSettings (server) -----------------')
-    console.log(gameSettings)
-    console.log('gameSettings (client) -----------------')
-    console.log(gameSettingsClient)
 }
 
 // Set listeners for all contracts

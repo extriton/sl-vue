@@ -4,7 +4,7 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const config = require('./config/config')
+const config = require('../config/config-server')
 
 // Mongoose
 const mongoose = require('mongoose')

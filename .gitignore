@@ -26,8 +26,9 @@ yarn-error.log*
 # Exclude server config
 config/config-server.js
 
-# Exclude game-settings
-config/game-settings-*
+# Exclude server game-settings
+config/game-settings-server.js
+config/game-settings-server-*
 
 # Exclude contracts ABI
 config/abi

@@ -5,7 +5,7 @@ import axios from 'axios'
 import Language from '@/util/language'
 import getWeb3 from '@/util/getWeb3'
 import util from '@/util/util'
-import domain from '../../server/config/domain'
+import config from '../../config/config'
 
 Vue.use(Vuex)
 
@@ -157,7 +157,7 @@ export default new Vuex.Store({
   },
   actions: {
     loadGameSettings ({ commit }, payload) {
-      axios.get(`${domain}/api/game/settings`)
+      axios.get(`${config.domain}/api/game/settings`)
       .then(response => {
         if(response.data !== null) commit('loadGameSettings', { settings: response.data, routerId: payload})
       })

@@ -24,7 +24,7 @@ module.exports = {
             padSize: 49,
             minWinMatch: 2,
             arrSize: 4,                         // REQ_NUMBERS - MIN_WIN_MATCH + 1
-            drawDow: 0,                         // Day of week: 0 ... 6 (Sunday ... Saturday), other value - everyday
+            drawDow: 7,                         // Day of week: 0 ... 6 (Sunday ... Saturday), other value - everyday
             drawHour: 15,                       // Hour: 0-23
             drawMinute: 48,                     // Minute: 0-59
             preDrawPeriod: 60,                   // (minutes)

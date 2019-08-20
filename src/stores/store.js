@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 import Language from '@/util/language'
 import getWeb3 from '@/util/getWeb3'
 import util from '@/util/util'
-import config from '../../config/config'
+import gameSettings from '../../config/game-settings'
 
 Vue.use(Vuex)
 
@@ -23,7 +22,7 @@ export default new Vuex.Store({
     dict: Language.getDictonary(),
     // For Game Settings
     gameSettingsLoaded: false,
-    gameSettings: null,
+    gameSettings: gameSettings(),
     gamesCount: 0,
     gameCurrentIndex: null,
     gameCurrent: null,
@@ -102,25 +101,21 @@ export default new Vuex.Store({
     },
     // Load Game settings
     loadGameSettings (state, payload) {
-      state.gameSettings = payload.settings
-      // Define gamesCount
-      if (state.gameSettings !== null && Array.isArray(state.gameSettings.games)) {
+      if (state.gameSettings.games !== undefined && Array.isArray(state.gameSettings.games))
         state.gamesCount = state.gameSettings.games.length
-      }
       
+      let index = 0
       // Define gameCurrentIndex & gameCurrent
-      if(state.gamesCount > 0) {
-        let index = 0
+      if(state.gamesCount > 0)
         for (let i = 0; i < state.gamesCount; i++) {
           state.gameSettings.games[i].type = util.getGameType(state.gameSettings.games[i])
           state.gameSettings.games[i].name = util.getGameName(state.gameSettings.games[i])
-          if (state.gameSettings.games[i].type === payload.routerId) {
+          if (state.gameSettings.games[i].type === payload.routerId)
             index = i
-          }
         }
-        state.gameCurrentIndex = index
-        state.gameCurrent = state.gameSettings.games[index]
-      }
+      
+      state.gameCurrentIndex = index
+      state.gameCurrent = state.gameSettings.games[index]
       state.gameSettingsLoaded = true
     },
     gameCurrentChange (state, payload) {
@@ -156,13 +151,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadGameSettings ({ commit }, payload) {
-      axios.get(`${config.domain}/api/game/settings`)
-      .then(response => {
-        if(response.data !== null) commit('loadGameSettings', { settings: response.data, routerId: payload})
-      })
-      .catch(e => console.log(e))
-    },
     registerWeb3 ({commit}) {
       getWeb3
       .then(result => {

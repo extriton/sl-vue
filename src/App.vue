@@ -1,16 +1,18 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <GameWrapper />
     <notifications group="main" position="right bottom"/>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import GameWrapper from '@/views/GameWrapper.vue'
 
 export default {
   name: 'app',
   components: {
+    GameWrapper,
   },
   computed: {
     ...mapGetters(['notification', 'notificationCounter'])

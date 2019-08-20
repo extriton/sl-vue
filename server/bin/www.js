@@ -27,10 +27,8 @@ require('../sockets/sockets')(io)
 contracts.setListeners(io)
 
 // Synchronize db & contracts data
-/*
 contracts.syncAllContracts()
 setInterval(contracts.syncAllContracts, 24 * 60 * 60 * 1000)
-*/
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

@@ -1,19 +1,13 @@
 <template>
-    <div class="game-body">
-      <div v-if="gameCurrentIndex !== null">
-        <GamePlay />
-        <GameHistory />
-        <PlayerHistory />
-        <GameRules />
-      </div>
-      <div v-if="gameCurrentIndex === null">
-        <GameDefault />
-      </div>
-    </div>
+  <div class="game-body">
+    <GamePlay />
+    <GameHistory />
+    <PlayerHistory />
+    <GameRules />
+  </div>
 </template>
 
 <script>
-import GameDefault from '@/components/GameDefault.vue'
 import GamePlay from '@/components/GamePlay.vue'
 import GameHistory from '@/components/GameHistory.vue'
 import PlayerHistory from '@/components/PlayerHistory.vue'
@@ -24,7 +18,6 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'GameBody',
   components: {
-    GameDefault,
     GamePlay,
     GameHistory,
     PlayerHistory,

@@ -55,8 +55,8 @@ export default {
       },
       ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex', 'gameSettingsLoaded'])
   },
-  mounted () {
-    this.$store.dispatch('loadGameSettings', this.$route.params.id)
+  created () {
+    this.$store.commit('loadGameSettings', { routerId: this.$route.params.id })
   },
   watch: {
     gameCurrentIndex: function(val) {

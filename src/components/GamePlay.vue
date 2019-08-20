@@ -106,7 +106,7 @@
                          :class="{ disabled: gameCurrent !== null && leftNumbers >= gameCurrent.reqNumbers }" 
                          @click="doClear()"
                     >
-                            <i class="glyphicon glyphicon-trash"></i>
+                            <i class="fa fa-trash-o"></i>
                     </div>
                     <div id="copy-button" 
                          class="m-btn btn-ctrl btn-copy" 

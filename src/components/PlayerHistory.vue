@@ -8,7 +8,8 @@
                 </div>
             </div>
             <div class="player-address-wrapper">
-                <input  class="player-address" 
+                <input  id="player-address"
+                        class="player-address" 
                         name="player-address" 
                         type="text" 
                         v-model="playerAddress" 

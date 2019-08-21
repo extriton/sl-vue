@@ -16,7 +16,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: 'GameBody',
+      redirect: GameBody,
     },
   ]
 })

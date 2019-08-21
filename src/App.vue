@@ -2,6 +2,7 @@
   <div id="app">
     <GameWrapper />
     <notifications group="main" position="right bottom"/>
+    <div>{{ gameSettings }}</div>
   </div>
 </template>
 
@@ -15,7 +16,7 @@ export default {
     GameWrapper,
   },
   computed: {
-    ...mapGetters(['notification', 'notificationCounter'])
+    ...mapGetters(['notification', 'notificationCounter', 'gameSettings'])
   },
   watch: {
     notificationCounter (value) {
@@ -34,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Didact+Gothic|Comfortaa:400,700&subset=latin,cyrillic");
+@import url('../public/fonts/comfortaa/comfortaa.css');
 
 #app {
   font-family: 'Comfortaa', sans;

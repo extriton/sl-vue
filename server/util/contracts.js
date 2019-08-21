@@ -1,7 +1,7 @@
 const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
-const gameSettings = require('../../config/game-settings-server')()
+const gameSettings = require('../../config/server/game-settings-server')()
 const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
 
 let io = null

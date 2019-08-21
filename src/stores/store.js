@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 import Language from '@/util/language'
 import getWeb3 from '@/util/getWeb3'
-import gameSettings from '../../config/game-settings'
+import gameSettings from '@/../config/game-settings'
 
 Vue.use(Vuex)
 

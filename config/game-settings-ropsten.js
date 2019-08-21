@@ -4,7 +4,6 @@ module.exports = {
     metamaskNetId: 3,
     games: [
         {   
-            type: 'w5x36',
             reqNumbers: 5,
             padSize: 36,
             minWinMatch: 2,
@@ -19,7 +18,6 @@ module.exports = {
             contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
         },
         {   
-            type: 'd6x49',
             reqNumbers: 6,
             padSize: 49,
             minWinMatch: 2,

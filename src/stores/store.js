@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import Language from '@/util/language'
 import getWeb3 from '@/util/getWeb3'
-import util from '@/util/util'
 import gameSettings from '../../config/game-settings'
 
 Vue.use(Vuex)
@@ -21,11 +20,8 @@ export default new Vuex.Store({
     language: '',
     dict: Language.getDictonary(),
     // For Game Settings
-    gameSettingsLoaded: false,
     gameSettings: gameSettings(),
-    gamesCount: 0,
-    gameCurrentIndex: null,
-    gameCurrent: null,
+    gameCurrentIndex: 0,
     // For current contract data
     gameCurrentDetail: {
       GameNum: 0,
@@ -60,20 +56,17 @@ export default new Vuex.Store({
     notificationCounter: state => {
       return state.notification.counter
     },
-    gameSettingsLoaded: state => {
-      return state.gameSettingsLoaded
-    },
     gameSettings: state => {
       return state.gameSettings
-    },
-    gamesCount: state => {
-      return state.gamesCount
     },
     gameCurrentIndex: state => {
       return state.gameCurrentIndex
     },
+    gamesCount: state => {
+      return state.gameSettings.games.length
+    },
     gameCurrent: state => {
-      return state.gameCurrent
+      return state.gameSettings.games[state.gameCurrentIndex]
     },
     gameCurrentDetail: state => {
       return state.gameCurrentDetail
@@ -108,15 +101,12 @@ export default new Vuex.Store({
       // Define gameCurrentIndex & gameCurrent
       if(state.gamesCount > 0)
         for (let i = 0; i < state.gamesCount; i++) {
-          state.gameSettings.games[i].type = util.getGameType(state.gameSettings.games[i])
-          state.gameSettings.games[i].name = util.getGameName(state.gameSettings.games[i])
           if (state.gameSettings.games[i].type === payload.routerId)
             index = i
         }
       
       state.gameCurrentIndex = index
       state.gameCurrent = state.gameSettings.games[index]
-      state.gameSettingsLoaded = true
     },
     gameCurrentChange (state, payload) {
       const index = parseInt(payload)

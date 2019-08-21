@@ -15,6 +15,7 @@ module.exports = {
 // Set listeners for all contracts
 function setListeners(_io) {
     io = _io
+
     gameSettings.games.forEach(el => {
         if (!el.isActive) return
         contracts[el.type] = new web3.eth.Contract(el.contractAbi, el.contractAddress)

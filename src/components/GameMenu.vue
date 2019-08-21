@@ -49,11 +49,9 @@ export default {
   },
   computed: {
       currentName () {
-        if(!this.gameSettingsLoaded) return 'Loading...'
-        if(this.gameCurrentIndex === null) return 'No games'
         return this.gameCurrent.name
       },
-      ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex', 'gameSettingsLoaded'])
+      ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex'])
   },
   created () {
     this.$store.commit('loadGameSettings', { routerId: this.$route.params.id })

@@ -89,19 +89,7 @@ export default {
         }
     
         return dataString
-    },
-
-    getGameType (game) {
-        let result = game.reqNumbers + 'x' + game.padSize
-        let freq = isWeeklyGame(game.drawDow) ? 'w' : 'd'
-        return (freq + result)
-    },
-
-    getGameName (game) {
-        let result = game.reqNumbers + '/' + game.padSize
-        let freq = isWeeklyGame(game.drawDow) ? 'Weekly ' : 'Daily '
-        return (freq + result)
-    },
+    }
 
 }
 

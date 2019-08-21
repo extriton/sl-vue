@@ -2,13 +2,12 @@
   <div id="app">
     <GameWrapper />
     <notifications group="main" position="right bottom"/>
-    <div>{{ gameSettings }}</div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import GameWrapper from '@/views/GameWrapper.vue'
+import GameWrapper from '@/components/GameWrapper.vue'
 
 export default {
   name: 'app',

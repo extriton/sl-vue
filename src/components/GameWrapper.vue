@@ -29,10 +29,25 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['gameCurrentIndex'])
+    ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentIndex'])
   },
-  mounted () {
-    this.$scrollTo('.game-body', 0)
+  created () {
+    
+    // Define current game by router id
+    let index = 0
+    
+    for (let i = 0; i < this.gameSettings.games.length; i++)
+      if (this.gameSettings.games[i].type === this.$route.params.id)
+          index = i
+
+    this.$store.commit('gameCurrentChange', index)
+  },
+  watch: {
+    gameCurrentIndex: function(val) {
+      if(val !== null) {
+        this.$router.push({ path: this.gameCurrent.type })
+      }
+    }
   }
 }
 </script>

@@ -15,9 +15,9 @@ import VueScrollTo from 'vue-scrollto'
 Vue.use(VueCookies)
 Vue.use(VueClipboard)
 Vue.use(Notifications)
-Vue.use(VueScrollTo, { container: 'body', offset: -105, duration: 1500, easing: 'ease-in' })
+Vue.use(VueScrollTo, { container: 'body', offset: -114, duration: 1500, easing: 'ease-in' })
 
-Vue.use(new VueSocketIO({ debug: true, connection: config.domain, options: { path: '/ws/socket.io' } }))
+Vue.use(new VueSocketIO({ debug: false, connection: config.domain, options: { path: '/ws/socket.io' } }))
 
 Vue.config.productionTip = false
 

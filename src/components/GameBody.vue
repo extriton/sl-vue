@@ -32,7 +32,10 @@ export default {
   beforeCreate () {
     // Register web3 metamask / mist
     this.$store.dispatch('registerWeb3')
-  }
+  },
+  mounted () {
+    this.$scrollTo('.game-body', 1)
+  },
 }
 </script>
 

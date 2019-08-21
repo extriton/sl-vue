@@ -21,7 +21,7 @@ export default new Vuex.Store({
     dict: Language.getDictonary(),
     // For Game Settings
     gameSettings: gameSettings(),
-    gameCurrentIndex: 0,
+    gameCurrentIndex: null,
     // For current contract data
     gameCurrentDetail: {
       GameNum: 0,
@@ -93,20 +93,14 @@ export default new Vuex.Store({
       state.dict = Language.getDictonary()
     },
     // Load Game settings
-    loadGameSettings (state, payload) {
-      if (state.gameSettings.games !== undefined && Array.isArray(state.gameSettings.games))
-        state.gamesCount = state.gameSettings.games.length
-      
+    setGameCurrentIndex (state, payload) {
       let index = 0
-      // Define gameCurrentIndex & gameCurrent
-      if(state.gamesCount > 0)
-        for (let i = 0; i < state.gamesCount; i++) {
-          if (state.gameSettings.games[i].type === payload.routerId)
-            index = i
-        }
+
+      for (let i = 0; i < state.gameSettings.games.length; i++)
+        if (state.gameSettings.games[i].type === payload.routerId)
+          index = i
       
       state.gameCurrentIndex = index
-      state.gameCurrent = state.gameSettings.games[index]
     },
     gameCurrentChange (state, payload) {
       const index = parseInt(payload)

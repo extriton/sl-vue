@@ -39,10 +39,12 @@ export default {
     },
     nextGame () {
       let index = 0
+      
       if(this.gameCurrentIndex === this.gamesCount - 1)
         index = 0
       else
         index = this.gameCurrentIndex + 1
+
       this.slideDirection = 'slide-right'
       this.$store.commit('gameCurrentChange', index)
     },
@@ -52,16 +54,6 @@ export default {
         return this.gameCurrent.name
       },
       ...mapGetters(['gamesCount', 'gameCurrent', 'gameCurrentIndex'])
-  },
-  created () {
-    this.$store.commit('loadGameSettings', { routerId: this.$route.params.id })
-  },
-  watch: {
-    gameCurrentIndex: function(val) {
-      if(val !== null) {
-        this.$router.push({ path: this.gameCurrent.type })
-      }
-    }
   }
 }
 </script>

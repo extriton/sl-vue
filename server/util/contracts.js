@@ -1,8 +1,8 @@
+const gameSettings = require('../../config/server/game-settings-server')()
 const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
-const gameSettings = require('../../config/server/game-settings-server')()
-const web3 = new Web3(new Web3.providers.WebsocketProvider(gameSettings.websocketProvider))
+const web3 = new Web3(gameSettings.websocketProvider)
 
 let io = null
 const contracts = {}
@@ -29,7 +29,10 @@ function setContractListeners(_settings, _contract) {
     // Process event GameChanged
     _contract.events.GameChanged({ fromBlock: 'latest', toBlock: 'latest' }, (error, event) => {
         console.log(`Event GameChanged started... (game_type: ${_settings.type})`)
-        if (error) { console.log(error); return; }
+        if (error) { 
+            console.log(error)
+            return
+        }
         GameChanged(_settings, _contract, event.returnValues)
     })
 
@@ -55,6 +58,7 @@ function syncAllContracts() {
         console.log(`syncContract started... (${_settings.type})`)
         await Game.deleteMany({ type: _settings.type })
         await Member.deleteMany({ game_type: _settings.type })
+        
         const lastGameContract = await _contract.methods.getGameInfo(0).call()
         
         for (let i = 0; i < lastGameContract._gamenum; i++ ) {

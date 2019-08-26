@@ -31,8 +31,6 @@ import Language from '@/util/language.js';
 
 export default {
     name: 'TheLanguage',
-    props: {},
-    
     data () {
         return {
             open: false,
@@ -40,9 +38,7 @@ export default {
             lang_list: Language.getLangList(),
         }
     },
-
     created () {
-
         // Определяем язык и получаем словарь
         let lang = $cookies.get('language')
         if(!lang) {
@@ -56,18 +52,14 @@ export default {
             this.language = Language.getLanguage()
             this.$store.commit('setLanguage')
         }
-
     },
-
     methods: {
         hideContainer () {
             this.open = false
         },
-
         toggleContainer () {
             this.open = !this.open
         },
-
         selectLang (index) {
             this.open = false
             
@@ -76,17 +68,14 @@ export default {
             this.language = Language.getLanguage()
             this.$store.commit('setLanguage')
         },
-
         getLangClass (lang) {
             let className = 'flag-' + lang
             let classObj = {}
             classObj[className] = true
             return classObj
-        },
-
-    },
-
-};
+        }
+    }
+}
 </script>
 
 <style lang="scss">
@@ -104,7 +93,7 @@ export default {
         width: 42px;
         position: absolute;
         top: 25px;
-        left: -45px;
+        left: -5px;
         padding: 5px;
         z-index: 5;
         &.open {

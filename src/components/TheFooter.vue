@@ -1,10 +1,7 @@
 <template>
     <div id="footer">
-        <div class="left-block">
+        <div>
             <span class="color-blue">Copyright © 2019 –</span> SmartLotto.org
-        </div>
-        <div class="right-block">
-            <span class="color-blue">All rights are reserved by the owner</span>
         </div>
     </div>
 </template>
@@ -23,19 +20,21 @@ export default {
 
 <style lang="scss">
 #footer {
-    padding: 40px 0;
+    /*position: absolute;
+    bottom: 0;*/
+    padding: 20px 30px;
+    width: 100%;
     background-color: #0E1014;
     color: #FFF;
-    .left-block {
-        width: 35%;
-        float: left;
-    }
-    .right-block {
-        width: 35%;
-        float: right;
-    }
     .color-blue {
         color: #34BBFF;
     }
 }
+@media all and (max-width: 760px) {
+    #footer {
+      font-size: 0.8em;
+      padding: 10px 20px;
+    }
+}
+
 </style>

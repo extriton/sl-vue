@@ -15,7 +15,7 @@ export default {
     GameWrapper,
   },
   computed: {
-    ...mapGetters(['notification', 'notificationCounter', 'gameSettings'])
+    ...mapGetters(['notification', 'notificationCounter'])
   },
   watch: {
     notificationCounter (value) {
@@ -34,15 +34,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('../public/fonts/comfortaa/comfortaa.css');
-
 #app {
   font-family: 'Comfortaa', sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -moz-user-select: none;
+  -webkit-user-select: none;
   text-align: center;
-  color: #2c3e50;
-  min-width: 768px;
-  padding-top: 114px;
 }
 </style>

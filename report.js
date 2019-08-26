@@ -1,7 +1,7 @@
 {
-  mode: 'development',
+  mode: 'production',
   context: 'C:\\Share\\home\\sl-vue',
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'source-map',
   node: {
     setImmediate: false,
     dgram: 'empty',
@@ -12,9 +12,9 @@
   },
   output: {
     path: 'C:\\Share\\home\\sl-vue\\dist',
-    filename: '[name].js',
+    filename: 'js/[name].[contenthash:8].js',
     publicPath: '/',
-    globalObject: '(typeof self !== \'undefined\' ? self : this)'
+    chunkFilename: 'js/[name].[contenthash:8].js'
   },
   resolve: {
     alias: {
@@ -55,7 +55,7 @@
             loader: 'cache-loader',
             options: {
               cacheDirectory: 'C:\\Share\\home\\sl-vue\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '78d4662a'
+              cacheIdentifier: '69a6ee42'
             }
           },
           {
@@ -65,7 +65,7 @@
                 preserveWhitespace: false
               },
               cacheDirectory: 'C:\\Share\\home\\sl-vue\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '78d4662a'
+              cacheIdentifier: '69a6ee42'
             }
           }
         ]
@@ -171,10 +171,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -199,10 +199,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -225,10 +225,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -252,10 +252,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -284,10 +284,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -312,10 +312,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -338,10 +338,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -365,10 +365,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -397,10 +397,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -431,10 +431,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -463,10 +463,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -496,10 +496,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -534,10 +534,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -569,10 +569,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -602,10 +602,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -636,10 +636,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -675,10 +675,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -709,10 +709,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -741,10 +741,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -774,10 +774,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -812,10 +812,10 @@
             resourceQuery: /module/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -847,10 +847,10 @@
             resourceQuery: /\?vue/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -880,10 +880,10 @@
             test: /\.module\.\w+$/,
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -914,10 +914,10 @@
           {
             use: [
               {
-                loader: 'vue-style-loader',
+                loader: 'C:\\Share\\home\\sl-vue\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
-                  sourceMap: false,
-                  shadowMode: false
+                  hmr: false,
+                  publicPath: '../'
                 }
               },
               {
@@ -955,8 +955,11 @@
             loader: 'cache-loader',
             options: {
               cacheDirectory: 'C:\\Share\\home\\sl-vue\\node_modules\\.cache\\babel-loader',
-              cacheIdentifier: '3d1d1446'
+              cacheIdentifier: '4d18ce41'
             }
+          },
+          {
+            loader: 'thread-loader'
           },
           {
             loader: 'babel-loader'
@@ -981,7 +984,7 @@
                 '.vue'
               ],
               cache: true,
-              cacheIdentifier: '1d79cd59',
+              cacheIdentifier: '99d48332',
               emitWarning: true,
               emitError: false,
               eslintPath: 'C:\\Share\\home\\sl-vue\\node_modules\\eslint\\lib\\api.js',
@@ -992,6 +995,75 @@
       }
     ]
   },
+  optimization: {
+    minimizer: [
+      {
+        options: {
+          test: /\.m?js(\?.*)?$/i,
+          chunkFilter: () => true,
+          warningsFilter: () => true,
+          extractComments: false,
+          sourceMap: true,
+          cache: true,
+          cacheKeys: defaultCacheKeys => defaultCacheKeys,
+          parallel: true,
+          include: undefined,
+          exclude: undefined,
+          minify: undefined,
+          terserOptions: {
+            output: {
+              comments: /^\**!|@preserve|@license|@cc_on/i
+            },
+            compress: {
+              arrows: false,
+              collapse_vars: false,
+              comparisons: false,
+              computed_props: false,
+              hoist_funs: false,
+              hoist_props: false,
+              hoist_vars: false,
+              inline: false,
+              loops: false,
+              negate_iife: false,
+              properties: false,
+              reduce_funcs: false,
+              reduce_vars: false,
+              switches: false,
+              toplevel: false,
+              typeofs: false,
+              booleans: true,
+              if_return: true,
+              sequences: true,
+              unused: true,
+              conditionals: true,
+              dead_code: true,
+              evaluate: true
+            },
+            mangle: {
+              safari10: true
+            }
+          }
+        }
+      }
+    ],
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: 'chunk-vendors',
+          test: /[\\\/]node_modules[\\\/]/,
+          priority: -10,
+          chunks: 'initial'
+        },
+        common: {
+          name: 'chunk-common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
   plugins: [
     /* config.plugin('vue-loader') */
     new VueLoaderPlugin(),
@@ -999,7 +1071,7 @@
     new DefinePlugin(
       {
         'process.env': {
-          NODE_ENV: '"development"',
+          NODE_ENV: '"production"',
           BASE_URL: '"/"'
         }
       }
@@ -1017,14 +1089,49 @@
         ]
       }
     ),
-    /* config.plugin('hmr') */
-    new HotModuleReplacementPlugin(),
-    /* config.plugin('progress') */
-    new ProgressPlugin(),
+    /* config.plugin('extract-css') */
+    new MiniCssExtractPlugin(
+      {
+        filename: 'css/[name].[contenthash:8].css',
+        chunkFilename: 'css/[name].[contenthash:8].css'
+      }
+    ),
+    /* config.plugin('optimize-css') */
+    new OptimizeCssnanoPlugin(
+      {
+        sourceMap: false,
+        cssnanoOptions: {
+          preset: [
+            'default',
+            {
+              mergeLonghand: false,
+              cssDeclarationSorter: false
+            }
+          ]
+        }
+      }
+    ),
+    /* config.plugin('hash-module-ids') */
+    new HashedModuleIdsPlugin(
+      {
+        hashDigest: 'hex'
+      }
+    ),
+    /* config.plugin('named-chunks') */
+    new NamedChunksPlugin(
+      function () { /* omitted long function */ }
+    ),
     /* config.plugin('html') */
     new HtmlWebpackPlugin(
       {
         templateParameters: function () { /* omitted long function */ },
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: true,
+          collapseBooleanAttributes: true,
+          removeScriptTypeAttributes: true
+        },
         template: 'C:\\Share\\home\\sl-vue\\public\\index.html'
       }
     ),
@@ -1065,9 +1172,28 @@
         }
       ]
     ),
+    /* config.plugin('workbox') */
+    new GenerateSW(
+      {
+        exclude: [
+          /\.map$/,
+          /img\/icons\//,
+          /favicon\.ico$/,
+          /manifest\.json$/
+        ],
+        cacheId: 'sl-vue'
+      }
+    ),
     {
       options: {
-        resourceRegExp: /abi\//,
+        resourceRegExp: /config\/abi\//,
+        contextRegExp: undefined
+      },
+      checkIgnore: function () { [native code] }
+    },
+    {
+      options: {
+        resourceRegExp: /config\/server\//,
         contextRegExp: undefined
       },
       checkIgnore: function () { [native code] }
@@ -1088,22 +1214,8 @@
     },
     {
       options: {
-        resourceRegExp: /^\.\/config-server.js$/,
-        contextRegExp: /config$/
-      },
-      checkIgnore: function () { [native code] }
-    },
-    {
-      options: {
-        resourceRegExp: /^\.\/config-server-mainnet.js$/,
-        contextRegExp: /config$/
-      },
-      checkIgnore: function () { [native code] }
-    },
-    {
-      options: {
-        resourceRegExp: /^\.\/config-server-ropsten.js$/,
-        contextRegExp: /config$/
+        resourceRegExp: /contracts\//,
+        contextRegExp: undefined
       },
       checkIgnore: function () { [native code] }
     }

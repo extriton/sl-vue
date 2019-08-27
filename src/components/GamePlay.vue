@@ -1,12 +1,5 @@
 <template>
     <div id="game-play" class="game-play-wrapper">
-        <!-- Title -->
-        <h3 class="title-text">
-            {{ dict.play_title1 }} <strong class="template-color">{{ dict.play_title2 }}</strong> 
-            {{ dict.play_title3 }} <a :href="contractUrl" target="_blank" rel="noreferrer">{{ dict.play_title4 }}</a>
-        </h3>
-        <!-- Description -->
-        <h4 class="title-desc">{{ dict.play_title5 }}</h4>
         <!-- Timer -->
         <div class="timer-wrapper">
             <div class="timer">
@@ -339,36 +332,9 @@ export default {
 
 <style lang="scss">
 .game-play-wrapper {
-    min-height: 100vh;
     padding: 40px 0 60px 0;
     color: white;
-    background: linear-gradient(to right, black -50%, rgb(17, 46, 61) 150%);
-    .game-play-background {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: -1;
-    }
-    .title-text {
-        width: 70%;
-        margin: 15px auto 30px auto;
-        color: #FAFAFA;
-        a {
-            text-decoration: underline;
-        }
-    }
-    .title-desc {
-        width: 70%;
-        margin: 15px auto 30px auto;
-        color: #3BB9FB;
-        border: 2px solid #3BB9FB;
-        border-radius: 15px;
-        padding: 10px 20px;
-    }
     .timer-wrapper {
-        width: 600px;
         margin: 20px auto;
         .timer {
             display: block;

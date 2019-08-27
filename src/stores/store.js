@@ -92,7 +92,8 @@ export default new Vuex.Store({
       state.language = Language.getLanguage()
       state.dict = Language.getDictonary()
     },
-    // Load Game settings
+    // Set current game index
+    /*
     setGameCurrentIndex (state, payload) {
       let index = 0
 
@@ -102,6 +103,7 @@ export default new Vuex.Store({
       
       state.gameCurrentIndex = index
     },
+    */
     gameCurrentChange (state, payload) {
       const index = parseInt(payload)
       state.gameCurrentIndex = index

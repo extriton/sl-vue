@@ -1,56 +1,34 @@
 <template>
   <div class="game-item">
+    <!-- Game menu -->
     Menu
-    <!-- <GameMenu /> -->
     <router-view></router-view>
-    <!--
-    <GamePlay />
-    <GameHistory />
-    <PlayerHistory />
-    <GameRules />
-    -->
   </div>
 </template>
 
 <script>
-//import GamePlay from '@/components/GamePlay.vue'
-//import GameHistory from '@/components/GameHistory.vue'
-//import PlayerHistory from '@/components/PlayerHistory.vue'
-//import GameRules from '@/components/GameRules.vue'
-
-// import { mapGetters } from 'vuex'
-//import GameMenu from '@/components/GameMenu.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'GameItem',
   components: {
-  //  GameMenu
-    /*
-    GamePlay,
-    GameHistory,
-    PlayerHistory,
-    GameRules
-    */
   },
   data () {
     return {}
   },
-  /*
   computed: {
-    ...mapGetters(['gameCurrentIndex'])
+    ...mapGetters(['gameSettings'])
   },
-  */
-  /*
-  beforeCreate () {
-    // Register web3 metamask / mist
-    this.$store.dispatch('registerWeb3')
+  created () {
+    // Define current game by router id
+    let index = 0
+    
+    for (let i = 0; i < this.gameSettings.games.length; i++)
+      if (this.gameSettings.games[i].type === this.$route.params.id)
+          index = i
+
+    this.$store.commit('gameCurrentChange', index)
   },
-  */
-  /*
-  mounted () {
-    this.$scrollTo('.game-body', 1)
-  },
-  */
 }
 </script>
 

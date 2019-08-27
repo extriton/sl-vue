@@ -1,20 +1,21 @@
 <template>
-    <div class="games-list-wrapper">
-      <!-- Title -->
-      <h3 class="title-text">
-        {{ dict.play_title1 }} <strong class="blue-color">{{ dict.play_title2 }}</strong> 
-        {{ dict.play_title3 }} {{ dict.play_title4 }}
-      </h3>
-      <!-- Description -->
-      <h4 class="title-desc">{{ dict.play_title5 }}</h4>
-      <!-- Games list -->
-      <router-link class="game-link"
-          v-for="game in games"
-          :key="game.type"
-          :to="game.type">
-          {{game.type}}
-      </router-link>
-      </div>
+  <div class="games-list-wrapper">
+    <!-- Title -->
+    <h3 class="title-text">
+      {{ dict.play_title1 }} <strong class="blue-color">{{ dict.play_title2 }}</strong> 
+      {{ dict.play_title3 }} {{ dict.play_title4 }}
+    </h3>
+    <!-- Description -->
+    <h4 class="title-desc">{{ dict.play_title5 }}</h4>
+    <!-- Games list -->
+    <div class="games-list-item" v-for="game in games" :key="game.type">
+      <div class="game-name">{{ game.name }}</div>
+      <div class="game-contract-address">{{ game.contractAddress }}</div>
+      <div class="game-ticket-price">{{ game.ticketPrice }}</div>
+      <div class="game-draw-time">{{textDrawTime(game)}}</div>
+      <router-link class="game-link" :to="gameLink(game)">{{ dict.menu_play }}</router-link>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -36,13 +37,20 @@ export default {
     },
     ...mapGetters(['gameSettings'])
   },
+  methods: {
+    textDrawTime (game) {
+      return 'textDrawTime'
+    },
+    gameLink (game) {
+      return `/${game.type}/play`
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 .games-list-wrapper {
   padding: 20px 0;
-  height: 1500px;
   .title-text {
     color: #FAFAFA;
   }
@@ -56,7 +64,27 @@ export default {
   .blue-color {
     color: #3BB9FB;
   }
-  .game-link {
+  .games-list-item {
+    width: 95%;
+    margin: 2em auto;
+    overflow: hidden;
+    text-shadow: 0 -1px 1px #cc5500;
+    user-select: none;
+    padding: .8em 2em;
+    outline: none;
+    border-radius: 1px;
+    background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#08161E, #08161E, #08161E);
+    background-size: 100% 100%, auto;
+    background-position: 50% 50%;
+    box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
+    /*
+    margin: 2em auto;
+    padding: 1em;
+    border: 1px solid rgb(100,100,100);
+    box-shadow: 20px 0 20px -20px #000 inset, -20px 0 20px -20px #000 inset;
+    overflow: hidden;
+    */
+    .game-link {
     position: relative;
     display: block;
     margin-top: 20px;
@@ -85,7 +113,9 @@ export default {
     }
     &:active {
       top: 1px;
-    }  
+    }
+
+  }
   }
 
 }

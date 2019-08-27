@@ -1,20 +1,18 @@
 <template>
-    <div class="game-wrapper">
-        <TheHeader />
-        <transition name="fade" mode="out-in">
-            <div class="game-wrapper-content">
-              <router-view></router-view>
-            </div>
-        </transition>
-        <TheFooter />
-    </div>
+  <div class="game-wrapper">
+    <TheHeader />
+    <transition name="fade" mode="out-in">
+      <div class="game-wrapper-content">
+        <router-view></router-view>
+      </div>
+    </transition>
+    <TheFooter />
+  </div>
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
-
-// import { mapGetters } from 'vuex'
 
 export default {
   name: 'GameWrapper',
@@ -25,35 +23,10 @@ export default {
   data () {
     return {}
   },
-  /*
-  computed: {
-    ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentIndex'])
-  },
-  */
-  created () {
-    
-    // Define current game by router id
-    /*
-    let index = 0
-    
-    for (let i = 0; i < this.gameSettings.games.length; i++)
-      if (this.gameSettings.games[i].type === this.$route.params.id)
-          index = i
-
-    this.$store.commit('gameCurrentChange', index)
-    */
-  },
   beforeCreate () {
     // Register web3 metamask / mist
     this.$store.dispatch('registerWeb3')
   },
-  watch: {
-    gameCurrentIndex: function(val) {
-      if(val !== null) {
-        this.$router.push({ path: this.gameCurrent.type })
-      }
-    }
-  }
 }
 </script>
 
@@ -83,4 +56,3 @@ export default {
     opacity: 0
 }
 </style>
-

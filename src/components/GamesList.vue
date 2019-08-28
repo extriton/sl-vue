@@ -8,12 +8,19 @@
     <!-- Description -->
     <h4 class="title-desc">{{ dict.play_title5 }}</h4>
     <!-- Games list -->
-    <div class="games-list-item" v-for="game in games" :key="game.type">
-      <div class="game-name">{{ game.name }}</div>
-      <div class="game-contract-address">{{ game.contractAddress }}</div>
-      <div class="game-ticket-price">{{ game.ticketPrice }}</div>
-      <div class="game-draw-time">{{textDrawTime(game)}}</div>
-      <router-link class="game-link" :to="gameLink(game)">{{ dict.menu_play }}</router-link>
+    <div class="games-list">
+      <div class="games-list-item" v-for="game in games" :key="game.type">
+        <div class="game-name">{{ game.name }}</div>
+        <div class="game-ticket-price">
+          <span class="text">{{dict.ticket_price}}:</span><br />
+          <span class="value">{{ game.ticketPrice }} ETH</span>
+        </div>
+        <div class="game-draw-time">
+          <span class="text">{{dict.draw_time}}:</span><br />
+          <span class="value">{{ textDrawTime(game) }}</span>
+        </div>
+        <router-link class="game-link" :to="gameLink(game)">{{ dict.menu_play }}</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -43,93 +50,152 @@ export default {
     },
     gameLink (game) {
       return `/${game.type}/play`
-    }
+    },
+    textDrawTime (game) {
+      const dows = { '1': 'monday', '2': 'tuesday', '3': 'wednesday', '4': 'thursday', '5': 'friday', '6': 'saturday', '0': 'sunday' }
+      let res = ''
+      if (game.drawDow >= 0 && game.drawDow <= 6) 
+        res = this.dict[dows[game.drawDow]] + ' '
+      else
+        res = this.dict.everyday + ' '
+            
+      res += this.dict.from + ' '
+      res += (game.drawHour - Math.ceil(game.preDrawPeriod / 60)) + '-00 '
+      res += this.dict.to + ' '
+      res += (game.drawHour + Math.ceil(game.postDrawPeriod / 60)) + '-00 GMT'
+      
+      return res
+    },
   }
 }
 </script>
 
 <style lang="scss">
 .games-list-wrapper {
-  padding: 20px 0;
+  padding: 2em 0;
   .title-text {
     color: #FAFAFA;
   }
   .title-desc {
     margin-top: 15px;
     color: #3BB9FB;
-    border: 2px solid #3BB9FB;
-    border-radius: 15px;
+    border: 1px solid #3BB9FB;
     padding: 10px 20px;
   }
   .blue-color {
     color: #3BB9FB;
   }
-  .games-list-item {
-    width: 95%;
-    margin: 2em auto;
-    overflow: hidden;
-    text-shadow: 0 -1px 1px #cc5500;
-    user-select: none;
-    padding: .8em 2em;
-    outline: none;
-    border-radius: 1px;
-    background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#08161E, #08161E, #08161E);
-    background-size: 100% 100%, auto;
-    background-position: 50% 50%;
-    box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
-    /*
-    margin: 2em auto;
-    padding: 1em;
-    border: 1px solid rgb(100,100,100);
-    box-shadow: 20px 0 20px -20px #000 inset, -20px 0 20px -20px #000 inset;
-    overflow: hidden;
-    */
-    .game-link {
-    position: relative;
-    display: block;
-    margin-top: 20px;
-    color: #777674;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: rgba(255,255,255,.5) 1px 1px, rgba(100,100,100,.3) 3px 7px 3px;
-    user-select: none;
-    padding: 1em 2em;
-    outline: none;
-    border-radius: 3px / 100%;
-    background-image:
-      linear-gradient(45deg, rgba(255,255,255,.0) 30%, rgba(255,255,255,.8), rgba(255,255,255,.0) 70%),
-      linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 90%, rgba(255,255,255,.3)),
-      linear-gradient(to right, rgba(125,125,125,1), rgba(255,255,255,.9) 45%, rgba(125,125,125,.5)),
-      linear-gradient(to right, rgba(125,125,125,1), rgba(255,255,255,.9) 45%, rgba(125,125,125,.5)),
-      linear-gradient(to right, rgba(223,190,170,1), rgba(255,255,255,.9) 45%, rgba(223,190,170,.5)),
-      linear-gradient(to right, rgba(223,190,170,1), rgba(255,255,255,.9) 45%, rgba(223,190,170,.5));
-    background-repeat: no-repeat;
-    background-size: 200% 100%, auto, 100% 2px, 100% 2px, 100% 1px, 100% 1px;
-    background-position: 200% 0, 0 0, 0 0, 0 100%, 0 4px, 0 calc(100% - 4px);
-    box-shadow: rgba(0,0,0,.5) 3px 10px 10px -10px;
-    &:hover {
-      transition: .5s linear;
-      background-position: -200% 0, 0 0, 0 0, 0 100%, 0 4px, 0 calc(100% - 4px);
+  .games-list {
+    margin: 1em auto 0 auto;
+    padding: 1em 0;
+    overflow: none;
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, .3),
+      -23px 0 20px -23px rgba(0, 0, 0, .8),
+      23px 0 20px -23px rgba(0, 0, 0, .8),
+      0 0 40px rgba(0, 0, 0, .1) inset;
+    .games-list-item {
+      font-size: 1em;
+      width: 95%;
+      margin: 0 auto 2em auto;
+      overflow: hidden;
+      text-shadow: 0 -1px 1px #cc5500;
+      user-select: none;
+      padding: 0;
+      outline: none;
+      border-radius: 1px;
+      background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#08161E, #08161E, #08161E);
+      background-size: 100% 100%, auto;
+      background-position: 50% 50%;
+      box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
+      .game-name {
+        font-weight: bold;
+        text-shadow: 0 -1px 1px #cc5500;
+        padding: .8em 2em;
+        outline: none;
+        border-radius: 1px;
+        background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
+        background-size: 100% 100%, auto;
+        background-position: 50% 50%;
+        box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
+      }
+      .game-ticket-price {
+        margin-top: .7em; 
+        font-style: italic;
+        .text {
+          color: #E17615;
+        }
+        .value {
+          color: #3BB9FB;
+          text-shadow: none;
+        }
+      }
+      .game-draw-time {
+        margin-top: .7em; 
+        font-style: italic;
+        .text {
+          color: #E17615;
+        }
+        .value {
+          color: #3BB9FB;
+          text-shadow: none;
+        }
+      }
+      .game-link {
+        position: relative;
+        display: block;
+        width: 90%;
+        margin: 1em auto;
+        color: #777674;
+        font-weight: bold;
+        text-decoration: none;
+        text-shadow: rgba(255,255,255,.5) 1px 1px, rgba(100,100,100,.3) 3px 7px 3px;
+        user-select: none;
+        padding: 1em 2em;
+        outline: none;
+        border-radius: 3px / 100%;
+        background-image:
+        linear-gradient(45deg, rgba(255,255,255,.0) 30%, rgba(255,255,255,.8), rgba(255,255,255,.0) 70%),
+        linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 90%, rgba(255,255,255,.3)),
+        linear-gradient(to right, rgba(125,125,125,1), rgba(255,255,255,.9) 45%, rgba(125,125,125,.5)),
+        linear-gradient(to right, rgba(125,125,125,1), rgba(255,255,255,.9) 45%, rgba(125,125,125,.5)),
+        linear-gradient(to right, rgba(223,190,170,1), rgba(255,255,255,.9) 45%, rgba(223,190,170,.5)),
+        linear-gradient(to right, rgba(223,190,170,1), rgba(255,255,255,.9) 45%, rgba(223,190,170,.5));
+        background-repeat: no-repeat;
+        background-size: 200% 100%, auto, 100% 2px, 100% 2px, 100% 1px, 100% 1px;
+        background-position: 200% 0, 0 0, 0 0, 0 100%, 0 4px, 0 calc(100% - 4px);
+        box-shadow: rgba(0,0,0,.5) 3px 10px 10px -10px;
+        &:hover {
+          transition: .5s linear;
+          background-position: -200% 0, 0 0, 0 0, 0 100%, 0 4px, 0 calc(100% - 4px);
+        }
+        &:active {
+          top: 1px;
+        }
+      }
     }
-    &:active {
-      top: 1px;
+    .games-list-item:last-child {
+      margin-bottom: 0;
     }
-
   }
-  }
-
 }
 @media all and (max-width: 760px) {
   .games-list-wrapper {
-    padding: 20px 0;
+    padding: 1em 0;
     .title-text {
       font-size: 0.7em;
     }
     .title-desc {
       display: none;
     }
-    .game-link {
-      margin-top: 10px;
+    .games-list {
+      .games-list-item {
+        margin: 0 auto 1em auto;
+        font-size: 0.7em;
+        .game-link {
+          margin-top: 1em;
+        }
+      }
     }
   }
 }

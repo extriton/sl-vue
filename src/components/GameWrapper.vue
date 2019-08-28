@@ -1,11 +1,11 @@
 <template>
   <div class="game-wrapper">
     <TheHeader />
-    <transition name="fade" mode="out-in">
-      <div class="game-wrapper-content">
+    <div class="game-wrapper-content">
+      <transition name="fade" mode="out-in">
         <router-view></router-view>
-      </div>
-    </transition>
+      </transition>
+    </div>
     <TheFooter />
   </div>
 </template>
@@ -40,12 +40,14 @@ export default {
     max-width: 800px;
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px);
+    padding-bottom: calc(58px + 1em);
   }
 }
 @media all and (max-width: 760px) {
   .game-wrapper {
     .game-wrapper-content {
-      min-height: calc(100vh - 90px - 38px);
+      min-height: calc(100vh - 90px - 34px);
+      padding-bottom: calc(34px + 1em);
     }
   }
 }

@@ -34,6 +34,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import './../public/css/reset.css';
+@import './../public/fonts/font-awesome-4.7.0/css/font-awesome.min.css';
+@import './../public/fonts/comfortaa/comfortaa.css';
 #app {
   font-family: 'Comfortaa', sans;
   -webkit-font-smoothing: antialiased;

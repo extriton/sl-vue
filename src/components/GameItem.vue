@@ -1,8 +1,18 @@
 <template>
   <div class="game-item">
+    <!-- Game name -->
+    <div class="game-name">{{ gameName }}</div>
     <!-- Game menu -->
-    Menu
-    <router-view></router-view>
+    <div class="menu-list">
+      <router-link :to="linkPath('play')" class="menu-list-item">{{ dict.menu_play }}</router-link>
+      <router-link :to="linkPath('game-history')" class="menu-list-item">{{ dict.menu_history }}</router-link>
+      <router-link :to="linkPath('player-history')" class="menu-list-item">{{ dict.menu_statistics }}</router-link>
+      <router-link :to="linkPath('rules')" class="menu-list-item">{{ dict.menu_rules }}</router-link>
+    </div>
+    <!-- Game body -->
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -11,28 +21,101 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'GameItem',
+  props: ['gameType'],
   components: {
   },
   data () {
     return {}
   },
   computed: {
-    ...mapGetters(['gameSettings'])
+    dict () {
+      return this.$store.state.dict
+    },
+    gameName () {
+      return this.gameCurrent.name
+    },
+    ...mapGetters(['gameSettings', 'gameCurrent'])
+  },
+  methods: {
+    linkPath (path) {
+      return `/${this.gameType}/${path}`
+    }
   },
   created () {
     // Define current game by router id
-    let index = 0
+    let index = null
     
     for (let i = 0; i < this.gameSettings.games.length; i++)
-      if (this.gameSettings.games[i].type === this.$route.params.id)
+      if (this.gameSettings.games[i].type === this.$route.params.gameType) {
           index = i
+          break
+      }
 
-    this.$store.commit('gameCurrentChange', index)
-  },
+    if (index === null)
+      this.$router.push({ path: '/' })
+    else
+      this.$store.commit('gameCurrentChange', index)
+  }
 }
 </script>
 
 <style lang="scss">
+.game-item {
+  .menu-list-item {
+    display: inline-block;
+    width: 25%;
+    color: rgb(205,216,228);
+    text-decoration: none;
+    outline: none;
+    border-right: 1px solid rgba(13,20,27,.5);
+    border-top: 1px solid rgba(270,278,287,.01);
+    background-color: rgb(12,33,43); /* 12,33,43     20, 41, 51  */ /* 64,73,82 */
+    background-image:
+      radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1px 60% at 100% 50%, rgba(255,255,255,.3), transparent),
+      linear-gradient(rgb(12,33,43), rgb(20,41,51));
+    &:hover {
+      background-image:
+        radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
+        radial-gradient(1px 60% at 100% 50%, rgba(255,255,255,.3), transparent),
+        linear-gradient(rgb(0,21,29), rgb(5,24,34));
+    }
+    &.router-link-active {
+      color: rgb(245,247,250);
+      border-top: 1px solid rgb(67,111,136);
+      background-image:
+        linear-gradient(rgb(0,55,83), rgb(0,27,53));
+    }
+    &.router-link-active:hover {
+      border-top: 1px solid rgb(49,87,107);
+      background-image:
+        linear-gradient(rgb(33,77,98), rgb(29,57,77));
+    }
+  }
+  .game-name {
+    font-weight: bold;
+    text-shadow: 0 -1px 1px #cc5500;
+    padding: .8em 2em;
+    outline: none;
+    border-radius: 1px;
+    background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
+    background-size: 100% 100%, auto;
+    background-position: 50% 50%;
+    box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
+  }
+}
+@media all and (min-width: 761px) {
+  .menu-list-item {
+    font-size: 1em;
+    padding: .5em 1em;
+  }
+}
+@media all and (max-width: 760px) {
+  .menu-list-item {
+    font-size: .5em;
+    padding: .2em .1em;
+  }
+}
 .m-btn {
   border: 0 solid;
   box-shadow: inset 0 0 20px rgba(51, 181, 247, 0);

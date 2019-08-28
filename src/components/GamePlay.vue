@@ -64,15 +64,20 @@
                 </div>
             </div>
             <!-- Drawing message -->
+            <!--
             <div class="drawing" :class="{ active: isDrawing }">
                 <span class="drawing-text">Drawing...</span>
             </div>
+            -->
             <!-- Loto pad -->
             <div class="loto-pad">
+                <!--
                 <div class="count-block">
                     <span v-show="leftNumbers > 0">{{ dict.play_select }} <strong class="left-numbers-color">{{ leftNumbers }}</strong> {{ dict.play_numbers }}</span>
                     <span v-show="leftNumbers === 0">{{ dict.play_ready }}</span>
                 </div>
+                -->
+
                 <!-- Loto pad items -->
                 <div class="loto-pad-item-adjust"> 
                     <div class="loto-pad-item" 
@@ -85,6 +90,7 @@
                     </div>
                 </div>
                 <!-- Control panel -->
+                <!--
                 <div class="control-bar">
                     <div class="m-btn btn-ctrl btn-auto" 
                          @click="doAuto()"
@@ -114,9 +120,11 @@
                             <p>{{ dict.play_play }}</p>
                     </div>
                 </div>
+                -->
             </div>
         </div>
         <!-- Additional info -->
+        <!--
         <div class="loto-info-bottom">
             {{ dict.play_txt1 }} {{ gameCurrent.ticketPrice }} {{ dict.play_txt1a }} 
             <strong>
@@ -128,7 +136,7 @@
                 <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
             </span>
         </div>
-        
+        -->
     </div>
 </template>
 
@@ -332,54 +340,38 @@ export default {
 
 <style lang="scss">
 .game-play-wrapper {
-    padding: 40px 0 60px 0;
-    color: white;
     .timer-wrapper {
-        margin: 20px auto;
         .timer {
             display: block;
             width: auto;
-            margin: 15px auto;
             span {
                 display: inline-block;
-                padding: 5px 8px;
                 font-family: "Roboto", sans-serif;
-                font-size: 25px;
                 color: #75EEFF;
-                margin-right: 10px;
             }
             .number {
                 background-color: #000;
-                border-radius: 4px;
+                border-radius: .25em;
             }
         }
     }
     .loto-pad-wrapper {
-        width: 800px;
-        margin: 30px auto 0 auto;
         position: relative;
-        margin: 40px auto 20px auto;
         .loto-info {
-            width: 170px; 
-            float: left;
             background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            border-radius: .6em;
             color: #FAFAFA;
             .column {
-                width: 100%;
-                padding: 20px 10px;
-                &:nth-child(1),
-                &:nth-child(2) {
-                    border-bottom: 1px solid #10191E;
-                }
+                display: inline-block;
+                width: 33%;
                 .text {
                     color: #34bbff;
                 }
             }
         }
         .drawing {
-            width: 600px;
+            /* width: 600px; */
             height: 0;
             position: absolute;
             top: -35px;
@@ -404,13 +396,9 @@ export default {
         }
         .loto-pad {
             position: relative;
-            display: inline-block;
-            width: 600px;
-            margin-left: 30px;
             min-height: 392px;
-            padding: 10px;
             border: 1px solid #191B1C;
-            border-radius: 10px 0 10px 10px;
+            border-radius: .5em 0 .5em .5em;
             background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
             padding-bottom: 120px;
@@ -432,16 +420,16 @@ export default {
             }
             .loto-pad-item-adjust {
                 text-align: left;
-                margin-left: 20px;
+                margin: .5em auto;
             }
             .loto-pad-item {
                 display: inline-block;
-                padding: 15px 0;
-                width: 50px;
-                height: 50px;
-                border-radius: 10px;
+                padding: 1em 0;
+                min-width: calc(100vw * 0.1);
+                min-height: calc(100vw * 0.1);
+                border-radius: .5em;
                 text-align: center;
-                margin: 5px;
+                margin: .3em;
                 border: 1px solid #D5D6D6;
                 color: #D5D6D6;
                 -moz-user-select: none;
@@ -455,10 +443,10 @@ export default {
                 }
             }
             .loto-pad-item.selected {
-                border-radius: 50px;
+                border-radius: 100%;
                 border-color: #CC6311;
                 border-width: 2px;
-                padding: 14px 0;
+                padding: 1em 0;
                 color: #CC6311;
             }
             .control-bar {
@@ -530,6 +518,58 @@ export default {
         }
     }
 }
+@media all and (min-width: 761px) {
+    .game-play-wrapper {
+        font-size: .875em;
+        .timer-wrapper {
+            margin: 1.5em auto 1em auto;
+            .timer {
+                margin: 1em auto;
+                span {
+                    padding: .3em .5em;
+                    font-size: 1.5em;
+                    margin-right: .6em;
+                }
+            }
+        }
+        .loto-pad-wrapper {
+            margin: 1em auto;
+            .loto-info {
+                .column {
+                    padding: 1.2em .6em;
+                }
+            }
+        }
+    }
+}
+@media all and (max-width: 760px) {
+    .game-play-wrapper {
+        .timer-wrapper {
+            margin: .7em auto .5em auto;
+            .timer {
+                margin: .7em auto;
+                span {
+                    padding: .1em .3em;
+                    font-size: 1em;
+                    margin-right: .3em;
+                }
+            }
+        }
+        .loto-pad-wrapper {
+            margin: .5em auto;
+            .loto-info {
+                .column {
+                    padding: .6em .3em;
+                    font-size: .6em;
+                    img {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .animate-info {
     display: inline-block;
     position: relative;

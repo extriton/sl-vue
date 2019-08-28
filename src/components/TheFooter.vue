@@ -12,16 +12,15 @@ export default {
     components: {
     },
     data () {
-        return {
-        }
+        return {}
     },
 }
 </script>
 
 <style lang="scss">
 #footer {
-    /*position: absolute;
-    bottom: 0;*/
+    position: fixed;
+    bottom: 0;
     padding: 20px 30px;
     width: 100%;
     background-color: #0E1014;
@@ -36,5 +35,4 @@ export default {
       padding: 10px 20px;
     }
 }
-
 </style>

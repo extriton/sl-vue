@@ -80,10 +80,10 @@ dicts.ru = {
     // Прочее
     monday                              : 'Понедельник', 
     tuesday                             : 'Вторник', 
-    wednesday                           : 'Среду', 
+    wednesday                           : 'Среда', 
     thursday                            : 'Четверг', 
-    friday                              : 'Пятницу', 
-    saturday                            : 'Субботу', 
+    friday                              : 'Пятница', 
+    saturday                            : 'Суббота', 
     sunday                              : 'Воскресенье',
 
     every                               : 'каждый',
@@ -97,7 +97,9 @@ dicts.ru = {
     prize_fund                          : 'Призовой фонд',
     winners                             : 'Победители',
     not_played                          : 'Не разыгран',
-    pick_up                             : 'Забрать'
+    pick_up                             : 'Забрать',
+    ticket_price                        : 'Стоимость билета',
+    draw_time                           : 'Время розыгрыша'
   
 };
       
@@ -191,8 +193,10 @@ dicts.en = {
     prize_fund                          : 'Prize fund',
     winners                             : 'Winners',
     not_played                          : 'Not played',
-    pick_up                             : 'Pick up'
-  
+    pick_up                             : 'Pick up',
+    ticket_price                        : 'Ticket price',
+    draw_time                           : 'Draw time'
+
 };
 
 export default {

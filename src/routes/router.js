@@ -19,8 +19,9 @@ export default new Router({
       component: GamesList
     },
     {
-      path: '/:id',
+      path: '/:gameType',
       component: GameItem,
+      props: true,
       children: [
         {
           path: 'play',
@@ -39,8 +40,8 @@ export default new Router({
           component: GameRules
         },
         {
-          path: '*',
-          redirect: 'play', 
+          path: '',
+          redirect: 'play'
         }
       ]
     },

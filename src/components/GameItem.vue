@@ -131,7 +131,7 @@ export default {
   -webkit-user-select: none;
 }
 .m-btn:hover {
-  border: 1px solid;
+  /* border: 1px solid; */
   box-shadow: inset 0 0 20px rgba(51, 181, 247, 0.5), 0 0 20px rgba(51, 181, 247, 0.2);
   outline-offset: 15px;
   outline-color: rgba(51, 181, 247, 0);

@@ -63,14 +63,12 @@
                     </span>
                 </div>
             </div>
-            <!-- Drawing message -->
-            <!--
-            <div class="drawing" :class="{ active: isDrawing }">
-                <span class="drawing-text">Drawing...</span>
-            </div>
-            -->
             <!-- Loto pad -->
             <div class="loto-pad">
+                <!-- Drawing message -->
+                <div class="drawing" :class="{ active: isDrawing }">
+                    <span class="drawing-text">Drawing...</span>
+                </div>
                 <!--
                 <div class="count-block">
                     <span v-show="leftNumbers > 0">{{ dict.play_select }} <strong class="left-numbers-color">{{ leftNumbers }}</strong> {{ dict.play_numbers }}</span>
@@ -82,6 +80,7 @@
                 <div class="loto-pad-item-adjust"> 
                     <div class="loto-pad-item" 
                          :class="{ selected:  n == 1 }" 
+                         :style="{ 'height': lotoPadItemWidth, 'line-height': lotoPadItemWidth }"
                          v-for="(n, index) in numbers" 
                          @click="doSelect(index)" 
                         :key="index"
@@ -90,7 +89,6 @@
                     </div>
                 </div>
                 <!-- Control panel -->
-                <!--
                 <div class="control-bar">
                     <div class="m-btn btn-ctrl btn-auto" 
                          @click="doAuto()"
@@ -117,26 +115,21 @@
                     <div class="m-btn btn-ctrl btn-play" 
                          :class="{ disabled: leftNumbers > 0 || !web3.isInjected }"
                          @click="doPlay()">
-                            <p>{{ dict.play_play }}</p>
+                            <p>{{ dict.menu_play }}</p>
                     </div>
                 </div>
-                -->
             </div>
         </div>
         <!-- Additional info -->
-        <!--
         <div class="loto-info-bottom">
             {{ dict.play_txt1 }} {{ gameCurrent.ticketPrice }} {{ dict.play_txt1a }} 
-            <strong>
                 <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
-            </strong>
             {{ dict.play_txt2 }}<br />
             <span v-show="!web3.isInjected" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
                 <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
             </span>
         </div>
-        -->
     </div>
 </template>
 
@@ -158,6 +151,7 @@ export default {
             dataString: '',
             numbers: [],
             leftNumbers: 0,
+            lotoPadItemWidth: 'auto'
         }
     },
     computed: {
@@ -320,6 +314,8 @@ export default {
         this.leftNumbers = this.gameCurrent.reqNumbers
         // Request current game data
         this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+        // Define loto-pad-item width
+        this.lotoPadItemWidth = this.$el.querySelector('.loto-pad-item-adjust').clientWidth / 100 * 9 + 'px'
     },
     sockets: {
         getGameDataSuccess (data) {
@@ -371,11 +367,10 @@ export default {
             }
         }
         .drawing {
-            /* width: 600px; */
+            width: 100%;
             height: 0;
             position: absolute;
-            top: -35px;
-            right: 0;
+            left: 0;
             background-color: rgba(0, 0, 0, 0.8);
             border-radius: 5px;
             z-index: 100;
@@ -383,25 +378,21 @@ export default {
             overflow: hidden;
             .drawing-text {
                 display: inline-block; 
-                margin: 140px auto;
                 text-shadow: 1px 1px 5px #34BBFF, 0 0 1em #34BBFF;
-                font-size: 72px;
                 color: #EFCB46;
-                -moz-user-select: none;
-                -webkit-user-select: none;
+                vertical-align: middle;
             }
         }
         .drawing.active {
-            height: calc(100% + 35px);
+            height: 100%;
+            padding: 20% 0;
         }
         .loto-pad {
             position: relative;
-            min-height: 392px;
             border: 1px solid #191B1C;
             border-radius: .5em 0 .5em .5em;
             background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-            padding-bottom: 120px;
             .count-block {
                 width: 205px;
                 padding: 5px 15px;
@@ -412,8 +403,6 @@ export default {
                 top: -31px;
                 background-color: rgba(0, 0, 0, 0.4);
                 border-radius: 15px 0 0 0;
-                -moz-user-select: none;
-                -webkit-user-select: none;
                 .left-numbers-color {
                     color: #34bbff;
                 }
@@ -424,18 +413,14 @@ export default {
             }
             .loto-pad-item {
                 display: inline-block;
-                padding: 1em 0;
-                min-width: calc(100vw * 0.1);
-                min-height: calc(100vw * 0.1);
-                border-radius: .5em;
+                padding: 0;
+                width: 9%;
+                border-radius: .3em;
                 text-align: center;
-                margin: .3em;
+                margin: 1%;
                 border: 1px solid #D5D6D6;
                 color: #D5D6D6;
-                -moz-user-select: none;
-                -webkit-user-select: none;
-                transition: border-color 0.3s ease-in-out;
-                transition: border-radius 0.3s ease-in-out;
+                transition: border-radius .3s linear;
                 &:hover {
                     cursor: pointer;
                     color: #CC6311;
@@ -443,77 +428,36 @@ export default {
                 }
             }
             .loto-pad-item.selected {
-                border-radius: 100%;
+                border-radius: 50%;
                 border-color: #CC6311;
-                border-width: 2px;
-                padding: 1em 0;
                 color: #CC6311;
             }
             .control-bar {
-                position: absolute;
-                height: 100px;
-                bottom: 10px;
-                left: 35px;
-                border-top: 1px solid #33B5F7;
-                width: 530px;
+                border-top: 1px solid rgb(38, 77, 97);
+                width: auto;
                 .data-string {
-                    position: absolute;
-                    width: 180px;
-                    height: 72px;
-                    top: 15px;
-                    left: 80px;
+                    display: inline-block;
                     color: #FFF;
-                    padding-top: 27px;
-                    font-size: 12px;
-                    border: 0 solid;
+                    border: 1px solid rgba(255, 255, 255, 0.5);
                     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
-                    outline: 1px solid;
-                    outline-color: rgba(255, 255, 255, 0);
-                    outline-offset: 0px;
-                    text-shadow: none;
-                    -webkit-transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
-                    transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
-                    outline-color: rgba(255, 255, 255, 0.5);
-                    outline-offset: 0px;
                 }
                 .btn-ctrl {
-                    position: absolute;
-                    top: 15px;
+                    display: inline-block;
+                    text-align: center;
                     color: #33B5F7;
-                    padding: 5px 10px;
-                    width: 72px;
-                    height: 72px;
-                    padding-top: 25px;
                 }
                 .btn-ctrl.disabled {
                     color: #313232;
-                }
-                .btn-auto {
-                    left: 0;
-                }
-                .btn-copy {
-                    left: 268px;
-                }
-                .btn-clear {
-                    left: 348px;
-                }
-                .btn-play {
-                    left: 428px;
-                    width: 102px;
-                    padding-top: 15px;
                 }
             }
         }
     }
     .loto-info-bottom {
-        width: 800px; 
-        margin: 20px auto 0 auto;
-        padding: 20px;
         background-color: rgba(0, 0, 0, 0.4);
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+        box-shadow: 0 0 .8em rgba(0, 0, 0, 0.1);
+        border-radius: .8em;
         color: #FAFAFA;
-        strong {
+        a {
             color: #34bbff;
         }
     }
@@ -539,7 +483,40 @@ export default {
                     padding: 1.2em .6em;
                 }
             }
+            .drawing-text {
+                font-size: 72px;
+            }
+            .loto-pad-item {
+                font-size: 1em;
+            }
+            .control-bar {
+                margin: .5em auto;
+                padding: .5em 0 0 0;
+                .data-string {
+                    width: 180px;
+                    height: 74px;
+                    line-height: 72px;
+                    margin-right: 1em;
+                    margin-bottom: 1em;
+                    font-size: .8em;
+                }
+                .btn-ctrl {
+                    width: 72px;
+                    height: 72px;
+                    line-height: 72px;
+                    margin-right: 1em;
+                    margin-bottom: 1em;
+                }
+                .btn-play {
+                    width: 102px;
+                }
+            }
         }
+    }
+    .loto-info-bottom {
+        font-size: 1em;
+        margin: 1em auto 0 auto;
+        padding: 1em;
     }
 }
 @media all and (max-width: 760px) {
@@ -566,7 +543,42 @@ export default {
                     }
                 }
             }
+            .drawing-text {
+                font-size: 36px;
+            }
+            .loto-pad-item {
+                font-size: .6em;
+            }
+            .control-bar {
+                margin: .3em auto;
+                padding: .3em 0 0 0;
+                .data-string {
+                    width: 100px;
+                    height: 38px;
+                    line-height: 36px;
+                    margin-right: .4em;
+                    margin-bottom: .4em;
+                    font-size: .45em;
+                }
+                .btn-ctrl {
+                    width: 36px;
+                    height: 36px;
+                    line-height: 36px;
+                    margin-right: .4em;
+                    margin-bottom: .4em;
+                    font-size: .5em;
+                }
+                .btn-play {
+                    width: 60px;
+                }
+            }
         }
+    }
+    .loto-info-bottom {
+        font-size: .6em;
+        margin: .8em auto 0 auto;
+        padding: .3em;
+        line-height: 1.2em;
     }
 }
 

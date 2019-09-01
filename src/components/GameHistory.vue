@@ -1,64 +1,62 @@
 <template>
-    <div id="game-history">
-        <div class="game-history-wrapper">
-            <div class="page-caption">
-                <h3>{{ dict.history_title }}</h3>
-                <div class="paginator-wrapper">
-                    <ThePaginator :max-page="maxPage" :on-change="onChangePage" />
-                </div>
+    <div class="game-history-wrapper">
+        <div class="game-history-caption">
+            <h3>{{ dict.history_title }}</h3>
+            <div class="paginator-wrapper">
+                <ThePaginator :max-page="maxPage" :on-change="onChangePage" />
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ dict.history_col1 }}</th>
-                        <th>{{ dict.history_col2 }}</th>
-                        <th>{{ dict.history_col3 }}</th>
-                    </tr>
-                </thead>
-                <transition name="fade" mode="out-in">
-                <tbody :key="page">
-                    <tr v-for="(item, index) in history" 
-                        :key="index"
-                        @click="onShowDetails(index)">
-                        <td>{{ formatNumber(item.id, 7, 0) }}</td>
-                        <td>
-                            <span class="win-numbers-pad" v-show="item.winNumbers[0] === 0">
-                                <i>{{ dict.statisctics_no_draw }}</i>
-                            </span>
-                            <div class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
-                                <span class="win-number" v-for="(i, index) in item.winNumbers" :key="index">{{ i }}</span>
-                                <div class="game-detail" :class="{ opened: showingIndex === index }" >
-                                    <table class='small-table'>
-                                        <thead>
-                                            <tr>
-                                                <td>{{ dict.matched_numbers }}</td>
-                                                <td>{{ dict.prize_fund }}</td>
-                                                <td>{{ dict.winners }}</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(fund, index) in item.funds" :key="index">
-                                                <td>
-                                                    <span v-show="index < item.funds.length - 1">{{ gameCurrent.minWinMatch + index }}</span>
-                                                    <span v-show="index === item.funds.length - 1" style="color: #FBCF62;">Jackpot</span>
-                                                </td>
-                                                <td>{{ formatNumber(fund, 1, 5) }}</td>
-                                                <td>
-                                                    <span v-show="item.winners[index] !== 0">{{ item.winners[index] }}</span>
-                                                    <span v-show="item.winners[index] === 0" style="color: #FBCF62;">{{ dict.not_played }}</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </td>
-                        <td>{{ formatNumber(item.totalFund, 1, 4) }}</td>
-                    </tr>
-                </tbody>
-                </transition>
-            </table>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ dict.history_col1 }}</th>
+                    <th>{{ dict.history_col2 }}</th>
+                    <th>{{ dict.history_col3 }}</th>
+                </tr>
+            </thead>
+            <transition name="fade" mode="out-in">
+            <tbody :key="page">
+                <tr v-for="(item, index) in history" 
+                    :key="index"
+                    @click="onShowDetails(index)">
+                    <td>{{ formatNumber(item.id, 7, 0) }}</td>
+                    <td>
+                        <span class="win-numbers-pad" v-show="item.winNumbers[0] === 0">
+                            <i>{{ dict.statisctics_no_draw }}</i>
+                        </span>
+                        <div class="win-numbers-pad" v-show="item.winNumbers[0] !== 0">
+                            <span class="win-number" v-for="(i, index) in item.winNumbers" :key="index">{{ i }}</span>
+                            <div class="game-detail" :class="{ opened: showingIndex === index }" >
+                                <table class='small-table'>
+                                    <thead>
+                                        <tr>
+                                            <td>{{ dict.matched_numbers }}</td>
+                                            <td>{{ dict.prize_fund }}</td>
+                                            <td>{{ dict.winners }}</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(fund, index) in item.funds" :key="index">
+                                            <td>
+                                                <span v-show="index < item.funds.length - 1">{{ gameCurrent.minWinMatch + index }}</span>
+                                                <span v-show="index === item.funds.length - 1" style="color: #FBCF62;">Jackpot</span>
+                                            </td>
+                                            <td>{{ formatNumber(fund, 1, 5) }}</td>
+                                            <td>
+                                                <span v-show="item.winners[index] !== 0">{{ item.winners[index] }}</span>
+                                                <span v-show="item.winners[index] === 0" style="color: #FBCF62;">-</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ formatNumber(item.totalFund, 1, 4) }}</td>
+                </tr>
+            </tbody>
+            </transition>
+        </table>
     </div>
 </template>
 
@@ -130,25 +128,27 @@ export default {
 </script>
 
 <style lang="scss">
-#game-history {
-    min-height: 100vh;
-    padding: 20px 20px 60px 20px;
+.game-history-wrapper {
+    color: #CC6610;
+    font-size: 1em;
     background: linear-gradient(to right, black -50%, rgb(23, 60, 78) 150%);
     text-align: left;
-}
-.game-history-wrapper {
-    width: 800px;
-    margin: 0 auto;
-    color: #CC6610;
-    font-size: 20px;
-    .paginator-wrapper {
-        position: absolute;
-        width: 220px;
-        right: 0;
-        top: 10px;
+    .game-history-caption {
+        color: #CC6610;
+        position: relative;
+        h3 {
+            text-align: left;
+            margin-top: 0;
+        }
+        .paginator-wrapper {
+            position: absolute;
+            width: auto;
+            right: 0;
+        }
     }
     table {
         width: 100%;
+        text-align: center;
     }
     table tr {
         width: 100%;
@@ -157,7 +157,6 @@ export default {
         border-top: 2px solid black;
         border-bottom: 2px solid black;
         color: #34BBFF;
-        margin-bottom: 15px;
     }
     table tbody tr {
         &:hover {
@@ -165,25 +164,19 @@ export default {
             background-color: rgba(0, 0 ,0 , 0.2)
         }
     }
-    table thead th {
-        text-align: center;
-        padding-bottom: 10px;
-    }
     table td, table th {
-        padding: 10px;
-        text-align: center;
-        height: 56px;
+        padding: .3em;
+        word-wrap: break-word;
+        height: 3em;
+        vertical-align: middle;
     }
     table tr td:nth-child(1) {
-        width: 120px;
-        vertical-align: top;
-        padding-top: 15px;
+        width: 5em;
+        text-align: left;
     }
     table tr td:nth-child(3) {
-        width: 120px;
+        width: 5em;
         text-align: right;
-        vertical-align: top;
-        padding-top: 15px;
     }
     table tbody tr {
         border-bottom: 1px solid black;
@@ -191,14 +184,9 @@ export default {
     .win-numbers-pad {
         .win-number {
             display: inline-block;
-            width: 35px;
-            height: 35px;
-            border-radius: 35px;
-            margin-right: 25px;
-            background: linear-gradient(-45deg, #FEE864, #F5965E);
-            padding-top: 6px;
-            text-align: center;
+            border-radius: 50%;
             color: black;
+            background: linear-gradient(-45deg, #FEE864, #F5965E);
             text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
          }
     }
@@ -208,13 +196,13 @@ export default {
         height: 0;
         overflow: hidden;
         &.opened {
-            height: 170px;
+            height: 9em;
         }
         .small-table {
-            margin-top: 15px;
+            margin-top: .5em;
             width: 100%;
             color: #CACACA;
-            font-size: 12px;
+            font-size: .75em;
             tr {
                 width: 100%;
                 &:hover {
@@ -223,8 +211,9 @@ export default {
             }
             td {
                 height: auto;
-                padding: 5px;
+                padding: .3em;
                 vertical-align: middle;
+                text-align: center;
             }
             thead {
                 tr {
@@ -235,6 +224,64 @@ export default {
                 tr {
                     border: none;
                     border-top: 1px solid black;
+                }
+            }
+        }
+    }
+}
+
+@media all and (min-width: 761px) {
+    .game-history-wrapper {
+        margin-top: 3em;
+        .game-history-caption {
+            h3 {
+                font-size: 2em;
+                padding: .5em;
+            }
+            .paginator-wrapper {
+                top: 1em;
+            }
+        }
+        table {
+            font-size: 1em;
+        }
+        .win-numbers-pad {
+            .win-number {
+                width: 2em;
+                height: 2em;
+                line-height: 2em;
+                margin-right: 1.5em;
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+@media all and (max-width: 760px) {
+    .game-history-wrapper {
+        margin-top: 1em;
+        .game-history-caption {
+            h3 {
+                font-size: 1em;
+                padding: .5em;
+            }
+            .paginator-wrapper {
+                top: .4em;
+            }
+        }
+        table {
+            font-size: .65em;
+        }
+        .win-numbers-pad {
+            .win-number {
+                width: 1.8em;
+                height: 1.8em;
+                line-height: 1.8em;
+                margin-right: 1em;
+                &:last-child {
+                    margin-right: 0;
                 }
             }
         }

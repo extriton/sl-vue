@@ -69,7 +69,7 @@ export default {
     outline: none;
     border-right: 1px solid rgba(13,20,27,.5);
     border-top: 1px solid rgba(270,278,287,.01);
-    background-color: rgb(12,33,43); /* 12,33,43     20, 41, 51  */ /* 64,73,82 */
+    background-color: rgb(12,33,43);
     background-image:
       radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
       radial-gradient(1px 60% at 100% 50%, rgba(255,255,255,.3), transparent),
@@ -131,7 +131,6 @@ export default {
   -webkit-user-select: none;
 }
 .m-btn:hover {
-  /* border: 1px solid; */
   box-shadow: inset 0 0 20px rgba(51, 181, 247, 0.5), 0 0 20px rgba(51, 181, 247, 0.2);
   outline-offset: 15px;
   outline-color: rgba(51, 181, 247, 0);

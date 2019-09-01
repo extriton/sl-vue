@@ -92,18 +92,6 @@ export default new Vuex.Store({
       state.language = Language.getLanguage()
       state.dict = Language.getDictonary()
     },
-    // Set current game index
-    /*
-    setGameCurrentIndex (state, payload) {
-      let index = 0
-
-      for (let i = 0; i < state.gameSettings.games.length; i++)
-        if (state.gameSettings.games[i].type === payload.routerId)
-          index = i
-      
-      state.gameCurrentIndex = index
-    },
-    */
     gameCurrentChange (state, payload) {
       const index = parseInt(payload)
       state.gameCurrentIndex = index

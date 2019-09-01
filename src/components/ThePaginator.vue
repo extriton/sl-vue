@@ -3,7 +3,7 @@
         <div class="paginator-button m-btn left" 
             :class="{ disabled: page === 1 }"
             @click="prevPage">
-            <i class="glyphicon glyphicon-menu-left"></i> 
+            <i class="fa fa-angle-left"></i> 
         </div>
         <div class="paginator-counter">
             <span class="counter">{{ page }}</span> / {{ maxPage }}
@@ -11,7 +11,7 @@
         <div class="paginator-button m-btn right" 
             :class="{ disabled: page === maxPage || maxPage === 1 }"
             @click="nextPage">
-            <i class="glyphicon glyphicon-menu-right"></i>
+            <i class="fa fa-angle-right"></i>
         </div>
     </div>
 </template>
@@ -52,26 +52,10 @@ export default {
 
 <style lang="scss">
 .paginator-box-bottom {
-    position: relative;
-    margin: 15px auto 10px auto;
-    width: 220px;
-    height: 50px;
-    font-size: 20px;
+    text-align: center;
     .paginator-button {
-        display: block;
-        position: absolute;
-        padding-top: 8px;
-        width: 40px;
-        height: 40px;
-        text-align: center;
+        display: inline-block;
         color: #34BBFF;
-        top: 0;
-        &.left {
-            left: 0;
-        }
-        &.right {
-            right: 0;
-        }
         &:hover {
             cursor: pointer;
             color: #71E0FB;
@@ -84,17 +68,40 @@ export default {
         &.disabled:hover {
             cursor: default;
         }
-
     }
     .paginator-counter {
-        display: block;
-        width: 120px;
-        height: 40px;
-        margin: 0 auto;
-        padding-top: 6px;
+        display: inline-block;
         color: #878787;
-        text-align: center;
         border: 1px solid #878787;
+    }
+}
+@media all and (min-width: 761px) {
+    .paginator-box-bottom {
+        font-size: 1em;
+        line-height: 2em;
+        .paginator-button {
+            margin-right: .5em;
+            width: 2em;
+        }
+        .paginator-counter {
+            margin-right: .5em;
+            padding: 0 1.5em;
+        }
+    }
+}
+
+@media all and (max-width: 760px) {
+    .paginator-box-bottom {
+        font-size: .8em;
+        line-height: 1.6em;
+        .paginator-button {
+            margin-right: .5em;
+            width: 1.6em;
+        }
+        .paginator-counter {
+            margin-right: .5em;
+            padding: 0 1.2em;
+        }
     }
 }
 </style>

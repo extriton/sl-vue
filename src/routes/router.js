@@ -2,11 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import GamesList from '@/components/GamesList.vue'
-import GameItem from '@/components/GameItem.vue'
-import GamePlay from '@/components/GamePlay.vue'
-import GameHistory from '@/components/GameHistory.vue'
-import PlayerHistory from '@/components/PlayerHistory.vue'
-import GameRules from '@/components/GameRules.vue'
+// import GameItem from '@/components/GameItem.vue'
+// import GamePlay from '@/components/GamePlay.vue'
+// import GameHistory from '@/components/GameHistory.vue'
+// import PlayerHistory from '@/components/PlayerHistory.vue'
+// import GameRules from '@/components/GameRules.vue'
 
 Vue.use(Router)
 
@@ -20,24 +20,29 @@ export default new Router({
     },
     {
       path: '/:gameType',
-      component: GameItem,
+      // component: GameItem,
+      component: () => import(/* webpackChunkName: "GameItem" */ '@/components/GameItem.vue'),
       props: true,
       children: [
         {
           path: 'play',
-          component: GamePlay
+          // component: GamePlay
+          component: () => import(/* webpackChunkName: "GameItem" */ '@/components/GamePlay.vue')
         },
         {
           path: 'game-history',
-          component: GameHistory
+          // component: GameHistory
+          component: () => import(/* webpackChunkName: "GameItem" */ '@/components/GameHistory.vue')
         },
         {
           path: 'player-history',
-          component: PlayerHistory
+          // component: PlayerHistory
+          component: () => import(/* webpackChunkName: "GameItem" */ '@/components/PlayerHistory.vue')
         },
         {
           path: 'rules',
-          component: GameRules
+          // component: GameRules
+          component: () => import(/* webpackChunkName: "GameItem" */ '@/components/GameRules.vue')
         },
         {
           path: '',

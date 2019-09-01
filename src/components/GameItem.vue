@@ -153,18 +153,4 @@ export default {
 .m-btn.disabled:hover {
   cursor: not-allowed;
 }
-.page-caption {
-  color: #CC6610;
-  position: relative;
-  h3 {
-    text-align: left;
-    margin-top: 0;
-    margin-bottom: 40px;
-    font-size: 42px;
-    padding: 8px 20px 7px 20px;
-    border-top: 3px solid;
-    border-left: 3px solid;
-    padding-top: 17px;
-  }
-}
 </style>

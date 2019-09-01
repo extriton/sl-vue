@@ -279,7 +279,7 @@ export default {
                 width: 1.8em;
                 height: 1.8em;
                 line-height: 1.8em;
-                margin-right: 1em;
+                margin-right: .1em;
                 &:last-child {
                     margin-right: 0;
                 }

@@ -13,6 +13,7 @@ module.exports = {
             preDrawPeriod: 60,                   // (minutes)
             postDrawPeriod: 60,                  // (minutes)
             ticketPrice: 0.01,
+            distribFund: { '2': 20, '3': 30, '4': 35, '5': 15},
             isActive: true,
             contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
         },
@@ -27,6 +28,7 @@ module.exports = {
             preDrawPeriod: 60,                   // (minutes)
             postDrawPeriod: 60,                  // (minutes)
             ticketPrice: 0.01,
+            distribFund: { '2': 20, '3': 30, '4': 35, '5': 15},
             isActive: true,
             contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
         }

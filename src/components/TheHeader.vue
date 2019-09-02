@@ -1,9 +1,9 @@
 <template>
     <div class="header">
         <div class="container">
-            <a href="/" class="site-logo">
+            <router-link to="/" class="site-logo">
                 <img src="/img/brand/logo.png" alt="Logo" title="SmartLotto" />
-            </a>
+            </router-link>
             <div class="language-wrapper">
                 <TheLanguage />
             </div>

@@ -61,6 +61,9 @@
                 </tbody>
             </transition>
         </table>
+        <div class="player-history-error" v-show="history.length === 0">
+            {{ dict.no_tickets_found }}
+        </div>
     </div>
 </template>
 
@@ -307,11 +310,14 @@ export default {
             text-align: center;
             color: black;
             background: white;
-            text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
             &.matched {
                 background: linear-gradient(-45deg, #FEE864, #F5965E);
             }
          }
+    }
+    .player-history-error {
+        text-align: center;
+        color: #1CACFF;
     }
 }
 
@@ -360,10 +366,15 @@ export default {
                 height: 2em;
                 line-height: 2em;
                 margin-right: 1.5em;
+                text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
                 &:last-child {
                     margin-right: 0;
                 }
             }
+        }
+        .player-history-error {
+            padding: 4em;
+            font-size: 1.5em;
         }
     }
 }
@@ -411,12 +422,17 @@ export default {
             .numbers {
                 width: 1.8em;
                 height: 1.8em;
-                line-height: 1.8em;
+                line-height: 1.9em;
                 margin-right: .1em;
+                text-shadow: none;
                 &:last-child {
                     margin-right: 0;
                 }
             }
+        }
+        .player-history-error {
+            padding: 3em;
+            font-size: 1em;
         }
     }
 }

@@ -23,12 +23,14 @@ const io = require('socket.io').listen(server,
       path: '/ws/socket.io' })
 require('../sockets/sockets')(io)
 
+/*
 // Set contracts listeners
 contracts.setListeners(io)
 
 // Synchronize db & contracts data
 contracts.syncAllContracts()
 setInterval(contracts.syncAllContracts, 24 * 60 * 60 * 1000)
+*/
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

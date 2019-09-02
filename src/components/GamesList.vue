@@ -11,11 +11,22 @@
     <div class="games-list">
       <div class="games-list-item" v-for="game in games" :key="game.type">
         <div class="game-name">{{ game.name }}</div>
-        <div class="game-ticket-price">
+        <div class="game-info-block">
+          <span class="text">{{dict.rules_address}}:</span>
+          <span class="copy-contract-button"
+                @click="doCopyAddress(game)">
+            <i class="fa fa-files-o" aria-hidden="true"></i>
+          </span>
+          <br />
+          <a :href="contractUrl(game)" target="_blank" rel="noreferrer">
+            <span class="value">{{ game.contractAddress }}</span>
+          </a>
+        </div>
+        <div class="game-info-block">
           <span class="text">{{dict.ticket_price}}:</span><br />
           <span class="value">{{ game.ticketPrice }} ETH</span>
         </div>
-        <div class="game-draw-time">
+        <div class="game-info-block">
           <span class="text">{{dict.draw_time}}:</span><br />
           <span class="value">{{ textDrawTime(game) }}</span>
         </div>
@@ -26,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'GamesList',
@@ -45,8 +56,8 @@ export default {
     ...mapGetters(['gameSettings'])
   },
   methods: {
-    textDrawTime (game) {
-      return 'textDrawTime'
+    contractUrl (game) {
+      return this.gameSettings.etherscanAddressUrl + game.contractAddress
     },
     gameLink (game) {
       return `/${game.type}/play`
@@ -66,6 +77,16 @@ export default {
       
       return res
     },
+    doCopyAddress (game) {
+      this.$copyText(game.contractAddress)
+      .then((e) => {
+        this.newNotify({ type: 'success', title: '<b>:: Copy ::</b>', text: `Smart-contract address successfull copied!` })
+      })
+      .catch((e) => {
+        this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `Smart-contract address not copied!` })
+      })
+    },
+    ...mapMutations(['newNotify'])
   }
 }
 </script>
@@ -119,20 +140,20 @@ export default {
         background-position: 50% 50%;
         box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
       }
-      .game-ticket-price {
-        margin-top: .7em; 
+      .game-info-block {
+        margin-top: .4em; 
         font-style: italic;
-        .text {
-          color: #E17615;
+        line-height: 1.3em;
+        .copy-contract-button {
+          margin: 0 .3em;
+          color: #EECA57;
+          &:hover {
+            cursor: pointer;
+          }
         }
-        .value {
-          color: #3BB9FB;
-          text-shadow: none;
+        a {
+          text-decoration: none;
         }
-      }
-      .game-draw-time {
-        margin-top: .7em; 
-        font-style: italic;
         .text {
           color: #E17615;
         }
@@ -191,7 +212,7 @@ export default {
     .games-list {
       .games-list-item {
         margin: 0 auto 1em auto;
-        font-size: 0.7em;
+        font-size: 0.68em;
         .game-link {
           margin-top: 1em;
         }

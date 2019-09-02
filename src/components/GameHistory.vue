@@ -187,8 +187,7 @@ export default {
             border-radius: 50%;
             color: black;
             background: linear-gradient(-45deg, #FEE864, #F5965E);
-            text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
-         }
+        }
     }
     .game-detail {
         color: white;
@@ -251,6 +250,7 @@ export default {
                 height: 2em;
                 line-height: 2em;
                 margin-right: 1.5em;
+                text-shadow: 2px 3px 5px rgba(224, 186, 6, 0), 3px 3px 5px black;
                 &:last-child {
                     margin-right: 0;
                 }
@@ -278,8 +278,9 @@ export default {
             .win-number {
                 width: 1.8em;
                 height: 1.8em;
-                line-height: 1.8em;
+                line-height: 1.9em;
                 margin-right: .1em;
+                text-shadow: none;
                 &:last-child {
                     margin-right: 0;
                 }

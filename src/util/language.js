@@ -99,7 +99,9 @@ dicts.ru = {
     not_played                          : 'Не разыгран',
     pick_up                             : 'Забрать',
     ticket_price                        : 'Стоимость билета',
-    draw_time                           : 'Время розыгрыша'
+    draw_time                           : 'Время розыгрыша',
+    enter_member_address                : 'Введите адрес участника',
+    no_tickets_found                    : 'Билеты не найдены'
   
 };
       
@@ -195,7 +197,9 @@ dicts.en = {
     not_played                          : 'Not played',
     pick_up                             : 'Pick up',
     ticket_price                        : 'Ticket price',
-    draw_time                           : 'Draw time'
+    draw_time                           : 'Draw time',
+    enter_member_address                : 'Enter Member Address',
+    no_tickets_found                    : 'No tickets found'
 
 };
 

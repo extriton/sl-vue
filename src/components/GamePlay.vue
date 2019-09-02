@@ -122,8 +122,12 @@
         </div>
         <!-- Additional info -->
         <div class="loto-info-bottom">
-            {{ dict.play_txt1 }} {{ gameCurrent.ticketPrice }} {{ dict.play_txt1a }} 
-                <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
+            {{ dict.play_txt1 }} <strong>{{ gameCurrent.ticketPrice }}</strong> {{ dict.play_txt1a }} 
+            <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
+            <span class="copy-contract-button"
+                  @click="doCopyAddress()">
+                <i class="fa fa-files-o" aria-hidden="true"></i>
+            </span>
             {{ dict.play_txt2 }}<br />
             <span v-show="!web3.isInjected" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
@@ -304,6 +308,15 @@ export default {
             this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
 
         },
+        doCopyAddress () {
+            this.$copyText(this.gameCurrent.contractAddress)
+            .then((e) => {
+                this.newNotify({ type: 'success', title: '<b>:: Copy ::</b>', text: `Smart-contract address successfull copied!` })
+            })
+            .catch((e) => {
+                this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `Smart-contract address not copied!` })
+            })
+        },
         ...mapMutations(['newNotify'])
     },
     mounted () {
@@ -457,8 +470,18 @@ export default {
         box-shadow: 0 0 .8em rgba(0, 0, 0, 0.1);
         border-radius: .8em;
         color: #FAFAFA;
+        strong {
+            color: #34bbff;
+        }
         a {
             color: #34bbff;
+        }
+        .copy-contract-button {
+            color: #EECA57;
+            margin: 0 .3em;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 }

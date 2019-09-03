@@ -50,6 +50,7 @@ function syncAllContracts() {
         
     gameSettings.games.forEach(el => {
         if(!el.isActive) return
+        contracts[el.type] = new web3.eth.Contract(el.contractAbi, el.contractAddress)
         syncContract(el, contracts[el.type])
     })
 
@@ -104,7 +105,7 @@ async function GameChanged(_settings, _contract, res) {
     io.emit('refreshContractData',  { 
                                         type: _settings.type,
                                         runTimer: (res._action === 0) ? true : false
-                                    })    
+                                    })
 
 }
 

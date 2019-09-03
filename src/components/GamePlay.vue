@@ -294,6 +294,8 @@ export default {
                 data: this.dataString
             }
 
+            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
+            
             const callback = (error, result) => {
                 if (error) {
                     error = '' + error
@@ -304,8 +306,6 @@ export default {
                     this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
                 }
             }
-
-            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
 
         },
         doCopyAddress () {

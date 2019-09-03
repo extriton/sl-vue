@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const favicon = require('serve-favicon')
+// const favicon = require('serve-favicon')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -19,7 +19,7 @@ mongoose.connect(config.dbURL, config.dbOptions)
 // App
 const app = express()
 app.use(logger('dev'))
-app.use(cors({credentials: true}))
+// app.use(cors({credentials: true}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({'extended':'false'}))
 

@@ -3,7 +3,7 @@ const app = require('../app')
 const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../util/contracts')
-// const io = require('socket.io')
+const drawing = require('../util/drawing')
 
 const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
@@ -24,6 +24,9 @@ const io = require('socket.io').listen(server,
 require('../sockets/sockets')(io)
 
 /*
+// Drawing contracts
+drawing.drawAllContracts()
+
 // Set contracts listeners
 contracts.setListeners(io)
 

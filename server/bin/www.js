@@ -23,13 +23,12 @@ const io = require('socket.io').listen(server,
       path: '/ws/socket.io' })
 require('../sockets/sockets')(io)
 
-/*
+
 // Drawing contracts
 drawing.drawAllContracts()
 
 // Set contracts listeners
 contracts.setListeners(io)
-*/
 
 // Synchronize db & contracts data (true - clear collection)
 contracts.syncAllContracts(false)

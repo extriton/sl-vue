@@ -151,7 +151,7 @@ function checkDrawingTime (_game) {
     let timeToDraw = (_game.drawHour * 60 + _game.drawMinute) * 60
     let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
     if (isWeeklyGame(_game.drawDow)) {
-        timeToDraw += drawDow * SEC_IN_DAY
+        timeToDraw += _game.drawDow * SEC_IN_DAY
         timeCurrent += now.getUTCDay() * SEC_IN_DAY
     }
 

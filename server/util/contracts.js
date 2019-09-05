@@ -21,7 +21,7 @@ function setListeners(_io) {
     gameSettings.games.forEach(_game => {
         if (!_game.isActive) return
         contracts[_game.type] = new web3.eth.Contract(_game.contractAbi, _game.contractAddress)
-        setContractListeners(_game, contracts[game.type])
+        setContractListeners(_game, contracts[_game.type])
     })
 
     // Set listeners for contract

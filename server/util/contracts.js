@@ -48,13 +48,13 @@ function setListeners(_io) {
 //-------------------------------------------------------------------------------------------------//
 // Synchronize all contracts data (called on start serve and throw interval)
 //-------------------------------------------------------------------------------------------------//
-function syncAllContracts(clear = false) {
+async function syncAllContracts(clear = false) {
 
     // Clear games and members data if 'clear' === true
     if (clear) {
         console.log(`Clearing Game and Member collection data`)
-        await Game.deleteMany({ type: _game.type })
-        await Member.deleteMany({ game_type: _game.type })
+        await Game.deleteMany()
+        await Member.deleteMany()
     }
         
     gameSettings.games.forEach(_game => {
@@ -73,35 +73,40 @@ async function syncContract(_game, _contract) {
 
     // Get contract last game, database games and define games array
     const lastGameContract = await _contract.methods.getGameInfo(0).call()
-    const arrGames = new Array(lastGameContract).fill({ membersCounter: 0, members: [], status: 0 })
+    const arrGames = new Array(parseInt(lastGameContract._gamenum))
     const dbGames = await Game.find({ type: _game.type })
 
+    // Init arrGames
+    for (let i = 0; i < arrGames.length; i++)
+        arrGames[i] = { membersCounter: 0, members: [], status: 0 }
+
     // Move db games data to array games
-    dbGames.forEach(dbGame => {
-        arrGames[dbGame.id - 1].membersCounter = dbGame.membersCounter
-        arrGames[dbGame.id - 1].status = dbGame.status
-    })
+    for (let i = 0; i < dbGames.length; i++) {
+        arrGames[dbGames[i].id - 1].membersCounter = dbGames[i].membersCounter
+        arrGames[dbGames[i].id - 1].status = dbGames[i].status
+    }
 
     // Loop arrGames and save needed games
     for (let i = 0; i < arrGames.length; i++) {
-        if (arrGame[i].status !== 2) {
+        if (arrGames[i].status !== 2) {
             const savedGame = await saveGame(_game, _contract, i + 1)
-            arrGame[i].membersCounter = savedGame.membersCounter
-            arrGame[i].status = savedGame.status
+            arrGames[i].membersCounter = savedGame.membersCounter
+            arrGames[i].status = savedGame.status
         }
-        arrGame[i].members = new Array(arrGame[i].membersCounter).fill({ payout: 0 })
+        arrGames[i].members = new Array(arrGames[i].membersCounter)
+        for (let j = 0; j < arrGames[i].members.length; j++)
+            arrGames[i].members[j] = 0
     }
 
     // Get members data for current game
-    const dbMembers = await Member.find({ type: _game.type })
-    dbMembers.forEach(dbMember => {
-        arrGame[dbMember.game_id - 1].members[dbMember.id - 1].payout = dbMember.payout
-    })
+    const dbMembers = await Member.find({ game_type: _game.type })
+    for (let i = 0; i < dbMembers.length; i++)
+        arrGames[dbMembers[i].game_id - 1].members[dbMembers[i].id - 1] = dbMembers[i].payout
 
     // Loop arrGames and save needed memebers
     for (let i = 0; i < arrGames.length; i++)
         for (let j = 0; j < arrGames[i].membersCounter; j++)
-            if (arrGame[i].members[j].payout !== 1)
+            if (arrGames[i].members[j] !== 1)
                 saveMember(_game, _contract, i + 1, j + 1)
 
 }
@@ -130,8 +135,7 @@ async function GameChanged(_game, _contract, res) {
 async function MemberChanged(_game, _contract, res) {
     console.log(`Member ${res._gameNum}, ${res._member} changed. (${_game.type})`)
     
-    const game = await saveGame(_game, _contract, res._gameNum)
-    await saveMember(_game, _contract, res._gameNum, res._member, game)
+    await saveMember(_game, _contract, res._gameNum, res._member)
 
     io.emit('refreshContractData', { type: _game.type })
 
@@ -241,8 +245,13 @@ async function saveMember(_game, _contract, game_id, id) {
     }
 
     const matchIndex = member.matchNumbers - _game.minWinMatch
-    if (game.status == 2 && member.payout == 0 && matchIndex >= 0)
+    if (game.status === 2 && member.payout === 0 && matchIndex >= 0) {
         member.prize = game.funds[matchIndex] / game.winners[matchIndex]
+    }
+
+    if (game.status === 2 && member.payout === 0 && member.prize === 0) {
+        member.payout = 1
+    }
     
     await member.save()
 

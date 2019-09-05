@@ -31,8 +31,8 @@ drawing.drawAllContracts()
 contracts.setListeners(io)
 
 // Synchronize db & contracts data
-contracts.syncAllContracts()
-setInterval(contracts.syncAllContracts, 24 * 60 * 60 * 1000)
+contracts.syncAllContracts(true)
+setInterval(contracts.syncAllContracts, 30 * 60 * 1000)     // Synchronize every 30 minutes
 */
 
 // Normalize a port into a number, string, or false.

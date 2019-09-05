@@ -11,7 +11,6 @@ var MemberSchema = new Schema({
     matchNumbers:       { type: Number, default: 0 },
     prize:              { type: Number, default: 0 },
     payout:             { type: Number, default: 0 },
-    checked:            { type: Number, default: 0 },                   // 0 - Not checked, 1 - Checked
     created:            { type: Date, default: Date.now }
 })
 

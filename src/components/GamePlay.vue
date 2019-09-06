@@ -188,11 +188,15 @@ export default {
                 clearInterval(this.timerInterval)
                 this.timerInterval = null
             }
-            this.timer = util.calcTimerStart(this.gameCurrent.drawDow, this.gameCurrent.drawHour, this.gameCurrent.drawMinute, 
-                                             this.gameCurrent.preDrawPeriod, this.gameCurrent.postDrawPeriod) * 1000
+            this.timer = util.calcTimerStart(this.gameCurrent) * 1000
             this.timerInterval = setInterval(() => {
-                if(this.timer > 1000) this.timer -= 1000
-                else this.timer = 0
+                if(this.timer > 1000) {
+                    this.timer -= 1000
+                } else {
+                    this.timer = 0
+                    if (util.calcTimerStart(this.gameCurrent) > 0 && this.gameCurrentDetail.Status === 0)
+                        this.timer = util.calcTimerStart(this.gameCurrent) * 1000
+                }
             }, 1000)
         },
         doSelect (index) {
@@ -337,8 +341,6 @@ export default {
         refreshContractData (data) {
             if (data.type === this.gameCurrent.type)
                 this.$socket.emit('getGameData', { type: this.gameCurrent.type })
-            if (data.runTimer)
-                this.runTimer()
         }
     },
     beforeDestroy () {

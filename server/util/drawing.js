@@ -1,11 +1,9 @@
 const axios = require('axios')
 const gameSettings = require('../../config/server/game-settings-server')()
-const Game = require('../models/Game')
+const util = reauire('./util')
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
-
-const SEC_IN_DAY = 24 * 60 * 60         // 86 400
 
 const contracts = {}
 const phases = {}                       // Фазы обработки: 'ready' готов к прокрутке, 'started' - уже прокручивается, 'finished' - прокрутка контракта (всех пулов) завершилась
@@ -29,11 +27,10 @@ function drawAllContracts() {
     // Run timer and process contracts every 3 minutes
     setInterval(() => {
         // Loop contracts
-        gameSettings.games.forEach(game => {
-            // Check status
-            if (!game.isActive) return
+        for (let i = 0; i < gameSettings.games.length; i++) {
+            const game = gameSettings.games[i]
             // Check contract drawing time start and start contract drawing
-            if (checkDrawingTime(game)) {
+            if (util.isDrawing(game)) {
                 if (phases[game.type] === 'ready') {
                     phases[game.type] = 'started'
                     startContractDrawing(game, contracts[game.type])
@@ -44,7 +41,7 @@ function drawAllContracts() {
                 }
             }
             
-        })
+        }
     }, 3 * 60 * 1000)
 
 }
@@ -121,7 +118,7 @@ async function startContractDrawing(_game, _contract) {
                     // Compare drawingGameNum and currentGameNum
                     const currentGameNum = getCurrentGameNum(_game, _contract)
                     if (currentGameNum === 0) {
-                        console.log(`${new Date()}: Error (${_game.type}): Cannot define currentGameNum; Transaction: ${txCounter}`)
+                        console.log(`${new Date()}: Error (${_game.type}): Cannot getting currentGameNum; Transaction: ${txCounter}`)
                         return
                     }
 
@@ -140,31 +137,6 @@ async function startContractDrawing(_game, _contract) {
 
     }
 
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Check contract drawing time start
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-function checkDrawingTime (_game) {
-
-    const now = new Date()
-    let timeToDraw = (_game.drawHour * 60 + _game.drawMinute) * 60
-    let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
-    if (isWeeklyGame(_game.drawDow)) {
-        timeToDraw += _game.drawDow * SEC_IN_DAY
-        timeCurrent += now.getUTCDay() * SEC_IN_DAY
-    }
-
-    // If blocked period and phase not 'busy' return true
-    if (timeCurrent > (timeToDraw - _game.preDrawPeriod * 60) && timeCurrent < (timeToDraw + _game.postDrawPeriod * 60)) {
-        return true
-    } else {
-        return false
-    }
-
-    function isWeeklyGame(dow) {
-        return (dow >= 0 && dow <= 6) ? true : false
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

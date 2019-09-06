@@ -1,4 +1,5 @@
 const gameSettings = require('../../config/server/game-settings-server')()
+const util = require('./util')
 const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
@@ -161,32 +162,13 @@ async function saveGame(_game, _contract, id) {
     }
 
     let game = await Game.findOne({ type: _game.type, id: id })
-    
-    let isNew = false 
     if (game === null) { 
         game = new Game()
-        isNew = true
-    }
-
-    // Если прокрутка игры произошла в drawing период то выставляем blocked новой игры в true
-    // и запускаем таймер для изменения этого статуса после drawing
-    let timeToEndDrawing = isDrawing(_game)
-
-    if (isNew) {
         game.type               = _game.type
         game.id                 = gameInfo._gamenum
         game.winNumbers         = new Array(_game.reqNumbers).fill(0)
         game.funds              = new Array(_game.arrSize).fill(0)
         game.winners            = new Array(_game.arrSize).fill(0)
-
-        if (timeToEndDrawing > 0) {
-            setTimeout(() => {
-                game.save(() => {
-                    io.emit('refreshContractData', { type: _game.type, runTimer: true })    
-                })
-            }, timeToEndDrawing * 1000)
-        }
-
     }
 
     if (gameInfo._status > game.status) {
@@ -241,7 +223,7 @@ async function saveMember(_game, _contract, game_id, id) {
 
     if (game.status > 0) {
         member.winNumbers       = game.winNumbers
-        member.matchNumbers     = findMatch(memberInfo._numbers, game.winNumbers)
+        member.matchNumbers     = util.findMatch(memberInfo._numbers, game.winNumbers)
     }
 
     const matchIndex = member.matchNumbers - _game.minWinMatch
@@ -256,35 +238,4 @@ async function saveMember(_game, _contract, game_id, id) {
     await member.save()
 
     return member
-}
-
-// Check drawing time or no
-function isDrawing(_game) {
-
-    const SEC_IN_DAY = 24 * 60 * 60                                     // 86 400
-    const now = new Date()
-
-    let isWeeklyGame = (_game.drawDow >= 0 && _game.drawDow <= 6) ? true : false
-
-    let timeToDraw = (_game.drawHour * 60 + _game.drawMinute) * 60
-    let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
-    if (isWeeklyGame) {
-        timeToDraw += _game.drawDow * SEC_IN_DAY
-        timeCurrent += now.getUTCDay() * SEC_IN_DAY
-    }
-
-    // If drawing period, return time to end drawing, Else return 0
-    if(timeCurrent > (timeToDraw - _game.preDrawPeriod * 60) && timeCurrent < (timeToDraw + _game.postDrawPeriod * 60))
-        return (timeToDraw + _game.postDrawPeriod * 60 - timeCurrent)
-    else
-        return 0
-}
-
-// Find match numbers function
-function findMatch(arr1, arr2) {
-    let cnt = 0
-    for (let i = 0; i < arr1.length; i++)
-        for (let j = 0; j < arr2.length; j++)
-            if (arr1[i] === arr2[j]) { cnt++; break; }
-    return cnt
 }

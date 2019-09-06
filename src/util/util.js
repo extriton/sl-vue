@@ -6,22 +6,23 @@ export default {
         
         const SEC_IN_DAY = 24 * 60 * 60                                     // 86 400
         const SEC_IN_WEEK = 7 * SEC_IN_DAY                                  // 604 800
+        const isWeeklyGame = (_game.drawDow >= 0 && _game.drawDow <= 6) ? true : false
         const now = new Date()
 
-        let timeToDraw = (drawHour * 60 + drawMinute) * 60
+        let timeToDraw = (_game.drawHour * 60 + _game.drawMinute) * 60
         let timeCurrent = (now.getUTCHours() * 60 + now.getUTCMinutes()) * 60 + now.getUTCSeconds()
-        if (isWeeklyGame(drawDow)) {
-            timeToDraw += drawDow * SEC_IN_DAY
+        if (isWeeklyGame) {
+            timeToDraw += _game.drawDow * SEC_IN_DAY
             timeCurrent += now.getUTCDay() * SEC_IN_DAY
         }
 
         // If blocked period, set timer to 0
-        if(timeCurrent > (timeToDraw - preDrawPeriod * 60) && timeCurrent < (timeToDraw + postDrawPeriod * 60)) return 0
+        if(timeCurrent > (timeToDraw - _game.preDrawPeriod * 60) && timeCurrent < (timeToDraw + _game.postDrawPeriod * 60)) return 0
 
         // Else, return timer value
-        let result = timeToDraw - timeCurrent - preDrawPeriod * 60
+        let result = timeToDraw - timeCurrent - _game.preDrawPeriod * 60
         if (timeCurrent > timeToDraw) {                                     // Add week or day to result      
-            if (isWeeklyGame(drawDow)) result += SEC_IN_WEEK                         // Weekly game
+            if (isWeeklyGame) result += SEC_IN_WEEK                         // Weekly game
             else result += SEC_IN_DAY                                       // Daily game
         }
 
@@ -91,8 +92,4 @@ export default {
         return dataString
     }
 
-}
-
-function isWeeklyGame(dow) {
-    return (dow >= 0 && dow <= 6) ? true : false
 }

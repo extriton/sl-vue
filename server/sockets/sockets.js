@@ -1,3 +1,6 @@
+const gameSettings = require('../../config/server/game-settings-server')()
+const util = reauire('../util/util')
+
 const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
@@ -29,7 +32,20 @@ async function getGameData(data, socket) {
   
   if (!data.type) return
 
-  const lastGame = await Game.findOne({ type: data.type, blocked: false }).sort({ id: -1 })
+  // Define game settings by type
+  let currentGameSettings = null
+  for (let i = 0; i < gameSettings.games.length; i++)
+    if (gameSettings.games[i].type == data.type) {
+      currentGameSettings = gameSettings.games[i]
+      break
+    }
+  
+  const isDrawing = util.isDrawing(currentGameSettings)
+  let lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 })
+
+  if (isDrawing || lastGame.status === 1) {
+    lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 }).skip(1)
+  }
   
   if (lastGame === null) return
 
@@ -59,8 +75,8 @@ async function getGameHistory(data, socket) {
     data.page = 1
   }
 
-  const historyCountPromise = Game.countDocuments({ type: data.type, blocked: false })
-  const historyPromise = Game.find({ type: data.type, blocked: false }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
+  const historyCountPromise = Game.countDocuments({ type: data.type })
+  const historyPromise = Game.find({ type: data.type, blocked: false }).sort({ id: -1 }).skip((data.page - 1) * 10 + 1).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise

@@ -178,7 +178,7 @@ export default {
             return util.formatNumber(this.gameCurrentDetail.Jackpot, 1, 4)
         },
         isDrawing () {
-            return (this.timer === 0 || this.gameCurrentDetail.Status !== 0) ? true : false
+            return (this.timer === 0 || this.gameCurrentDetail.Phase !== 'ready') ? true : false
         },
         ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },
@@ -194,7 +194,7 @@ export default {
                     this.timer -= 1000
                 } else {
                     this.timer = 0
-                    if (util.calcTimerStart(this.gameCurrent) > 0 && this.gameCurrentDetail.Status === 0)
+                    if (this.gameCurrentDetail.Phase !== 'ready')
                         this.timer = util.calcTimerStart(this.gameCurrent) * 1000
                 }
             }, 1000)

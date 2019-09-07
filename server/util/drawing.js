@@ -6,8 +6,6 @@ const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
 
-// const Game = require('../models/Game.js')
-
 module.exports = {
     drawAllContracts        : drawAllContracts
 }
@@ -30,7 +28,7 @@ function drawAllContracts() {
             const game = gameSettings.games[i]
             startContractDrawing(game, game.contract)
         }
-    }, 3 * 60 * 1000)
+    }, 1 * 60 * 1000)
 
 }
 
@@ -40,18 +38,25 @@ function drawAllContracts() {
 async function startContractDrawing(_game, _contract) {
     
     // Check drawing time and ready phase
-    if (!util.isDrawing(_game) || phases[_game.type] !== 'ready') return
-    phases[_game.type] = 'starting'
+    if (util.isDrawing(_game)) {
+        if (_game.phase !== 'ready') return
+    } else {
+        if (_game.phase === 'finished') {
+            _game.phase = 'ready'
+            _game.currentNum = util.getCurrentGameNum(_game, _contract)
+        }
+        return
+    }
 
     console.log(`${new Date()}: startContractDrawing... (${_game.type})`)
 
-    // Transactions counter
-    let txCounter = 0
+    _game.phase = 'starting'
+    _game.txCounter = 0
 
     // Transaction params
-    const serviceAddress = _game.serviceAddress;
+    const serviceAddress = _game.serviceAddress
     const servicePrivKey = Buffer.from(_game.servicePrivKey, 'hex')
-    const contractAddress = _game.contractAddress;
+    const contractAddress = _game.contractAddress
 
     // Raw tranaction object
     const rawTransaction = {
@@ -64,17 +69,13 @@ async function startContractDrawing(_game, _contract) {
 	}
 
     // Store drawing game
-    const drawingGameNum = util.getCurrentGameNum(_game, _contract)
-    if (drawingGameNum === 0) {
-        console.log(`${new Date()}: Error (${_game.type}): Cannot define drawingGameNum`)
+    _game.currentNum = util.getCurrentGameNum(_game, _contract)
+    console.log(`drawingGameNum: ${_game.currentNum}`)
+    if (_game.currentNum === 0) {
+        console.log(`${new Date()}: Error (${_game.type}): Cannot define _game.currentNum`)
         return
     }
 
-    // Update drawing field in collection
-    // const game = await Game.findOne({ type: _game.type, id: drawingGameNum })
-    // game.drawing = true
-    // game.save()
-    
     // Start first transaction after random pause
     const randomPause = Math.floor(Math.random() * 10) + 5;             // Рандомный старт через 5..15 мин
     setTimeout(() => { pushTransaction(_game, _contract) }, randomPause * 60 * 1000)
@@ -84,8 +85,8 @@ async function startContractDrawing(_game, _contract) {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     async function pushTransaction(_game, _contract) {
 
-        txCounter++
-        console.log(`${new Date()}: pushTransaction ${txCounter} started... (${_game.type})`);
+        _game.txCounter++
+        console.log(`${new Date()}: pushTransaction ${_game.txCounter} started... (${_game.type})`);
         
         // Define current gasPrice (fast)
         let gasPrice = null
@@ -101,7 +102,7 @@ async function startContractDrawing(_game, _contract) {
         // Get transaction count, later will used as nonce
         // web3.eth.getTransactionCount(serviceAddress).then(nonce => {
             
-            rawTransaction.data = web3.utils.toHex(txCounter)
+            rawTransaction.data = web3.utils.toHex(_game.txCounter)
             // rawTransaction.nonce = web3.utils.toHex(nonce)
 
             // Creating tranaction via ethereumjs-tx
@@ -110,7 +111,7 @@ async function startContractDrawing(_game, _contract) {
 
             // Validate transaction: if transaction incorrect then log and return
             if (!tx.validate() || bufferToHex(tx.getSenderAddress()) !== serviceAddress) {
-                console.log(`Invalid transaction: #${txCounter} (Game: ${_game.type}, GameNum: ${drawingGameNum})`)
+                console.log(`Invalid transaction: #${_game.txCounter} (Game: ${_game.type}, GameNum: ${_game.currentNum})`)
                 return
             }
 
@@ -121,16 +122,15 @@ async function startContractDrawing(_game, _contract) {
                     // Compare drawingGameNum and currentGameNum
                     const currentGameNum = util.getCurrentGameNum(_game, _contract)
                     if (currentGameNum === 0) {
-                        console.log(`${new Date()}: Error (${_game.type}): Cannot getting currentGameNum; Transaction: ${txCounter}`)
+                        console.log(`${new Date()}: Error (${_game.type}): Cannot getting currentGameNum; Transaction: ${_game.txCounter}`)
                         return
                     }
 
-                    if (currentGameNum == drawingGameNum) {
+                    if (currentGameNum == _game.currentNum) {
                         pushTransaction(_game, _contract)
                     } else {
-                        phases[_game.type] = 'finished'
-                        // game.drawing = false
-                        // game.save()
+                        _game.phase = 'finished'
+                        
                     }
 
                 })

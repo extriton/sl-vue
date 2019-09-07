@@ -25,7 +25,7 @@ contracts.init()
 // contracts.setListeners(io)
 
 // Synchronize db & contracts data (true - clear collection)
-contracts.syncAllContracts(true)
+contracts.syncAllContracts(false)
 setInterval(contracts.syncAllContracts, SYNC_INTERVAL)
 
 // Drawing contracts

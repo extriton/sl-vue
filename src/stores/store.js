@@ -27,7 +27,7 @@ export default new Vuex.Store({
       GameNum: 0,
       Jackpot: 0,
       Fund: 0,
-      Status: 0
+      Phase: 'ready'
     }, 
     // For games history
     gameCurrentHistory: {

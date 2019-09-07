@@ -33,20 +33,14 @@ async function getGameData(data, socket) {
   if (!data.type) return
 
   // Define game settings by type
-  let currentGameSettings = null
+  let _game = null
   for (let i = 0; i < gameSettings.games.length; i++)
     if (gameSettings.games[i].type == data.type) {
-      currentGameSettings = gameSettings.games[i]
+      _game = gameSettings.games[i]
       break
     }
   
-  const isDrawing = util.isDrawing(currentGameSettings)
-  let lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 })
-
-  if (isDrawing || lastGame.status === 1) {
-    lastGame = await Game.findOne({ type: data.type }).sort({ id: -1 }).skip(1)
-  }
-  
+  const lastGame = await Game.findOne({ type: data.type, id: _game.currentNum })
   if (lastGame === null) return
 
   const fundsSize = lastGame.funds.length
@@ -54,7 +48,7 @@ async function getGameData(data, socket) {
     GameNum: lastGame.id,
     Jackpot: lastGame.funds[fundsSize - 1],
     Fund: lastGame.totalFund,
-    Status: lastGame.status
+    Phase: _game.phase
   }
 
   socket.emit('getGameDataSuccess', result)
@@ -75,8 +69,16 @@ async function getGameHistory(data, socket) {
     data.page = 1
   }
 
-  const historyCountPromise = Game.countDocuments({ type: data.type })
-  const historyPromise = Game.find({ type: data.type }).sort({ id: -1 }).skip((data.page - 1) * 10 + 1).limit(10)
+  // Define game settings by type
+  let _game = null
+  for (let i = 0; i < gameSettings.games.length; i++)
+    if (gameSettings.games[i].type == data.type) {
+      _game = gameSettings.games[i]
+      break
+    }
+
+  const historyCountPromise = Game.countDocuments({ type: data.type, game_id: { $lt: _game.currentNum } })
+  const historyPromise = Game.find({ type: data.type, game_id: { $lt: _game.currentNum } }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise

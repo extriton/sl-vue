@@ -25,8 +25,9 @@ async function init() {
     for (let i = 0; i < gameSettings.games.length; i++) {
         const game = gameSettings.games[i]
         game.contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
-        game.phase = 'ready'
         game.currentNum = util.getCurrentGameNum(game, game.contract)
+        game.phase = 'ready'
+        game.txCounter = 0
     }
 
 }

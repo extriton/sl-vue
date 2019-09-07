@@ -1,5 +1,5 @@
-const gameSettings = require('../../config/server/game-settings-server')()
-const util = reauire('../util/util')
+const gameSettings = require('../../config/server/game-settings-server')
+const util = require('../util/util')
 
 const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
@@ -76,7 +76,7 @@ async function getGameHistory(data, socket) {
   }
 
   const historyCountPromise = Game.countDocuments({ type: data.type })
-  const historyPromise = Game.find({ type: data.type, blocked: false }).sort({ id: -1 }).skip((data.page - 1) * 10 + 1).limit(10)
+  const historyPromise = Game.find({ type: data.type }).sort({ id: -1 }).skip((data.page - 1) * 10 + 1).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise

@@ -1,4 +1,4 @@
-const gameSettings = require('../../config/server/game-settings-server')()
+const gameSettings = require('../../config/server/game-settings-server')
 const util = require('./util')
 const Game = require('../models/Game')
 const Member = require('../models/Member')

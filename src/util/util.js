@@ -2,7 +2,7 @@ export default {
     
     // Return time to draw in secods or 0 if game drawing 
     // preDrawPeriod, postDrawPeriod params in minutes
-    calcTimerStart (drawDow, drawHour, drawMinute, preDrawPeriod, postDrawPeriod) {
+    calcTimerStart (_game) {
         
         const SEC_IN_DAY = 24 * 60 * 60                                     // 86 400
         const SEC_IN_WEEK = 7 * SEC_IN_DAY                                  // 604 800

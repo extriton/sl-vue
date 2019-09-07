@@ -1,29 +1,26 @@
 const config = require('./config')
 const gameSettings = require(`./game-settings-${config.ethNetwork}`)
 
-module.exports = () => {
-    
-    const retSettings = JSON.parse(JSON.stringify(gameSettings))
+const retSettings = JSON.parse(JSON.stringify(gameSettings))
+if (retSettings.games !== undefined && Array.isArray(retSettings.games))
+    for (let i = 0; i < retSettings.games.length; i++)
+        if (!retSettings.games[i].isActive) {
+            retSettings.games.splice(i, 1)
+            i--
+        } else {
+            retSettings.games[i].type = getGameType(retSettings.games[i])
+            retSettings.games[i].name = getGameName(retSettings.games[i])
+        }
 
-    if (retSettings.games !== undefined && Array.isArray(retSettings.games))
-        for (let i = 0; i < retSettings.games.length; i++)
-            if (!retSettings.games[i].isActive) {
-                retSettings.games.splice(i, 1)
-                i--
-            } else {
-                addGameType(retSettings.games[i])
-                addGameName(retSettings.games[i])
-            }
 
-    return retSettings
-}
-
-function addGameType (game) {
+function getGameType (game) {
     let freq = (game.drawDow >= 0 && game.drawDow <= 6) ? 'w' : 'd'
-    game.type = freq + game.reqNumbers + 'x' + game.padSize
+    return freq + game.reqNumbers + 'x' + game.padSize
 }
 
-function addGameName (game) {
+function getGameName (game) {
     let freq = (game.drawDow >= 0 && game.drawDow <= 6) ? 'Weekly ' : 'Daily '
-    game.name = freq + game.reqNumbers + '/' + game.padSize
+    return freq + game.reqNumbers + '/' + game.padSize
 }
+
+module.exports = retSettings

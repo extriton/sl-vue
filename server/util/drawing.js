@@ -1,9 +1,11 @@
 const axios = require('axios')
-const gameSettings = require('../../config/server/game-settings-server')()
-const util = reauire('./util')
+const gameSettings = require('../../config/server/game-settings-server')
+const util = require('./util')
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
+
+const Game = require('../models/Game.js')
 
 const contracts = {}
 const phases = {}                       // Фазы обработки: 'ready' готов к прокрутке, 'started' - уже прокручивается, 'finished' - прокрутка контракта (всех пулов) завершилась
@@ -29,18 +31,7 @@ function drawAllContracts() {
         // Loop contracts
         for (let i = 0; i < gameSettings.games.length; i++) {
             const game = gameSettings.games[i]
-            // Check contract drawing time start and start contract drawing
-            if (util.isDrawing(game)) {
-                if (phases[game.type] === 'ready') {
-                    phases[game.type] = 'started'
-                    startContractDrawing(game, contracts[game.type])
-                }
-            } else {
-                if (phases[game.type] === 'finished') {
-                    phases[game.type] = 'ready'
-                }
-            }
-            
+            startContractDrawing(game, contracts[game.type])
         }
     }, 3 * 60 * 1000)
 
@@ -50,7 +41,12 @@ function drawAllContracts() {
 // Init params and push transactions chain
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 async function startContractDrawing(_game, _contract) {
-    console.log(`${new Date()}: drawContract started... (${_game.type})`)
+    
+    // Check drawing time and ready phase
+    if (!util.isDrawing(_game) || phases[_game.type] !== 'ready') return
+    phases[_game.type] = 'starting'
+
+    console.log(`${new Date()}: startContractDrawing... (${_game.type})`)
 
     // Transactions counter
     let txCounter = 0
@@ -77,6 +73,11 @@ async function startContractDrawing(_game, _contract) {
         console.log(`${new Date()}: Error (${_game.type}): Cannot define drawingGameNum`)
         return
     }
+
+    // Update drawing field in collection
+    const game = await Game.findOne({ type: _game.type, id: drawingGameNum })
+    game.drawing = true
+    game.save()
     
     // Start first transaction after random pause
     const randomPause = Math.floor(Math.random() * 10) + 5;             // Рандомный старт через 5..15 мин
@@ -126,6 +127,8 @@ async function startContractDrawing(_game, _contract) {
                         pushTransaction(_game, _contract)
                     } else {
                         phases[_game.type] = 'finished'
+                        game.drawing = false
+                        game.save()
                     }
 
                 })

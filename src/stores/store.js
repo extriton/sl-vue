@@ -20,7 +20,7 @@ export default new Vuex.Store({
     language: '',
     dict: Language.getDictonary(),
     // For Game Settings
-    gameSettings: gameSettings(),
+    gameSettings: gameSettings,
     gameCurrentIndex: null,
     // For current contract data
     gameCurrentDetail: {

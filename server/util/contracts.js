@@ -88,8 +88,7 @@ async function syncAllContracts(clear = false) {
     }
         
     gameSettings.games.forEach(_game => {
-        
-        syncContract(_game, contracts[_game.type], clear)
+        syncContract(_game, _game.contract)
     })
 
 }

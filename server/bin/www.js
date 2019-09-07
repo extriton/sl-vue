@@ -3,7 +3,7 @@ const app = require('../app')
 const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../util/contracts')
-const drawing = require('../util/drawing')
+// const drawing = require('../util/drawing')
 
 const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
@@ -23,9 +23,8 @@ const io = require('socket.io').listen(server,
       path: '/ws/socket.io' })
 require('../sockets/sockets')(io)
 
-
-// Drawing contracts
-drawing.drawAllContracts()
+// Init contracts data
+contracts.init()
 
 // Set contracts listeners
 contracts.setListeners(io)
@@ -34,6 +33,8 @@ contracts.setListeners(io)
 contracts.syncAllContracts(true)
 setInterval(contracts.syncAllContracts, 30 * 60 * 1000)     // Synchronize every 30 minutes
 
+// Drawing contracts
+contracts.drawAllContracts()
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

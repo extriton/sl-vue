@@ -11,7 +11,6 @@ var GameSchema = new Schema({
     funds:              { type: Array, default: [] },
     winners:            { type: Array, default: [] },
     status:             { type: Number, default: 0 },                   // Game status: 0 - created/ready, 1 - draw, 2 - closed
-    drawing:            { type: Boolean, default: false },
     created:            { type: Date, default: Date.now }
 })
 

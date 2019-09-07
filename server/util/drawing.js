@@ -1,14 +1,12 @@
 const axios = require('axios')
+const config = require('../../config/config')
 const gameSettings = require('../../config/server/game-settings-server')
 const util = require('./util')
-const Tx = require('ethereumjs-tx');
+const Tx = require('ethereumjs-tx').Transaction
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
 
-const Game = require('../models/Game.js')
-
-const contracts = {}
-const phases = {}                       // Фазы обработки: 'ready' готов к прокрутке, 'started' - уже прокручивается, 'finished' - прокрутка контракта (всех пулов) завершилась
+// const Game = require('../models/Game.js')
 
 module.exports = {
     drawAllContracts        : drawAllContracts
@@ -19,19 +17,18 @@ module.exports = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function drawAllContracts() {
     
-    // Define contracts connections and init contract phases
-    gameSettings.games.forEach(game => {
-        if (!game.isActive) return
-        contracts[game.type] = new web3.eth.Contract(game.contractAbi, game.contractAddress)
-        phases[game.type] = 'ready'
-    })
+    // Check contracts.init() call
+    if (gameSettings.games[0].contract === undefined) {
+        console.log(`drawAllContracts... Error: contracts.init() not called!`)
+        return
+    }
 
     // Run timer and process contracts every 3 minutes
     setInterval(() => {
         // Loop contracts
         for (let i = 0; i < gameSettings.games.length; i++) {
             const game = gameSettings.games[i]
-            startContractDrawing(game, contracts[game.type])
+            startContractDrawing(game, game.contract)
         }
     }, 3 * 60 * 1000)
 
@@ -58,26 +55,25 @@ async function startContractDrawing(_game, _contract) {
 
     // Raw tranaction object
     const rawTransaction = {
-	    "from":			serviceAddress, 
-	    "gasPrice":		web3.utils.toHex('6000000000'),         // Default 6 Gwei
-	    "gasLimit":		web3.utils.toHex('3500000'),            // 3.5 millions
-	    "to":			contractAddress,
-	    "value":		'0x0',
-	    "data":			'',
-	    "nonce":		''
+        nonce           : '0x00',
+        gasPrice        : web3.utils.toHex('6000000000'),       // Default 6 Gwei
+        gasLimit        : web3.utils.toHex('3500000'),          // 3.5 millions
+	    to              : contractAddress,
+	    value           : '0x00',
+	    data            : ''
 	}
 
     // Store drawing game
-    const drawingGameNum = getCurrentGameNum(_game, _contract)
+    const drawingGameNum = util.getCurrentGameNum(_game, _contract)
     if (drawingGameNum === 0) {
         console.log(`${new Date()}: Error (${_game.type}): Cannot define drawingGameNum`)
         return
     }
 
     // Update drawing field in collection
-    const game = await Game.findOne({ type: _game.type, id: drawingGameNum })
-    game.drawing = true
-    game.save()
+    // const game = await Game.findOne({ type: _game.type, id: drawingGameNum })
+    // game.drawing = true
+    // game.save()
     
     // Start first transaction after random pause
     const randomPause = Math.floor(Math.random() * 10) + 5;             // Рандомный старт через 5..15 мин
@@ -103,21 +99,27 @@ async function startContractDrawing(_game, _contract) {
             rawTransaction.gasPrice = web3.utils.toHex('' + (gasPrice.data.fast / 10) + '000000000')
 
         // Get transaction count, later will used as nonce
-        web3.eth.getTransactionCount(serviceAddress).then(nonce => {
+        // web3.eth.getTransactionCount(serviceAddress).then(nonce => {
             
             rawTransaction.data = web3.utils.toHex(txCounter)
-            rawTransaction.nonce = web3.utils.toHex(nonce)
+            // rawTransaction.nonce = web3.utils.toHex(nonce)
 
             // Creating tranaction via ethereumjs-tx
-            const transaction = new Tx(rawTransaction)
+            const transaction = new Tx(rawTransaction, { chain: config.ethNetwork, hardfork: 'petersburg' })
             transaction.sign(servicePrivKey)
+
+            // Validate transaction: if transaction incorrect then log and return
+            if (!tx.validate() || bufferToHex(tx.getSenderAddress()) !== serviceAddress) {
+                console.log(`Invalid transaction: #${txCounter} (Game: ${_game.type}, GameNum: ${drawingGameNum})`)
+                return
+            }
 
             // Sending transacton via web3 module
             web3.eth.sendSignedTransaction('0x' + transaction.serialize().toString('hex'))
                 .on('receipt', receipt => {
                     
                     // Compare drawingGameNum and currentGameNum
-                    const currentGameNum = getCurrentGameNum(_game, _contract)
+                    const currentGameNum = util.getCurrentGameNum(_game, _contract)
                     if (currentGameNum === 0) {
                         console.log(`${new Date()}: Error (${_game.type}): Cannot getting currentGameNum; Transaction: ${txCounter}`)
                         return
@@ -127,8 +129,8 @@ async function startContractDrawing(_game, _contract) {
                         pushTransaction(_game, _contract)
                     } else {
                         phases[_game.type] = 'finished'
-                        game.drawing = false
-                        game.save()
+                        // game.drawing = false
+                        // game.save()
                     }
 
                 })
@@ -136,29 +138,8 @@ async function startContractDrawing(_game, _contract) {
                     console.log(`${new Date()}: Error (${_game.type}): ${error}`)
                 })
 
-        })
+       // })
 
     }
 
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Get current contract gameNum
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getCurrentGameNum (_game, _contract) {
-
-    let currentGame = null
-    try {
-        currentGame = await _contract.methods.getGameInfo(0).call()    
-    } catch (e) {
-        console.log(`${new Date()}: Error (${_game.type}): ${e}`)
-        return 0
-    }
-    
-    if (currentGame === null) {
-        console.log(`${new Date()}: Error (${_game.type}): currentGame === null`)
-        return 0
-    }
-
-    return currentGame._gamenum
 }

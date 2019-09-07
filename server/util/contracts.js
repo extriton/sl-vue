@@ -5,24 +5,47 @@ const Member = require('../models/Member')
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
 
+const drawAllContracts = require('./drawing').drawAllContracts
+
 let io = null
-const contracts = {}
 
 module.exports = {
+    init                    : init,
     setListeners            : setListeners,
-    syncAllContracts        : syncAllContracts
+    syncAllContracts        : syncAllContracts,
+    drawAllContracts        : drawAllContracts
+}
+
+//-------------------------------------------------------------------------------------------------//
+// Init contracts data
+//-------------------------------------------------------------------------------------------------//
+async function init() {
+
+    // Define contracts connections and init contract phases
+    for (let i = 0; i < gameSettings.games.length; i++) {
+        const game = gameSettings.games[i]
+        game.contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
+        game.phase = 'ready'
+        game.currentNum = util.getCurrentGameNum(game, game.contract)
+    }
+
 }
 
 //-------------------------------------------------------------------------------------------------//
 // Set listeners for all contracts
 //-------------------------------------------------------------------------------------------------//
 function setListeners(_io) {
+    
+    // Check contracts.init() call
+    if (gameSettings.games[0].contract === undefined) {
+        console.log(`setListeners...  Error: contracts.init() not called!`)
+        return
+    }
+    
     io = _io
 
     gameSettings.games.forEach(_game => {
-        if (!_game.isActive) return
-        contracts[_game.type] = new web3.eth.Contract(_game.contractAbi, _game.contractAddress)
-        setContractListeners(_game, contracts[_game.type])
+        setContractListeners(_game, _game.contract)
     })
 
     // Set listeners for contract
@@ -51,6 +74,12 @@ function setListeners(_io) {
 //-------------------------------------------------------------------------------------------------//
 async function syncAllContracts(clear = false) {
 
+    // Check contracts.init() call
+    if (gameSettings.games[0].contract === undefined) {
+        console.log(`syncAllContracts...  Error: contracts.init() not called!`)
+        return
+    }
+
     // Clear games and members data if 'clear' === true
     if (clear) {
         console.log(`Clearing Game and Member collection data`)
@@ -59,8 +88,7 @@ async function syncAllContracts(clear = false) {
     }
         
     gameSettings.games.forEach(_game => {
-        if(!_game.isActive) return
-        contracts[_game.type] = new web3.eth.Contract(_game.contractAbi, _game.contractAddress)
+        
         syncContract(_game, contracts[_game.type], clear)
     })
 

@@ -31,3 +31,6 @@ config/abi
 
 # Exclude contracts source
 contracts
+
+# Exclude tests files
+test*

@@ -3,6 +3,7 @@ const config = require('../../config/config')
 const gameSettings = require('../../config/server/game-settings-server')
 const util = require('./util')
 const Tx = require('ethereumjs-tx').Transaction
+const bufferToHex = require('ethereumjs-util').bufferToHex
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
 
@@ -43,7 +44,7 @@ async function startContractDrawing(_game, _contract) {
     } else {
         if (_game.phase === 'finished') {
             _game.phase = 'ready'
-            _game.currentNum = util.getCurrentGameNum(_game, _contract)
+            _game.currentNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
         }
         return
     }
@@ -69,16 +70,16 @@ async function startContractDrawing(_game, _contract) {
 	}
 
     // Store drawing game
-    _game.currentNum = util.getCurrentGameNum(_game, _contract)
-    console.log(`drawingGameNum: ${_game.currentNum}`)
-    if (_game.currentNum === 0) {
-        console.log(`${new Date()}: Error (${_game.type}): Cannot define _game.currentNum`)
+    try {
+    _game.currentNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
+    } catch (e) {
+        console.log(`${new Date()}: startContractDrawing error: getGameInfo(0).call() - ${e}`)
         return
     }
 
     // Start first transaction after random pause
-    const randomPause = Math.floor(Math.random() * 10) + 5;             // Рандомный старт через 5..15 мин
-    setTimeout(() => { pushTransaction(_game, _contract) }, randomPause * 60 * 1000)
+    const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.8) 
+    setTimeout(() => { pushTransaction(_game, _contract) }, randomPause * 1000)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // Push transaction 
@@ -97,48 +98,46 @@ async function startContractDrawing(_game, _contract) {
         }
 
         if (gasPrice !== null) 
-            rawTransaction.gasPrice = web3.utils.toHex('' + (gasPrice.data.fast / 10) + '000000000')
+            rawTransaction.gasPrice = web3.utils.toHex('' + (gasPrice.data.fast * 100000000))
 
         // Get transaction count, later will used as nonce
-        // web3.eth.getTransactionCount(serviceAddress).then(nonce => {
+        web3.eth.getTransactionCount(serviceAddress).then(nonce => {
             
             rawTransaction.data = web3.utils.toHex(_game.txCounter)
-            // rawTransaction.nonce = web3.utils.toHex(nonce)
+            rawTransaction.nonce = web3.utils.toHex(nonce)
 
             // Creating tranaction via ethereumjs-tx
-            const transaction = new Tx(rawTransaction, { chain: config.ethNetwork, hardfork: 'petersburg' })
-            transaction.sign(servicePrivKey)
+            const tx = new Tx(rawTransaction, { chain: config.ethNetwork, hardfork: 'petersburg' })
+            tx.sign(servicePrivKey)
 
             // Validate transaction: if transaction incorrect then log and return
-            if (!tx.validate() || bufferToHex(tx.getSenderAddress()) !== serviceAddress) {
+            if (!tx.validate() || bufferToHex(tx.getSenderAddress()) !== serviceAddress.toLowerCase()) {
                 console.log(`Invalid transaction: #${_game.txCounter} (Game: ${_game.type}, GameNum: ${_game.currentNum})`)
                 return
             }
 
             // Sending transacton via web3 module
-            web3.eth.sendSignedTransaction('0x' + transaction.serialize().toString('hex'))
-                .on('receipt', receipt => {
-                    
-                    // Compare drawingGameNum and currentGameNum
-                    const currentGameNum = util.getCurrentGameNum(_game, _contract)
-                    if (currentGameNum === 0) {
-                        console.log(`${new Date()}: Error (${_game.type}): Cannot getting currentGameNum; Transaction: ${_game.txCounter}`)
-                        return
-                    }
+            web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'))
+                .on('receipt', onReceipt)
+                .on('error', onError)
+        })
+        
+        async function onReceipt (receipt) {
+           
+            // Compare drawingGameNum and currentGameNum
+           const currentGameNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
 
-                    if (currentGameNum == _game.currentNum) {
-                        pushTransaction(_game, _contract)
-                    } else {
-                        _game.phase = 'finished'
-                        
-                    }
+           if (currentGameNum == _game.currentNum) {
+               pushTransaction(_game, _contract)
+           } else {
+               _game.phase = 'finished'
+           }
+        
+        }
 
-                })
-                .on('error', error => {
-                    console.log(`${new Date()}: Error (${_game.type}): ${error}`)
-                })
-
-       // })
+        function onError (error) {
+            console.log(`${new Date()}: Error (${_game.type}): ${error}`)
+        }
 
     }
 

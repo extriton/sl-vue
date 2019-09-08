@@ -1,5 +1,4 @@
 const gameSettings = require('../../config/server/game-settings-server')
-const util = require('../util/util')
 
 const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
@@ -76,9 +75,9 @@ async function getGameHistory(data, socket) {
       _game = gameSettings.games[i]
       break
     }
-
-  const historyCountPromise = Game.countDocuments({ type: data.type, game_id: { $lt: _game.currentNum } })
-  const historyPromise = Game.find({ type: data.type, game_id: { $lt: _game.currentNum } }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
+  
+  const historyCountPromise = Game.countDocuments({ type: data.type, id: { $lt: _game.currentNum } })
+  const historyPromise = Game.find({ type: data.type, id: { $lt: _game.currentNum } }).sort({ id: -1 }).skip((data.page - 1) * 10).limit(10)
 
   const historyCount = await historyCountPromise
   const history = await historyPromise
@@ -100,7 +99,6 @@ async function getGameHistory(data, socket) {
       winners         : history[i].winners,
       status          : history[i].status
     })
-
   socket.emit('getGameHistorySuccess', result)
 }
 
@@ -131,7 +129,6 @@ async function getPlayerHistory(data, socket) {
 
   let unpaidAmount = 0
   for (let i = 0; i < unpaidAmounts.length; i++) unpaidAmount += unpaidAmounts[i].prize
-
 
   const result = {
     HistoryCount: historyCount,

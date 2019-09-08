@@ -19,16 +19,18 @@ module.exports = {
 //-------------------------------------------------------------------------------------------------//
 // Init contracts data
 //-------------------------------------------------------------------------------------------------//
-async function init() {
+async function init(cb) {
 
     // Define contracts connections and init contract phases
     for (let i = 0; i < gameSettings.games.length; i++) {
-        const game = gameSettings.games[i]
+        let game = gameSettings.games[i]
         game.contract = new web3.eth.Contract(game.contractAbi, game.contractAddress)
-        game.currentNum = util.getCurrentGameNum(game, game.contract)
+        game.currentNum = (await game.contract.methods.getGameInfo(0).call())._gamenum
         game.phase = 'ready'
         game.txCounter = 0
     }
+
+    if (typeof(cb) === 'function') cb()
 
 }
 
@@ -45,9 +47,10 @@ function setListeners(_io) {
     
     io = _io
 
-    gameSettings.games.forEach(_game => {
-        setContractListeners(_game, _game.contract)
-    })
+    for (let i = 0; i < gameSettings.games.length; i++) {
+        let game = gameSettings.games[i]
+        setContractListeners(game, game.contract)
+    }
 
     // Set listeners for contract
     function setContractListeners(_game, _contract) {
@@ -87,10 +90,11 @@ async function syncAllContracts(clear = false) {
         await Game.deleteMany()
         await Member.deleteMany()
     }
-        
-    gameSettings.games.forEach(_game => {
-        syncContract(_game, _game.contract)
-    })
+    
+    for (let i = 0; i < gameSettings.games.length; i++) {
+        let game = gameSettings.games[i]
+        syncContract(game, game.contract)
+    }
 
 }
 
@@ -156,8 +160,7 @@ async function GameChanged(_game, _contract, res) {
         await saveGame(_game, _contract, res._gameNum)
     }
     
-    const runTimer = (res._action === 0) ? true : false
-    io.emit('refreshContractData',  { type: _game.type, runTimer: runTimer })
+    io.emit('refreshContractData',  { type: _game.type })
 
 }
 

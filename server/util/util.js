@@ -45,16 +45,14 @@ async function getCurrentGameNum (_game, _contract) {
 
     let currentGame = null
     try {
-        currentGame = await _contract.methods.getGameInfo(0).call()    
+        currentGame = await _contract.methods.getGameInfo(0).call()
     } catch (e) {
         console.log(`${new Date()}: Error (${_game.type}): ${e}`)
-        return 0
     }
     
     if (currentGame === null) {
         console.log(`${new Date()}: Error (${_game.type}): currentGame === null`)
-        return 0
     }
 
-    return currentGame._gamenum
+    return currentGame
 }

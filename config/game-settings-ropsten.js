@@ -23,10 +23,10 @@ module.exports = {
             minWinMatch: 2,
             arrSize: 4,                         // REQ_NUMBERS - MIN_WIN_MATCH + 1
             drawDow: 7,                         // Day of week: 0 ... 6 (Sunday ... Saturday), other value - everyday
-            drawHour: 15,                       // Hour: 0-23
-            drawMinute: 48,                     // Minute: 0-59
-            preDrawPeriod: 60,                   // (minutes)
-            postDrawPeriod: 60,                  // (minutes)
+            drawHour: 6,                       // Hour: 0-23
+            drawMinute: 35,                     // Minute: 0-59
+            preDrawPeriod: 3,                   // (minutes)
+            postDrawPeriod: 3,                  // (minutes)
             ticketPrice: 0.01,
             distribFund: { '2': 20, '3': 30, '4': 35, '5': 15},
             isActive: true,

@@ -323,14 +323,17 @@ export default {
         },
         ...mapMutations(['newNotify'])
     },
-    mounted () {
+    beforeMount () {
         // Run Timer
         this.runTimer()
         // Init Numbers array and numbers data
         this.numbers = new Array(this.gameCurrent.padSize).fill(0)
         this.leftNumbers = this.gameCurrent.reqNumbers
-        // Request current game data
+        // Init and request current game data detail
+        this.$store.commit('initGameDetail')
         this.$socket.emit('getGameData', { type: this.gameCurrent.type })
+    },
+    mounted () {
         // Define loto-pad-item width
         this.lotoPadItemWidth = this.$el.querySelector('.loto-pad-item-adjust').clientWidth / 100 * 9 + 'px'
     },
@@ -388,7 +391,7 @@ export default {
             left: 0;
             background-color: rgba(0, 0, 0, 0.8);
             border-radius: 5px;
-            z-index: 100;
+            z-index: 1;
             transition: height 1s ease-out 0.3s;
             overflow: hidden;
             .drawing-text {

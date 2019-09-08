@@ -3,65 +3,65 @@
         <div class="game-rules-caption"><h3>{{ dict.menu_rules }}</h3></div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_clock.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_clock.png"  alt="" title="" />
             </span>
             {{ dict.rules_play_time1 }}: <span class="blue">{{ drawTime }}.</span><br />
             {{ dict.rules_play_time3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_cost.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_cost.png"  alt="" title="" />
             </span>
             {{ dict.rules_ticket_cost }}: <span class="blue">{{ gameCurrent.ticketPrice }} ETH</span><br />
             {{ dict.rules_ticket_cost1 }}<br />
-            <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;
+            <i class="fa fa-warning blue"></i>&nbsp;&nbsp;&nbsp;
             {{ dict.rules_ticket_cost2 }} <span class="blue">0 ETH</span><br />
             {{ dict.rules_ticket_cost3 }} <span class="blue">200 000 - 700 000</span><br />
             {{ dict.rules_ticket_cost4 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_address.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_address.png"  alt="" title="" />
             </span>
             {{ dict.rules_address }}: <a :href="contractUrl" target="_blank" rel="noreferrer">{{ gameCurrent.contractAddress }}</a>
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" />
             </span>
             {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank" rel="noreferrer">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank" rel="noreferrer">MetaMask</a></span>
-            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="glyphicon glyphicon-warning-sign blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
+            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="fa fa-warning blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_gas.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_gas.png"  alt="" title="" />
             </span>
             {{ dict.rules_gas_limit }}: <span class="blue">350 000</span><br />
             {{ dict.rules_gas_price }}: <span class="blue">{{ gasPriceFast }} Gwei</span>
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_fund1.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_fund1.png"  alt="" title="" />
             </span>
             {{ dict.rules_distr_funds }}: 
             <div class="column blue">
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 80% - {{ dict.rules_prize_fund }}<br />
-                <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; 20% - {{ dict.rules_service }}
+                <i class="fa fa-minus"></i>&nbsp;&nbsp; 80% - {{ dict.rules_prize_fund }}<br />
+                <i class="fa fa-minus"></i>&nbsp;&nbsp; 20% - {{ dict.rules_service }}
             </div>
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
-                <img src="../../public/img/icons/icon_fund2.png"  alt="" title="" width="50" height="50" />
+                <img src="../../public/img/icons/icon_fund2.png"  alt="" title="" />
             </span>
             {{ dict.rules_prize_pool_distr }}: 
             <div class="column blue">
                 <span v-for="(item, index) in distribFunds" :key="index">
-                    <i class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp; {{ item }}<br />
+                    <i class="fa fa-minus"></i>&nbsp;&nbsp; {{ item }}<br />
                 </span>
             </div>
             <div style="min-height: 20px;"></div>
-            <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt1 }}<br />
-            <i class="glyphicon glyphicon-minus"></i> {{ dict.rules_prize_txt2 }}
+            <i class="fa fa-minus"></i> {{ dict.rules_prize_txt1 }}<br />
+            <i class="fa fa-minus"></i> {{ dict.rules_prize_txt2 }}
         </div>
     </div>
 </template>
@@ -96,10 +96,23 @@ export default {
             else
                 res = this.dict.everyday + ' '
             
+            let _time = (this.gameCurrent.drawHour * 60 + this.gameCurrent.drawMinute - this.gameCurrent.preDrawPeriod)
+            let from_hour = parseInt(_time / 60)
+            let from_minute = _time % 60
+            _time = (this.gameCurrent.drawHour * 60 + this.gameCurrent.drawMinute + this.gameCurrent.postDrawPeriod)
+            let to_hour = parseInt(_time / 60)
+            let to_minute = _time % 60
+
+            if (('' + from_hour).length === 1) from_hour = '0' + from_hour
+            if (('' + from_minute).length === 1) from_minute = '0' + from_minute
+            if (('' + to_hour).length === 1) to_hour = '0' + to_hour
+            if (('' + to_minute).length === 1) to_minute = '0' + to_minute
+
             res += this.dict.from + ' '
-            res += (this.gameCurrent.drawHour - 1) + '-00 '
+            res += from_hour + '-' + from_minute + ' '
             res += this.dict.to + ' '
-            res += (this.gameCurrent.drawHour + 2) + '-00 GMT'
+            res += to_hour + '-' + to_minute + ' '
+            res += 'GMT'
 
             return res
         },
@@ -167,6 +180,10 @@ export default {
             border-radius: 5px;
             left: 10px;
             top: 10px;
+            img {
+                width: 32px;
+                height: 32px;
+            }
         }
         a, .blue {
             color: #CC6610;

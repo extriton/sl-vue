@@ -97,6 +97,12 @@ export default new Vuex.Store({
       state.gameCurrentIndex = index
       state.gameCurrent = state.gameSettings.games[index]
     },
+    initGameDetail (state) {
+      state.gameCurrentDetail.GameNum = 0
+      state.gameCurrentDetail.Jackpot = 0
+      state.gameCurrentDetail.Fund = 0
+      state.gameCurrentDetail.Phase = 'ready'
+    },
     getGameDataSuccess (state, payload) {
       state.gameCurrentDetail = payload
     },

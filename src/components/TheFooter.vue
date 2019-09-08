@@ -25,6 +25,7 @@ export default {
     width: 100%;
     background-color: #0E1014;
     color: #FFF;
+    z-index: 5;
     .color-blue {
         color: #34BBFF;
     }

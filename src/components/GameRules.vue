@@ -5,18 +5,18 @@
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_clock.png"  alt="" title="" />
             </span>
-            {{ dict.rules_play_time1 }}: <span class="blue">{{ drawTime }}.</span><br />
+            {{ dict.rules_play_time1 }}: <span class="data-value">{{ drawTime }}.</span><br />
             {{ dict.rules_play_time3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_cost.png"  alt="" title="" />
             </span>
-            {{ dict.rules_ticket_cost }}: <span class="blue">{{ gameCurrent.ticketPrice }} ETH</span><br />
+            {{ dict.rules_ticket_cost }}: <span class="data-value">{{ gameCurrent.ticketPrice }} ETH</span><br />
             {{ dict.rules_ticket_cost1 }}<br />
-            <i class="fa fa-warning blue"></i>&nbsp;&nbsp;&nbsp;
-            {{ dict.rules_ticket_cost2 }} <span class="blue">0 ETH</span><br />
-            {{ dict.rules_ticket_cost3 }} <span class="blue">200 000 - 700 000</span><br />
+            <i class="fa fa-warning warn data-value"></i>
+            {{ dict.rules_ticket_cost2 }} <span class="data-value">0 ETH</span><br />
+            {{ dict.rules_ticket_cost3 }} <span class="data-value">200 000 - 700 000</span><br />
             {{ dict.rules_ticket_cost4 }}
         </div>
         <div class="rules-row">
@@ -30,21 +30,21 @@
                 <img src="../../public/img/icons/icon_wallet.png"  alt="" title="" />
             </span>
             {{ dict.rules_wallets }}: <span><a href="https://www.myetherwallet.com/" target="_blank" rel="noreferrer">MyEtherWallet</a>, <a href="https://metamask.io/" target="_blank" rel="noreferrer">MetaMask</a></span>
-            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="fa fa-warning blue"></i>&nbsp;&nbsp;&nbsp;{{ dict.rules_wallets3 }}
+            {{ dict.rules_wallets1 }}<br />{{ dict.rules_wallets2 }} <br /> <i class="fa fa-warning warn data-value"></i>{{ dict.rules_wallets3 }}
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_gas.png"  alt="" title="" />
             </span>
-            {{ dict.rules_gas_limit }}: <span class="blue">350 000</span><br />
-            {{ dict.rules_gas_price }}: <span class="blue">{{ gasPriceFast }} Gwei</span>
+            {{ dict.rules_gas_limit }}: <span class="data-value">350 000</span><br />
+            {{ dict.rules_gas_price }}: <span class="data-value">{{ gasPriceFast }} Gwei</span>
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_fund1.png"  alt="" title="" />
             </span>
             {{ dict.rules_distr_funds }}: 
-            <div class="column blue">
+            <div class="column data-value">
                 <i class="fa fa-minus"></i>&nbsp;&nbsp; 80% - {{ dict.rules_prize_fund }}<br />
                 <i class="fa fa-minus"></i>&nbsp;&nbsp; 20% - {{ dict.rules_service }}
             </div>
@@ -54,7 +54,7 @@
                 <img src="../../public/img/icons/icon_fund2.png"  alt="" title="" />
             </span>
             {{ dict.rules_prize_pool_distr }}: 
-            <div class="column blue">
+            <div class="column data-value">
                 <span v-for="(item, index) in distribFunds" :key="index">
                     <i class="fa fa-minus"></i>&nbsp;&nbsp; {{ item }}<br />
                 </span>
@@ -185,7 +185,7 @@ export default {
                 height: 32px;
             }
         }
-        a, .blue {
+        a, .data-value {
             color: #CC6610;
         }
         .column {
@@ -193,6 +193,7 @@ export default {
             padding-top: 10px;
         }
     }
+
 }
 
 @media all and (min-width: 761px) {
@@ -209,6 +210,9 @@ export default {
             min-height: 5em;
             margin: 1em;
             padding: .7em .7em .7em 5em;
+            .warn {
+                margin: .7em .7em 0 .7em;
+            }
         }
     }
 }
@@ -229,6 +233,9 @@ export default {
             padding: .7em .7em .7em .7em;
             .rules-dotter {
                 display: none;
+            }
+            .warn {
+                margin: .5em .5em 0 .5em;
             }
         }
     }

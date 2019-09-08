@@ -194,7 +194,7 @@ export default {
                     this.timer -= 1000
                 } else {
                     this.timer = 0
-                    if (this.gameCurrentDetail.Phase !== 'ready')
+                    if (this.gameCurrentDetail.Phase === 'ready')
                         this.timer = util.calcTimerStart(this.gameCurrent) * 1000
                 }
             }, 1000)

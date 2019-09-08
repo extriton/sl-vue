@@ -38,6 +38,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import util from '@/util/util'
 
 export default {
   name: 'GamesList',
@@ -70,11 +71,14 @@ export default {
       else
         res = this.dict.everyday + ' '
             
+      const _time = util.calcDrawPeriod(game)
+
       res += this.dict.from + ' '
-      res += (game.drawHour - Math.ceil(game.preDrawPeriod / 60)) + '-00 '
+      res += _time.fromHour + '-' + _time.fromMinute + ' '
       res += this.dict.to + ' '
-      res += (game.drawHour + Math.ceil(game.postDrawPeriod / 60)) + '-00 GMT'
-      
+      res += _time.toHour + '-' + _time.toMinute + ' '
+      res += 'GMT'
+
       return res
     },
     doCopyAddress (game) {

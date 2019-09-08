@@ -149,14 +149,16 @@ async function syncContract(_game, _contract) {
 //-------------------------------------------------------------------------------------------------//
 async function GameChanged(_game, _contract, res) {
     console.log(`Game ${res._gameNum} changed. (${_game.type})`)
-
+    console.log(`res._action: ${res._action}`)
     // 0 - New game
     if (res._action === 0) {
+        console.log(`syncContract`)
         syncContract(_game, _contract)
     }
 
     // 1 - Change status or 2 - Change Jackpot
     if (res._action === 1 || res._action === 2) {
+        console.log(`saveGame; status: ${res._action}`)
         await saveGame(_game, _contract, res._gameNum)
     }
     

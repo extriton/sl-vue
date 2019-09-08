@@ -5,7 +5,7 @@
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_clock.png"  alt="" title="" />
             </span>
-            {{ dict.rules_play_time1 }}: <span class="data-value">{{ drawTime }}.</span><br />
+            {{ dict.rules_play_time1 }}: <span class="data-value">{{ textDrawTime }}.</span><br />
             {{ dict.rules_play_time3 }}
         </div>
         <div class="rules-row">
@@ -71,6 +71,7 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import util from '@/util/util'
 
 export default {
     name: 'GameRules',
@@ -88,7 +89,7 @@ export default {
         contractUrl () {
             return this.gameSettings.etherscanAddressUrl + this.gameCurrent.contractAddress + '#contracts'
         },
-        drawTime () {
+        textDrawTime () {
             const dows = { '1': 'monday', '2': 'tuesday', '3': 'wednesday', '4': 'thursday', '5': 'friday', '6': 'saturday', '0': 'sunday' }
             let res = ''
             if (this.gameCurrent.drawDow >= 0 && this.gameCurrent.drawDow <= 6) 
@@ -96,22 +97,12 @@ export default {
             else
                 res = this.dict.everyday + ' '
             
-            let _time = (this.gameCurrent.drawHour * 60 + this.gameCurrent.drawMinute - this.gameCurrent.preDrawPeriod)
-            let from_hour = parseInt(_time / 60)
-            let from_minute = _time % 60
-            _time = (this.gameCurrent.drawHour * 60 + this.gameCurrent.drawMinute + this.gameCurrent.postDrawPeriod)
-            let to_hour = parseInt(_time / 60)
-            let to_minute = _time % 60
-
-            if (('' + from_hour).length === 1) from_hour = '0' + from_hour
-            if (('' + from_minute).length === 1) from_minute = '0' + from_minute
-            if (('' + to_hour).length === 1) to_hour = '0' + to_hour
-            if (('' + to_minute).length === 1) to_minute = '0' + to_minute
+            const _time = util.calcDrawPeriod(this.gameCurrent)
 
             res += this.dict.from + ' '
-            res += from_hour + '-' + from_minute + ' '
+            res += _time.fromHour + '-' + _time.fromMinute + ' '
             res += this.dict.to + ' '
-            res += to_hour + '-' + to_minute + ' '
+            res += _time.toHour + '-' + _time.toMinute + ' '
             res += 'GMT'
 
             return res

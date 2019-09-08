@@ -90,6 +90,31 @@ export default {
         }
     
         return dataString
+    },
+
+    calcDrawPeriod (_game) {
+
+        const res = {
+            fromHour: '00',
+            fromMinute: '00',
+            toHour: '00',
+            toMinute: '00'
+        }
+
+        let _time = (_game.drawHour * 60 + _game.drawMinute - _game.preDrawPeriod)
+        res.fromHour = '' + parseInt(_time / 60)
+        res.fromMinute = '' + _time % 60
+        _time = (_game.drawHour * 60 + _game.drawMinute + _game.postDrawPeriod)
+        res.toHour = '' + parseInt(_time / 60)
+        res.toMinute = ''+ _time % 60
+
+        if (res.fromHour.length === 1) res.fromHour = '0' + res.fromHour
+        if (res.fromMinute.length === 1) res.fromMinute = '0' + res.fromMinute
+        if (res.toHour.length === 1) res.toHour = '0' + res.toHour
+        if (res.toMinute.length === 1) res.toMinute = '0' + res.toMinute
+
+        return res
+
     }
 
 }

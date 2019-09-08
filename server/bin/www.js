@@ -23,7 +23,7 @@ const io = require('socket.io').listen(server, { secure: false, rejectUnauthoriz
 
 
 const SYNC_INTERVAL = 30 * 60 * 1000                        // Synchronize every 30 minutes
-const CLEAR_COLLECTION = false
+const CLEAR_COLLECTION = true
 
 // Init contracts data
 contracts.init(io, () => {

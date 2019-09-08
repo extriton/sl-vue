@@ -8,24 +8,27 @@ import Web3 from 'web3'
 * 5. Get user balance
 */
 
-let getWeb3 = new Promise(function (resolve, reject) {
-  // Check for injected web3 (mist/metamask)
-  const web3js = window.web3
-
-  if (typeof web3js !== 'undefined') {
-    const web3 = new Web3(web3js.currentProvider)
+let getWeb3 = new Promise((resolve, reject) => {
+  
+  if (typeof window.ethereum !== 'undefined' || typeof window.web3 !== 'undefined') {
+    
+    const provider = window['ethereum'] || window.web3.currentProvider
+    const web3 = new Web3(provider)
     
     // Disable refreshing page if network id changed in metamask (only in window[ethereum])
-    if (window['ethereum']) window['ethereum'].autoRefreshOnNetworkChange = false
-
-    // Check for Mitamask / Mist unlocked
-    web3.eth.getAccounts((err, accounts) => {
-      if (err) reject(new Error('getAccounts error: ' + err))
-      else if (accounts.length === 0) reject(new Error('Metamask is locked'))
-      else { 
-        resolve({ injectedWeb3: true, web3 () { return web3 } })
-      }
-    })
+    if (typeof window.ethereum !== 'undefined') window['ethereum'].autoRefreshOnNetworkChange = false
+    
+    ethereum.enable()
+      .then(accounts => {
+        if (accounts.length === 0) 
+          reject(new Error('Metamask is locked'))
+        else { 
+          resolve({ injectedWeb3: true, web3 () { return web3 } })
+        }
+      })
+      .catch(error => {
+        reject(new Error(`ethereum.enable() error: + ${error}`))
+      })
     
   } else {
     reject(new Error('Unable to connect to Metamask'))

@@ -4,10 +4,7 @@ const Game = require('../models/Game')
 const Member = require('../models/Member')
 const Web3 = require('web3')
 const web3 = new Web3(gameSettings.websocketProvider)
-
 const drawAllContracts = require('./drawing').drawAllContracts
-
-let io = null
 
 module.exports = {
     init                    : init,
@@ -19,7 +16,9 @@ module.exports = {
 //-------------------------------------------------------------------------------------------------//
 // Init contracts data
 //-------------------------------------------------------------------------------------------------//
-async function init(cb) {
+async function init(io, cb) {
+
+    gameSettings.io = io
 
     // Define contracts connections and init contract phases
     for (let i = 0; i < gameSettings.games.length; i++) {
@@ -37,7 +36,7 @@ async function init(cb) {
 //-------------------------------------------------------------------------------------------------//
 // Set listeners for all contracts
 //-------------------------------------------------------------------------------------------------//
-function setListeners(_io) {
+function setListeners() {
     
     // Check contracts.init() call
     if (gameSettings.games[0].contract === undefined) {
@@ -45,8 +44,6 @@ function setListeners(_io) {
         return
     }
     
-    io = _io
-
     for (let i = 0; i < gameSettings.games.length; i++) {
         let game = gameSettings.games[i]
         setContractListeners(game, game.contract)
@@ -109,6 +106,10 @@ async function syncContract(_game, _contract) {
     const arrGames = new Array(parseInt(lastGameContract._gamenum))
     const dbGames = await Game.find({ type: _game.type })
 
+    // Refresh currentNum
+    _game.currentNum = lastGameContract._gamenum
+    _game.phase = 'ready'
+
     // Init arrGames
     for (let i = 0; i < arrGames.length; i++)
         arrGames[i] = { membersCounter: 0, members: [], status: 0 }
@@ -149,29 +150,24 @@ async function syncContract(_game, _contract) {
 //-------------------------------------------------------------------------------------------------//
 async function GameChanged(_game, _contract, res) {
     console.log(`Game ${res._gameNum} changed. (${_game.type})`)
-    console.log(`res._action: ${res._action}`)
+    
     // 0 - New game
-    if (res._action === 0) {
-        console.log(`syncContract`)
+    if (res._action == 0) {
         syncContract(_game, _contract)
     }
 
     // 1 - Change status or 2 - Change Jackpot
-    if (res._action === 1 || res._action === 2) {
-        console.log(`saveGame; status: ${res._action}`)
+    if (res._action == 1 || res._action == 2) {
         await saveGame(_game, _contract, res._gameNum)
     }
-    
-    io.emit('refreshContractData',  { type: _game.type })
 
 }
 
 async function MemberChanged(_game, _contract, res) {
     console.log(`Member ${res._gameNum}, ${res._member} changed. (${_game.type})`)
     
-    await saveMember(_game, _contract, res._gameNum, res._member)
-
-    io.emit('refreshContractData', { type: _game.type })
+    saveGame(_game, _contract, res._gameNum)
+    saveMember(_game, _contract, res._gameNum, res._member)
 
 }
 
@@ -230,6 +226,8 @@ async function saveGame(_game, _contract, id) {
     
     await game.save()
 
+    gameSettings.io.emit('refreshContractData',  { type: _game.type })
+
     return game
 }
 
@@ -237,18 +235,21 @@ async function saveMember(_game, _contract, game_id, id) {
     
     console.log(`SaveMember... game_id: ${game_id}, id: ${id} (${_game.type})`)
     
-    await Member.deleteOne({ game_type: _game.type, game_id: game_id, id: id })
-    const memberInfoPromise = _contract.methods.getMemberInfo(game_id, id).call()
     const gamePromise = Game.findOne({ type: _game.type, id: game_id })
-
-    const memberInfo = await memberInfoPromise
-    const game = await gamePromise
-
-    const member = new Member()
+    const memberPromise = Member.findOne({ game_type: _game.type, game_id: game_id, id: id })
+    const memberInfoPromise = _contract.methods.getMemberInfo(game_id, id).call()
     
-    member.game_type        = _game.type
-    member.game_id          = game_id
-    member.id               = id
+    const game = await gamePromise
+    const memberInfo = await memberInfoPromise
+    let member = await memberPromise
+
+    if (member === null) {
+        member = new Member()
+        member.game_type        = _game.type
+        member.game_id          = game_id
+        member.id               = id
+    }
+    
     member.address          = memberInfo._addr.toLowerCase()
     member.numbers          = memberInfo._numbers
     member.prize            = parseFloat(web3.utils.fromWei('' + memberInfo._prize, 'ether'))
@@ -269,6 +270,8 @@ async function saveMember(_game, _contract, game_id, id) {
     }
     
     await member.save()
+
+    gameSettings.io.emit('refreshContractData',  { type: _game.type })
 
     return member
 }

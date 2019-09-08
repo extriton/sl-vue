@@ -27,7 +27,8 @@ export default new Vuex.Store({
       GameNum: 0,
       Jackpot: 0,
       Fund: 0,
-      Phase: 'ready'
+      Phase: 'ready',
+      Status: 0
     }, 
     // For games history
     gameCurrentHistory: {
@@ -102,6 +103,7 @@ export default new Vuex.Store({
       state.gameCurrentDetail.Jackpot = 0
       state.gameCurrentDetail.Fund = 0
       state.gameCurrentDetail.Phase = 'ready'
+      state.gameCurrentDetail.Status = 0
     },
     getGameDataSuccess (state, payload) {
       state.gameCurrentDetail = payload

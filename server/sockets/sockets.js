@@ -47,7 +47,8 @@ async function getGameData(data, socket) {
     GameNum: lastGame.id,
     Jackpot: lastGame.funds[fundsSize - 1],
     Fund: lastGame.totalFund,
-    Phase: _game.phase
+    Phase: _game.phase,
+    Status: lastGame.status
   }
 
   socket.emit('getGameDataSuccess', result)
@@ -156,7 +157,7 @@ async function getPlayerHistory(data, socket) {
       const match = (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
       const tmp = {
         num: result.History[i].numbers[j],
-        match: (result.History[i].winNumbers.indexOf(result.History[i].numbers[j]) === -1) ? false : true
+        match: match
       }
       result.History[i].numbers[j] = tmp
     }

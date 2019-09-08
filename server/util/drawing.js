@@ -45,6 +45,7 @@ async function startContractDrawing(_game, _contract) {
         if (_game.phase === 'finished') {
             _game.phase = 'ready'
             _game.currentNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
+            gameSettings.io.emit('refreshContractData',  { type: _game.type })
         }
         return
     }
@@ -53,6 +54,8 @@ async function startContractDrawing(_game, _contract) {
 
     _game.phase = 'starting'
     _game.txCounter = 0
+    _game.currentNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
+    gameSettings.io.emit('refreshContractData',  { type: _game.type })
 
     // Transaction params
     const serviceAddress = _game.serviceAddress
@@ -68,14 +71,6 @@ async function startContractDrawing(_game, _contract) {
 	    value           : '0x00',
 	    data            : ''
 	}
-
-    // Store drawing game
-    try {
-    _game.currentNum = (await _game.contract.methods.getGameInfo(0).call())._gamenum
-    } catch (e) {
-        console.log(`${new Date()}: startContractDrawing error: getGameInfo(0).call() - ${e}`)
-        return
-    }
 
     // Start first transaction after random pause
     const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.8) 

@@ -23,16 +23,17 @@ const io = require('socket.io').listen(server, { secure: false, rejectUnauthoriz
 
 
 const SYNC_INTERVAL = 30 * 60 * 1000                        // Synchronize every 30 minutes
+const CLEAR_COLLECTION = false
 
 // Init contracts data
-contracts.init(() => {
+contracts.init(io, () => {
 
   // Set contracts listeners
-  contracts.setListeners(io)
+  contracts.setListeners()
 
   // Synchronize db & contracts data (true - clear collection)
-  contracts.syncAllContracts(false)
-  setInterval(contracts.syncAllContracts, SYNC_INTERVAL)
+  contracts.syncAllContracts(CLEAR_COLLECTION)
+  setInterval(() => { contracts.syncAllContracts(CLEAR_COLLECTION) }, SYNC_INTERVAL)
 
   // Drawing contracts
   contracts.drawAllContracts()

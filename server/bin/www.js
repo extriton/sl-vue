@@ -4,7 +4,7 @@ const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../util/contracts')
 
-const test = require('../util/test')
+// const test = require('../util/test')
 
 const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)

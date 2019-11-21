@@ -15,7 +15,7 @@ module.exports = {
             ticketPrice: 0.01,
             distribFund: { '2': 20, '3': 30, '4': 35, '5': 15},
             isActive: true,
-            contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
+            contractAddress: '0xC8ab1121655Cd5a8c314e07574c0AC2F8Ad60F8B',
         },
         {   
             reqNumbers: 6,
@@ -29,7 +29,7 @@ module.exports = {
             postDrawPeriod: 2,                  // (minutes)
             ticketPrice: 0.01,
             distribFund: { '3': 20, '4': 30, '5': 35, '6': 15},
-            isActive: true,
+            isActive: false,
             contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
         }
     ]

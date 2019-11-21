@@ -132,12 +132,12 @@ async function syncContract(_game, _contract) {
             arrGames[i].members[j] = 0
     }
 
-    // Get members data for current game
+    // Get members data for current game type
     const dbMembers = await Member.find({ game_type: _game.type })
     for (let i = 0; i < dbMembers.length; i++)
         arrGames[dbMembers[i].game_id - 1].members[dbMembers[i].id - 1] = dbMembers[i].payout
 
-    // Loop arrGames and save needed memebers
+    // Loop arrGames and save needed members
     for (let i = 0; i < arrGames.length; i++)
         for (let j = 0; j < arrGames[i].membersCounter; j++)
             if (arrGames[i].members[j] !== 1)
@@ -252,23 +252,16 @@ async function saveMember(_game, _contract, game_id, id) {
     
     member.address          = memberInfo._addr.toLowerCase()
     member.numbers          = memberInfo._numbers
-    member.prize            = parseFloat(web3.utils.fromWei('' + memberInfo._prize, 'ether'))
-    member.payout           = memberInfo._payout
+    member.prize            = 0
+    member.payout           = 0
 
-    if (game.status > 0) {
+    if (game.status == 2) {
         member.winNumbers       = game.winNumbers
         member.matchNumbers     = util.findMatch(memberInfo._numbers, game.winNumbers)
+        member.prize            = parseFloat(web3.utils.fromWei('' + memberInfo._prize, 'ether'))
+        member.payout           = 1
     }
 
-    const matchIndex = member.matchNumbers - _game.minWinMatch
-    if (game.status === 2 && member.payout === 0 && matchIndex >= 0) {
-        member.prize = game.funds[matchIndex] / game.winners[matchIndex]
-    }
-
-    if (game.status === 2 && member.payout === 0 && member.prize === 0) {
-        member.payout = 1
-    }
-    
     await member.save()
 
     gameSettings.io.emit('refreshContractData',  { type: _game.type })

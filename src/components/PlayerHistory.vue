@@ -18,12 +18,6 @@
                 <i class="fa fa-refresh"></i>
             </div>
         </div>
-        <div v-show="isShowUnpaidAmount" class="unpaid-amount-wrapper">
-            <div class="unpaid-amount">{{ unpaidAmount }} ETH</div>
-            <div class="m-btn btn-payout" @click="doPayout">
-                {{ dict.pick_up }}
-            </div>
-        </div>
         <!-- Data table -->
         <table>
             <thead>
@@ -47,8 +41,6 @@
                         <td :class="{ blue: item.prize > 0 }">
                             <span v-show="item.game_id !== gameCurrentDetail.GameNum && item.prize !== 0">
                                 {{ formatNumber(item.prize, 1, 5) }}
-                                <span v-show="item.payout === 0" style="color: red;">&nbsp;<i class="fa fa-minus"></i></span>
-                                <span v-show="item.payout === 1" style="color: green;">&nbsp;<i class="fa fa-check"></i></span>
                             </span>
                             <span v-show="item.game_id !== gameCurrentDetail.GameNum && item.prize === 0">
                                 <i style="font-size: 1em; color: #33B5F7;">-&nbsp;&nbsp;&nbsp;</i>
@@ -71,7 +63,7 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 import util from '@/util/util'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import ThePaginator from '@/components/ThePaginator.vue'
 import axios from 'axios'
 
@@ -95,17 +87,11 @@ export default {
         history () {
             return this.playerCurrentHistory.History
         },
-        unpaidAmount () {
-            return this.playerCurrentHistory.UnpaidAmount.toFixed(5)
-        },
         maxPage () {
             if (this.playerCurrentHistory.HistoryCount % 10 > 0 || this.playerCurrentHistory.HistoryCount == 0)
                 return parseInt(this.playerCurrentHistory.HistoryCount / 10) + 1
             else
                 return parseInt(this.playerCurrentHistory.HistoryCount / 10)
-        },
-        isShowUnpaidAmount () {
-            return (this.playerCurrentHistory.UnpaidAmount > 0 && this.web3.isInjected) ? true : false
         },
         ...mapGetters(['gameSettings', 'gameCurrent', 'playerCurrentHistory', 'gameCurrentDetail', 'web3'])
     },
@@ -124,69 +110,6 @@ export default {
             this.page = 1
             this.updateHistory()
         },
-        doPayout () {
-            // Check unpaid amount
-            if (this.playerCurrentHistory.UnpaidAmount <= 0) {
-                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `You have no unpaid winnings` })
-                return
-            }
-
-            // Check Metamask install
-            if (!this.web3.isInjected) {
-                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank" rel="noreferrer">https://metamask.io/</a>` })
-                return
-            }
-            
-            // Check Metamask lock
-            this.web3.web3Instance().eth.getAccounts()
-            .then((result) => {
-
-                if (!Array.isArray(result) || result.length <= 0) {
-                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Metamask is locked!` })
-                    return
-                }
-                
-                // Check Metamask network
-                if (this.gameSettings.metamaskNetId != this.web3.networkId) {
-                    const netId = '' + this.gameSettings.metamaskNetId
-                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: `Choose ${ethNetworks[netId]} network in Metamask!` })
-                    return
-                }
-                
-                // Create transaction for confirmation
-                this.createTransaction()
-
-            })
-            .catch((error) => {
-                this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: error })
-                return
-            })
-        },
-        async createTransaction () {
-            let gasPriceFast = '6'
-            const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
-            if (gasPrice !== null) gasPriceFast = '' + (gasPrice.data.fast / 10)
-
-            const transactionObj = {
-                from: this.web3.coinbase,
-                to: this.gameCurrent.contractAddress,
-                value: '0',
-                gas: 1500000,
-                gasPrice: window.web3.toWei(gasPriceFast, 'gwei'),
-                data: this.dataString
-            }
-
-            const callback = (error, result) => {
-                if (error)
-                    this.newNotify({ type: 'error', title: '<b>:: Player history ::</b>', text: error })
-                else
-                    this.newNotify({ type: 'success', title: '<b>:: Player history ::</b>', text: `Transaction successfully sent!`  })
-            }
-
-            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
-
-        },
-        ...mapMutations(['newNotify'])
     },
     mounted () {
             this.playerAddress = this.web3.coinbase
@@ -254,18 +177,6 @@ export default {
             text-align: center;
             color: #33B5F7;
             background: linear-gradient(rgb(9,26,34), rgb(59,76,84));
-        }
-    }
-    .unpaid-amount-wrapper {
-        text-align: right;
-        .unpaid-amount {
-            display: inline-block;
-            color: #CC6514;
-            border: 1px solid #33B5F7;
-        }
-        .btn-payout {
-            display: inline-block;
-            color: #33B5F7;
         }
     }
     table {

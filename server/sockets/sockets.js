@@ -122,19 +122,13 @@ async function getPlayerHistory(data, socket) {
 
   const historyCountPromise = Member.countDocuments({ game_type: data.type, address: data.address })
   const historyPromise = Member.find({ game_type: data.type, address: data.address }).sort({ game_id: -1, id: 1 }).skip((data.page - 1) * 10).limit(10)
-  const unpaidAmountsPromize = Member.find({ game_type: data.type, address: data.address, prize: { $gt: 0 }, payout: 0 })
-
+  
   const historyCount = await historyCountPromise
   const history = await historyPromise
-  const unpaidAmounts = await unpaidAmountsPromize
-
-  let unpaidAmount = 0
-  for (let i = 0; i < unpaidAmounts.length; i++) unpaidAmount += unpaidAmounts[i].prize
-
+  
   const result = {
     HistoryCount: historyCount,
     History: [],
-    UnpaidAmount: unpaidAmount
   }
 
   // Copy and transform history data

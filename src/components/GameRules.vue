@@ -14,10 +14,12 @@
             </span>
             {{ dict.rules_ticket_cost }}: <span class="data-value">{{ gameCurrent.ticketPrice }} ETH</span><br />
             {{ dict.rules_ticket_cost1 }}<br />
+            <!--
             <i class="fa fa-warning warn data-value"></i>
             {{ dict.rules_ticket_cost2 }} <span class="data-value">0 ETH</span><br />
             {{ dict.rules_ticket_cost3 }} <span class="data-value">200 000 - 700 000</span><br />
             {{ dict.rules_ticket_cost4 }}
+            -->
         </div>
         <div class="rules-row">
             <span class="rules-dotter">

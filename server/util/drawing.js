@@ -73,8 +73,8 @@ async function startContractDrawing(_game, _contract) {
 	}
 
     // Start first transaction after random pause ????
-    // const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.5)
-    const randomPause = 1
+    const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.5)
+    // const randomPause = 1
     setTimeout(() => { pushTransaction(_game, _contract) }, randomPause * 1000)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////

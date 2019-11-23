@@ -29,7 +29,7 @@ module.exports = {
             postDrawPeriod: 2,                  // (minutes)
             ticketPrice: 0.01,
             distribFund: { '3': 20, '4': 30, '5': 35, '6': 15},
-            isActive: false,
+            isActive: true,
             contractAddress: '0x525FF8A24B91078675a347e348fBE0794119EFce',
         }
     ]

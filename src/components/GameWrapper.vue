@@ -20,9 +20,6 @@ export default {
     TheHeader,
     TheFooter
   },
-  data () {
-    return {}
-  },
   created () {
     // Register web3 metamask / mist
     this.$store.dispatch('registerWeb3')

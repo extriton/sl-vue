@@ -83,10 +83,10 @@ export default {
     },
     doCopyAddress (game) {
       this.$copyText(game.contractAddress)
-      .then((e) => {
+      .then(() => {
         this.newNotify({ type: 'success', title: '<b>:: Copy ::</b>', text: `Smart-contract address successfull copied!` })
       })
-      .catch((e) => {
+      .catch(() => {
         this.newNotify({ type: 'error', title: '<b>:: Copy ::</b>', text: `Smart-contract address not copied!` })
       })
     },

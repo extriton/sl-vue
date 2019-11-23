@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -16,7 +18,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: GamesList
+      component: GamesList,
+      redirect: '/w5x36/play'
     },
     {
       path: '/:gameType',

@@ -43,7 +43,10 @@
                                             </td>
                                             <td>{{ formatNumber(fund, 1, 5) }}</td>
                                             <td>
-                                                <span v-show="item.winners[index] !== 0">{{ item.winners[index] }}</span>
+                                                <span v-show="item.winners[index] !== 0">
+                                                    {{ item.winners[index] }}
+                                                    <span style="color: #FBCF62;">({{ formatNumber(fund / item.winners[index], 1, 5) }})</span>
+                                                </span>
                                                 <span v-show="item.winners[index] === 0" style="color: #FBCF62;">-</span>
                                             </td>
                                         </tr>

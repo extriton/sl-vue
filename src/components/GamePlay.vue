@@ -293,7 +293,7 @@ export default {
                 from: this.web3.coinbase,
                 to: this.gameCurrent.contractAddress,
                 value: window.web3.toWei('' + this.gameCurrent.ticketPrice, 'ether'),
-                gas: 400000,
+                gas: 200000,
                 gasPrice: window.web3.toWei(gasPriceFast, 'gwei'),
                 data: this.dataString
             }

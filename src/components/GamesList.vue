@@ -169,6 +169,28 @@ export default {
       .game-link {
         position: relative;
         display: block;
+        width: 50%;
+        padding: 13px 14px 16px 15px;
+        margin: 1em auto;
+        border-radius: 5px;
+        box-shadow: inset 0 -3px 0 0 rgba(0, 0, 0, 0.24);
+        background-image: linear-gradient(to bottom, #ffed2a 5%, #ffdc2a 94%);
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 21px;
+        text-align: center;
+        color: #000;
+        text-decoration: none;
+        &:hover {
+          box-shadow: inset 0 -3px 0 0 rgba(0, 0, 0, 0.24);
+          background-image: linear-gradient(to bottom, #ffcb00 5%, #ffaf00 94%);
+        }
+      }
+      
+      /*
+      .game-link {
+        position: relative;
+        display: block;
         width: 90%;
         margin: 1em auto;
         color: #777674;
@@ -198,6 +220,7 @@ export default {
           top: 1px;
         }
       }
+      */
     }
     .games-list-item:last-child {
       margin-bottom: 0;

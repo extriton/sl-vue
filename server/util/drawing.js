@@ -37,7 +37,7 @@ function drawAllContracts() {
 // Init params and push transactions chain
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 async function startContractDrawing(_game, _contract) {
-    
+
     // Check drawing time and ready phase
     if (util.isDrawing(_game)) {
         if (_game.phase !== 'ready') return
@@ -72,8 +72,9 @@ async function startContractDrawing(_game, _contract) {
 	    data            : ''
 	}
 
-    // Start first transaction after random pause
-    const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.8) 
+    // Start first transaction after random pause ????
+    // const randomPause = _game.preDrawPeriod * 60 + Math.floor(Math.random() * _game.postDrawPeriod * 60 * 0.5)
+    const randomPause = 1
     setTimeout(() => { pushTransaction(_game, _contract) }, randomPause * 1000)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,8 +97,9 @@ async function startContractDrawing(_game, _contract) {
             rawTransaction.gasPrice = web3.utils.toHex('' + (gasPrice.data.fast * 100000000))
 
         // Get transaction count, later will used as nonce
+        console.log('web3: ' + web3)
         web3.eth.getTransactionCount(serviceAddress).then(nonce => {
-            
+            console.log('nonce: ' + nonce)
             rawTransaction.data = web3.utils.toHex(_game.txCounter)
             rawTransaction.nonce = web3.utils.toHex(nonce)
 

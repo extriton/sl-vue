@@ -38,7 +38,7 @@
             <span class="rules-dotter">
                 <img src="../../public/img/icons/icon_gas.png"  alt="" title="" />
             </span>
-            {{ dict.rules_gas_limit }}: <span class="data-value">200 000</span><br />
+            {{ dict.rules_gas_limit }}: <span class="data-value">250 000</span><br />
             {{ dict.rules_gas_price }}: <span class="data-value">{{ gasPriceFast }} Gwei</span>
         </div>
         <div class="rules-row">

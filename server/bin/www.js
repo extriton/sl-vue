@@ -36,7 +36,7 @@ contracts.init(io, () => {
   setInterval(() => { contracts.syncAllContracts(CLEAR_COLLECTION) }, SYNC_INTERVAL)
 
   // Drawing contracts
-  contracts.drawAllContracts()
+  // contracts.drawAllContracts()
 
   // Set scoket listeners
   require('../sockets/sockets')(io)

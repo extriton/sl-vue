@@ -1,6 +1,6 @@
 module.exports = {
     etherscanAddressUrl: 'https://etherscan.io/address/',
-    metamaskNetId: 3,
+    metamaskNetId: 1,
     games: [
         {   
             reqNumbers: 5,

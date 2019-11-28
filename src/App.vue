@@ -44,5 +44,6 @@ export default {
   -moz-user-select: none;
   -webkit-user-select: none;
   text-align: center;
+  translate: no;
 }
 </style>

@@ -14,6 +14,7 @@
             </span>
             {{ dict.rules_ticket_cost }}: <span class="data-value">{{ gameCurrent.ticketPrice }} ETH</span><br />
             {{ dict.rules_ticket_cost1 }}<br />
+            {{ dict.rules_ticket_cost5 }}<br />
             <!--
             <i class="fa fa-warning warn data-value"></i>
             {{ dict.rules_ticket_cost2 }} <span class="data-value">0 ETH</span><br />

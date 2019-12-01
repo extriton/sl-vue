@@ -22,6 +22,11 @@ export default new Router({
       redirect: '/w5x36/play'
     },
     {
+      path: '/admin',
+      // component: GameHistory
+      component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/AdminPage.vue')
+    },
+    {
       path: '/:gameType',
       // component: GameItem,
       component: () => import(/* webpackChunkName: "GameItem" */ '@/components/GameItem.vue'),

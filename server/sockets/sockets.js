@@ -22,12 +22,16 @@ module.exports = io => {
       socket.on('getGameHistory', data => { getGameHistory(data, socket) })
 
       socket.on('getPlayerHistory', data => { getPlayerHistory(data, socket) })
+
+      socket.on('getAdminData', data => { getAdminData(data, socket) })
         
     })
 }
 
 // Return game data by game type to client socket
 async function getGameData(data, socket) {
+
+  console.log('getGameData socket called')
   
   if (!data.type) return
 
@@ -158,6 +162,39 @@ async function getPlayerHistory(data, socket) {
   }
 
   socket.emit('getPlayerHistorySuccess', result)
+}
+
+// Return data for admin page
+async function getAdminData(data, socket) {
+  // Date From
+  let dateFrom = new Date(data.dateFrom)
+  dateFrom.setHours(0, 0, 0, 0)
+  dateFrom = dateFrom.toISOString()
+  // Date To
+  let dateTo = new Date(data.dateTo)
+  dateTo.setHours(23, 59, 59, 0)
+  dateTo = dateTo.toISOString()
+  // Query
+  const query = {}
+  query.created = { $gte: dateFrom, $lte: dateTo};
+
+  const periodDataPromise = Ip.countDocuments(query)
+  const allDataPromise = Ip.find({})
+
+  const periodData = await periodDataPromise
+  const allData = await allDataPromise
+
+  const result = {}
+  result.uniqueUsersByPeriod = periodData
+  result.uniqueUsers = allData.length
+  result.lookCount = 0
+
+  for (let i = 0; i < allData.length; i++) {
+    result.lookCount += allData[i].cnt
+  }
+
+  socket.emit('getAdminDataSuccess', result)
+  
 }
 
 // Add socket IP to IPs array and DB

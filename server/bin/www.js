@@ -21,7 +21,6 @@ server.on('listening', onListening)
 // Create socket connection
 const io = require('socket.io').listen(server, { secure: false, rejectUnauthorized: false, path: '/ws/socket.io' })
 
-
 const SYNC_INTERVAL = 30 * 60 * 1000                        // Synchronize every 30 minutes
 const CLEAR_COLLECTION = false
 
@@ -38,11 +37,10 @@ contracts.init(io, () => {
   // Drawing contracts
   // contracts.drawAllContracts()
 
-  // Set scoket listeners
+  // Set socket listeners
   require('../sockets/sockets')(io)
 
 })
-
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {

@@ -3,8 +3,8 @@ const gameSettings = require('../../config/server/game-settings-server')
 const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
+const Ipstat = require('../models/Ipstat.js')
 
-const IPs = []
 
 // Export function
 module.exports = io => {
@@ -12,10 +12,6 @@ module.exports = io => {
 
       const realSocketIP = getRealSocketIP(socket)
       if(realSocketIP !== '') addSocketIP(realSocketIP)
-
-      socket.on('disconnect', () => {
-        if(realSocketIP !== '') removeSocketIP(realSocketIP)
-      })
 
       socket.on('getGameData', data => { getGameData(data, socket) })
 
@@ -166,70 +162,96 @@ async function getPlayerHistory(data, socket) {
 
 // Return data for admin page
 async function getAdminData(data, socket) {
-  // Date From
-  let dateFrom = new Date(data.dateFrom)
-  dateFrom.setHours(0, 0, 0, 0)
-  dateFrom = dateFrom.toISOString()
-  // Date To
-  let dateTo = new Date(data.dateTo)
-  dateTo.setHours(23, 59, 59, 0)
-  dateTo = dateTo.toISOString()
-  // Query
-  const query = {}
-  query.created = { $gte: dateFrom, $lte: dateTo};
 
-  const periodDataPromise = Ip.countDocuments(query)
-  const allDataPromise = Ip.find({})
-
-  const periodData = await periodDataPromise
-  const allData = await allDataPromise
-
-  const result = {}
-  result.uniqueUsersByPeriod = periodData
-  result.uniqueUsers = allData.length
-  result.lookCount = 0
-
-  for (let i = 0; i < allData.length; i++) {
-    result.lookCount += allData[i].cnt
+  if (!data.year || !data.month) {
+    const now = new Date()
+    data.year = now.getFullYear()
+    data.month = now.getMonth() + 1
   }
+
+  try {
+    data.year = parseInt(data.year)
+    data.month = parseInt(data.month)
+  } catch {
+    const now = new Date()
+    data.year = now.getFullYear()
+    data.month = now.getMonth() + 1
+  }
+  
+  console.log('year: ' + data.year + ', month: ' + data.month)
+
+  const ipsPromise = Ip.find({})
+  const ipStatPromise = Ipstat.find({ year: data.year, month: data.month })
+
+  const ips = await ipsPromise
+  const ipStat = await ipStatPromise
+
+  const result = {
+    newUsers: ips.length,
+    visits:  0,
+    ipStat: []
+  }
+
+  for (let i = 0; i < ips.length; i++) {
+    result.visits += ips[i].cnt
+  }
+
+  result.ipStat = ipStat
 
   socket.emit('getAdminDataSuccess', result)
   
 }
 
-// Add socket IP to IPs array and DB
-function addSocketIP(socketIP) {
-  // Search socketIP in IPs array
-  if(IPs.indexOf(socketIP) === -1) {
-    // Add in IPs array
-    IPs.push(socketIP)
+// Add socket IP
+async function addSocketIP(socketIP) {
+  
     // Add in DB
     Ip.findOne({ ip: socketIP }).exec((err, ip) => {
         if(err) return
         
-        if(!ip) {
+        let isNew = false
+
+        if (!ip) {
             ip = new Ip({
                 ip: socketIP,
                 cnt: 1,
                 updated: new Date()
             })
-            ip.save()
+            isNew = true
         } else {
             ip.cnt = ip.cnt + 1
             ip.updated = new Date()
-            ip.save()
         }
+        ip.save()
+
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = now.getMonth() + 1
+        const date = now.getDate()
+        
+        Ipstat.findOne({ year: year, month: month, date: date }).exec((err, stat) => {
+          if(err) return
+
+          if (!stat) {
+            stat = new Ipstat({
+              year: year,
+              month: month,
+              date: date,
+              newUsers: 0,
+              visits: 1
+            })
+          } else {
+            stat.visits += 1
+          }
+
+          if (isNew) {
+            stat.newUsers += 1
+          }
+          stat.save()
+        })
+
     })
-  }
 
-}
-
-// Remove socket IP from IPs array
-function removeSocketIP(socketIP) {
-  if(IPs.indexOf(socketIP) !== -1) {
-    let pos = IPs.indexOf(socketIP)
-    IPs.splice(pos, 1);
-  }
 }
 
 // Return real socket IP

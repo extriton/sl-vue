@@ -1,43 +1,64 @@
 <template>
     <div class="admin-page">
-        <h3>Уникальных ползьзователей: {{ uniqueUsers }}</h3>
-        <h3>Количество посещений: {{ lookCount }}</h3>
-        <h3>Уникальных ползьзователей за период: {{ uniqueUsersByPeriod }}</h3>
+        <h3 class="admin-page__summary">
+            <span class="admin-page__new-users">Новые пользователи: <i class="value">{{ newUsers }}</i></span>
+            <span class="admin-page__visits">Посещения: <i class="value">{{ visits }}</i></span>
+        </h3>
+        <hr class="clearfix" />
+        <IpStat />
     </div>
 </template>
 
 <script>
+import IpStat from '@/components/IpStat'
+
 export default {
     name: 'AdminPage',
+    components: {
+      IpStat
+    },
     data () {
         return {
-            uniqueUsers: 0,
-            lookCount: 0,
-            uniqueUsersByPeriod: 0,
-            dateFrom: 0,
-            dateTo: 0
+            newUsers: 0,
+            visits: 0,
         }
     },
     methods: {
         updateAdminData () {
-            this.$socket.emit('getAdminData', { dateFrom: this.dateFrom, dateTo: this.dateTo })
+            this.$socket.emit('getAdminData', {})
         },
     },
     mounted () {
-        this.dateTo = new Date()
-        this.dateFrom = (new Date()).setDate(1)
         this.updateAdminData()
     },
     sockets: {
         getAdminDataSuccess (data) {
-            this.uniqueUsers = data.uniqueUsers
-            this.lookCount = data.lookCount
-            this.uniqueUsersByPeriod = data.uniqueUsersByPeriod
+            this.newUsers = data.newUsers
+            this.visits = data.visits
         }
     }
 }
 </script>
 
 <style lang="scss">
-
+.admin-page {
+    padding-top: 20px;
+    &__summary {
+        height: 20px;
+        .value {
+            color: green;
+        }
+    }
+    &__new-users {
+        float: left;
+    }
+    &__visits {
+        float: right;
+    }
+}
+/*
+.clearfix {
+    clear: both;
+}
+*/
 </style>

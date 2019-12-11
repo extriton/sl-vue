@@ -178,8 +178,6 @@ async function getAdminData(data, socket) {
     data.month = now.getMonth() + 1
   }
   
-  console.log('year: ' + data.year + ', month: ' + data.month)
-
   const ipsPromise = Ip.find({})
   const ipStatPromise = Ipstat.find({ year: data.year, month: data.month })
 

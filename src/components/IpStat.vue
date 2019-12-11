@@ -111,7 +111,6 @@ export default {
     },
     sockets: {
         getAdminDataSuccess (data) {
-            console.log(data)
             this.fillChartData(data.ipStat)
         }
     }

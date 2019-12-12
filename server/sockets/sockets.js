@@ -193,7 +193,7 @@ async function getAdminData(data, socket) {
   }
 
   for (let i = 0; i < ips.length; i++) {
-    if (excludeIPs.indexOf(socketIP) !== -1) {
+    if (excludeIPs.indexOf(ips[i].ip) !== -1) {
       result.visits += ips[i].cnt
     }
   }

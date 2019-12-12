@@ -5,7 +5,7 @@ const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
 const Ipstat = require('../models/Ipstat.js')
 
-const excludeIPs = ['93.125.42.220', '146.120.13.80']
+const excludeIPs = gameSettings.excludeIPs
 
 
 // Export function

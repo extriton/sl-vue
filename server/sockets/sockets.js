@@ -5,6 +5,8 @@ const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
 const Ipstat = require('../models/Ipstat.js')
 
+const excludeIPs = ['93.125.42.220', '146.120.13.80']
+
 
 // Export function
 module.exports = io => {
@@ -191,7 +193,9 @@ async function getAdminData(data, socket) {
   }
 
   for (let i = 0; i < ips.length; i++) {
-    result.visits += ips[i].cnt
+    if (excludeIPs.indexOf(socketIP) !== -1) {
+      result.visits += ips[i].cnt
+    }
   }
 
   result.ipStat = ipStat
@@ -202,6 +206,8 @@ async function getAdminData(data, socket) {
 
 // Add socket IP
 async function addSocketIP(socketIP) {
+
+    if (excludeIPs.indexOf(socketIP) !== -1) return
   
     // Add in DB
     Ip.findOne({ ip: socketIP }).exec((err, ip) => {

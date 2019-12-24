@@ -67,7 +67,10 @@
             <div class="loto-pad">
                 <!-- Drawing message -->
                 <div class="drawing" :class="{ active: isDrawing }">
-                    <span class="drawing-text">Drawing...</span>
+                    <div class="drawing-box">
+                        <img src="../../public/img/loading.svg"  alt="Jackpot" title="Drawing..." />
+                        <span class="drawing-text">{{ drawingText }}</span>
+                    </div>
                 </div>
                 <!--
                 <div class="count-block">
@@ -155,7 +158,9 @@ export default {
             dataString: '',
             numbers: [],
             leftNumbers: 0,
-            lotoPadItemWidth: 'auto'
+            lotoPadItemWidth: 'auto',
+            drawingStage: 0,
+            drawingInterval: null,
         }
     },
     computed: {
@@ -180,6 +185,16 @@ export default {
         isDrawing () {
             return (this.timer === 0 || this.gameCurrentDetail.Phase !== 'ready' || this.gameCurrentDetail.Status == 1) ? true : false
         },
+        drawingText () {
+            const text = "DRAWING..."
+
+            if (!this.isDrawing) 
+                return ''
+            else
+                return text.substr(0, 7 + this.drawingStage)
+
+
+        },
         ...mapGetters(['gameSettings', 'gameCurrent', 'gameCurrentDetail', 'web3'])
     },
     methods: {
@@ -197,6 +212,16 @@ export default {
                     if (this.gameCurrentDetail.Phase === 'ready')
                         this.timer = util.calcTimerStart(this.gameCurrent) * 1000
                 }
+            }, 1000)
+        },
+        runDrawingStage () {
+            if (this.drawingInterval !== null) {
+                clearInterval(this.drawingInterval)
+                this.drawingInterval = null
+            }
+            this.drawingInterval = setInterval(() => {
+                const seconds = (new Date()).getSeconds()
+                this.drawingStage = seconds % 4
             }, 1000)
         },
         doSelect (index) {
@@ -326,6 +351,8 @@ export default {
     beforeMount () {
         // Run Timer
         this.runTimer()
+        // Run Drawing stage
+        this.runDrawingStage()
         // Init Numbers array and numbers data
         this.numbers = new Array(this.gameCurrent.padSize).fill(0)
         this.leftNumbers = this.gameCurrent.reqNumbers
@@ -348,6 +375,7 @@ export default {
     },
     beforeDestroy () {
         if(this.timerInterval !== null) clearInterval(this.timerInterval)
+        if(this.drawingInterval !== null) clearInterval(this.drawingInterval)
     },
 }
 </script>
@@ -394,16 +422,30 @@ export default {
             z-index: 1;
             transition: height 1s ease-out 0.3s;
             overflow: hidden;
-            .drawing-text {
-                display: inline-block; 
-                text-shadow: 1px 1px 5px #34BBFF, 0 0 1em #34BBFF;
-                color: #EFCB46;
-                vertical-align: middle;
+            .drawing-box {
+                width: 50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                .drawing-text {
+                    display: block;
+                    width: 100px;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 18px;
+                    font-style: italic;
+                    text-align: left;
+                    text-shadow: 1px 1px 5px #34BBFF, 0 0 1em #34BBFF;
+                    color: #EFCB46;
+                }
             }
         }
         .drawing.active {
             height: 100%;
-            padding: 20% 0;
+            /* padding: 20% 0; */
         }
         .loto-pad {
             position: relative;

@@ -10,8 +10,8 @@ const excludeIPs = gameSettings.excludeIPs
 
 // Export function
 module.exports = io => {
-    io.sockets.on('connection', socket => {
 
+    io.sockets.on('connection', socket => {
       const realSocketIP = getRealSocketIP(socket)
       if(realSocketIP !== '') addSocketIP(realSocketIP)
 
@@ -193,7 +193,7 @@ async function getAdminData(data, socket) {
   }
 
   for (let i = 0; i < ips.length; i++) {
-    if (excludeIPs.indexOf(ips[i].ip) !== -1) {
+    if (excludeIPs.indexOf(ips[i].ip) === -1) {
       result.visits += ips[i].cnt
     }
   }
@@ -211,21 +211,23 @@ async function addSocketIP(socketIP) {
   
     // Add in DB
     Ip.findOne({ ip: socketIP }).exec((err, ip) => {
-        if(err) return
+        if(err) {
+          console.log('Ip find Error: ' + err)
+          return
+        }
         
         let isNew = false
 
         if (!ip) {
             ip = new Ip({
                 ip: socketIP,
-                cnt: 1,
-                updated: new Date()
+                cnt: 1
             })
             isNew = true
         } else {
             ip.cnt = ip.cnt + 1
-            ip.updated = new Date()
         }
+        ip.updated = new Date()
         ip.save()
 
         const now = new Date()
@@ -234,7 +236,10 @@ async function addSocketIP(socketIP) {
         const date = now.getDate()
         
         Ipstat.findOne({ year: year, month: month, date: date }).exec((err, stat) => {
-          if(err) return
+          if(err) {
+            console.log('Ipstat find Error:' + err)
+            return
+          }
 
           if (!stat) {
             stat = new Ipstat({
@@ -270,7 +275,6 @@ function getRealSocketIP(socket) {
   } else {
       origin_client_ip = socket.handshake.address
   }
-  
-  return origin_client_ip
 
+  return origin_client_ip
 }

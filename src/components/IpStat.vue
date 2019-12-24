@@ -39,43 +39,13 @@ export default {
         this.fillChartData()
     },
     methods: {
-        /*
-        fillData () {
-            this.datacollection = {
-                labels: this.fillLabels(this.daysInMonth),
-                datasets: [
-                    {
-                        label: 'Новые поьзователи',
-                        backgroundColor: 'green',
-                        data: this.fillDataset(this.daysCount)
-                    }, {
-                        label: 'Посещения',
-                        backgroundColor: 'blue',
-                        data: this.fillDataset(this.daysCount)
-                    }
-                ]
-            }
-        },
-        */
-        /*
-        getRandomInt () {
-            return Math.floor(Math.random() * (350 - 5 + 1)) + 5
-        },
-        */
         fillLabels (n) {
             const result = []
             for (let i = 0; i < n; i++) result.push(i + 1)
             return result
         },
-        /*
-        fillDataset (n) {
-            const result = []
-            for (let i = 0; i < n; i++) result.push(this.getRandomInt())
-            return result
-        },
-        */
         updateAdminData () {
-            this.$socket.emit('getAdminData', { year: this.selectedPeriod.getFullYear(), month: this.selectedPeriod.getMonth() })
+            this.$socket.emit('getAdminData', { year: this.selectedPeriod.getFullYear(), month: this.selectedPeriod.getMonth() + 1 })
         },
         fillChartData (ipStat) {
             const newUsers = (new Array(this.daysInMonth)).fill(0)

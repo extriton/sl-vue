@@ -1,7 +1,7 @@
 <template>
-    <div v-show="visits !== 0" class="visits-box">
-        <img src="../../public/img/icons/icon_people.png" class="visits-box__icon" />
-        <div class="visits-box__value">
+    <div v-show="visits !== 0" class="box-visits">
+        <img src="../../public/img/icons/icon_people.png" class="box-visits__icon" />
+        <div class="box-visits__value">
             {{ newUsers }} / {{ visits }}
         </div>
     </div>
@@ -11,7 +11,7 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 export default {
-    name: 'TheVisits',
+    name: 'BoxVisits',
     data () {
         return {
             newUsers: 0,
@@ -42,24 +42,47 @@ export default {
 </script>
 
 <style lang="scss">
-.visits-box {
-    min-width: 200px;
-    padding: 10px;
+.box-visits {
     &__icon {
         display: inline-block;
-        width: 50px;
-        height: 40px;
-        margin-right: 20px;
     }
     &__value {
-        width: 150px;
-        padding-top: 5px;
         color: #EEA201;
-        font-size: 30px;
         font-weight: bold;
         float: right;
         text-shadow: 2px 2px 5px #EEA201;
     }
 }
-   
+@media all and (min-width: 761px) {
+    .box-visits {
+        min-width: 200px;
+        padding: 10px;
+        &__icon {
+            width: 50px;
+            height: 40px;
+            margin-right: 20px;
+        }
+        &__value {
+            width: 150px;
+            padding-top: 5px;
+            font-size: 30px;
+        }
+    }
+}
+@media all and (max-width: 760px) {
+    .box-visits {
+        min-width: 120px;
+        padding: 10px 5px 5px 5px;
+        &__icon {
+            width: 30px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        &__value {
+            width: 80px;
+            padding-top: 2px;
+            font-size: 16px;
+        }
+    }
+}
 </style>

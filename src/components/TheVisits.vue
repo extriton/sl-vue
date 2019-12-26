@@ -1,5 +1,5 @@
 <template>
-    <div class="visits-box">
+    <div v-show="visits !== 0" class="visits-box">
         <img src="../../public/img/icons/icon_people.png" class="visits-box__icon" />
         <div class="visits-box__value">
             {{ newUsers }} / {{ visits }}
@@ -15,16 +15,27 @@ export default {
     data () {
         return {
             newUsers: 0,
-            visits: 0
+            visits: 0,
+            intervalId: null,
+            intervalTime: 5 * 60 * 1000
         }
     },
     created () {
         this.$socket.emit('getVisits')
+        this.intervalId = setInterval(() => {
+            this.$socket.emit('getVisits')
+        }, this.intervalTime)
     },
     sockets: {
         getVisitsSuccess (data) {
             this.newUsers = data.newUsers
             this.visits = data.visits
+        }
+    },
+    beforeDestroy () {
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId)
+            this.intervalId = null
         }
     }
 }

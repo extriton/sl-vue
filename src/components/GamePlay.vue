@@ -3,17 +3,29 @@
         <!-- Timer -->
         <div class="timer-wrapper">
             <div class="timer">
-                <span class="number">{{ timerString.charAt(0) }}</span>
-                <span class="number">{{ timerString.charAt(1) }}</span>
-                <span>:</span>
-                <span class="number">{{ timerString.charAt(2) }}</span>
-                <span class="number">{{ timerString.charAt(3) }}</span>
-                <span>:</span>
-                <span class="number">{{ timerString.charAt(4) }}</span>
-                <span class="number">{{ timerString.charAt(5) }}</span>
-                <span>:</span>
-                <span class="number">{{ timerString.charAt(6) }}</span>
-                <span class="number">{{ timerString.charAt(7) }}</span>
+                <span class="timer__part">
+                    <span class="number">{{ timerString.charAt(0) }}</span>
+                    <span class="number">{{ timerString.charAt(1) }}</span>
+                    <span class="number-desc">Days</span>
+                </span>
+                <span class="dotter">:</span>
+                <span class="timer__part">
+                    <span class="number">{{ timerString.charAt(2) }}</span>
+                    <span class="number">{{ timerString.charAt(3) }}</span>
+                    <span class="number-desc">Hours</span>
+                </span>
+                <span class="dotter">:</span>
+                <span class="timer__part">
+                    <span class="number">{{ timerString.charAt(4) }}</span>
+                    <span class="number">{{ timerString.charAt(5) }}</span>
+                    <span class="number-desc">Minutes</span>
+                </span>
+                <span class="dotter">:</span>
+                <span class="timer__part">
+                    <span class="number">{{ timerString.charAt(6) }}</span>
+                    <span class="number">{{ timerString.charAt(7) }}</span>
+                    <span class="number-desc">Seconds</span>
+                </span>
             </div>
         </div>
         <!-- Loto numeric pad wrapper -->
@@ -43,7 +55,7 @@
                         {{ dict.play_prize_fund }} <br />
                         <transition name="info" mode="out-in" >
                             <span class="animate-info" :key="Fund">
-                                <strong class="text">{{ Fund }}</strong>
+                                <strong class="text">{{ Fund }} ETH</strong>
                             </span>
                         </transition>
                     </span>
@@ -57,7 +69,7 @@
                         {{ dict.play_jackpot }} <br />
                         <transition name="info" mode="out-in" >
                             <span class="animate-info" :key="Jackpot">
-                                <strong class="text">{{ Jackpot }}</strong>
+                                <strong class="text">{{ Jackpot }} ETH</strong>
                             </span>
                         </transition>
                     </span>
@@ -386,14 +398,24 @@ export default {
         .timer {
             display: block;
             width: auto;
-            span {
-                display: inline-block;
-                font-family: "Roboto", sans-serif;
-                color: #75EEFF;
+            &__part {
+                position: relative;
+                .number {
+                    display: inline-block;
+                    background-color: #000;
+                    border-radius: .25em;
+                    box-shadow: inset 0px 0px 10px 0px #62EEFF;
+                }
+                .number-desc {
+                    width: 100%;
+                    position: absolute;
+                    text-align: center;
+                    transform: translateX(-100%);
+                    color: #E97A15;
+                }
             }
-            .number {
-                background-color: #000;
-                border-radius: .25em;
+            .dotter {
+                color: #75EEFF;
             }
         }
     }
@@ -480,7 +502,7 @@ export default {
                 margin: 1%;
                 border: 1px solid #D5D6D6;
                 color: #D5D6D6;
-                transition: border-radius .3s linear;
+                transition: all .3s linear;
                 &:hover {
                     cursor: pointer;
                     color: #CC6311;
@@ -491,6 +513,7 @@ export default {
                 border-radius: 50%;
                 border-color: #CC6311;
                 color: #CC6311;
+                box-shadow: inset 0px 0px 15px 0px #CC6311;
             }
             .control-bar {
                 border-top: 1px solid rgb(38, 77, 97);
@@ -536,10 +559,23 @@ export default {
     .game-play-wrapper {
         font-size: .875em;
         .timer-wrapper {
-            margin: 1.5em auto 1em auto;
+            margin: 1em 0 1.5em 0;
             .timer {
-                margin: 1em auto;
-                span {
+                &__part {
+                    font-size: 1em;
+                    .number {
+                        min-width: 35px;
+                        padding: .3em .5em .2em .5em;
+                        font-size: 1.5em;
+                        margin-right: .6em;
+                        text-align: center;
+                    }
+                    .number-desc {
+                        top: 3em;
+                        font-size: .6em;
+                    }
+                }
+                .dotter {
                     padding: .3em .5em;
                     font-size: 1.5em;
                     margin-right: .6em;
@@ -550,7 +586,7 @@ export default {
             margin: 1em auto;
             .loto-info {
                 .column {
-                    padding: 1.2em .6em;
+                    padding: .6em;
                 }
             }
             .drawing-text {
@@ -560,14 +596,13 @@ export default {
                 font-size: 1em;
             }
             .control-bar {
-                margin: .5em auto;
+                margin: 0 auto .5em auto;
                 padding: .5em 0 0 0;
                 .data-string {
                     width: 180px;
                     height: 74px;
                     line-height: 72px;
                     margin-right: 1em;
-                    margin-bottom: 1em;
                     font-size: .8em;
                 }
                 .btn-ctrl {
@@ -575,7 +610,6 @@ export default {
                     height: 72px;
                     line-height: 72px;
                     margin-right: 1em;
-                    margin-bottom: 1em;
                 }
                 .btn-play {
                     width: 102px;
@@ -591,11 +625,25 @@ export default {
 }
 @media all and (max-width: 760px) {
     .game-play-wrapper {
+        font-size: .5em;
         .timer-wrapper {
-            margin: .7em auto .5em auto;
+            margin: .7em auto 1.4em auto;
             .timer {
-                margin: .7em auto;
-                span {
+                &__part {
+                    font-size: 1em;
+                    .number {
+                        min-width: 25px;
+                        padding: .1em .3em;
+                        font-size: 1em;
+                        margin-right: .3em;
+                        text-align: center;
+                    }
+                    .number-desc {
+                        top: 2.2em;
+                        font-size: .7em;
+                    }
+                }
+                .dotter {
                     padding: .1em .3em;
                     font-size: 1em;
                     margin-right: .3em;

@@ -3,17 +3,19 @@
         <div>
             <span class="color-blue">Copyright © 2019 –</span> SmartLotto.org
         </div>
+        <div class="visits-box-wrap">
+            <TheVisits />
+        </div>
     </div>
 </template>
 
 <script>
+import TheVisits from '@/components/TheVisits.vue'
 export default {
     name: 'TheFooter',
     components: {
-    },
-    data () {
-        return {}
-    },
+        TheVisits
+    }
 }
 </script>
 
@@ -26,8 +28,14 @@ export default {
     background-color: #0E1014;
     color: #FFF;
     z-index: 5;
+    text-align: left;
     .color-blue {
         color: #34BBFF;
+    }
+    .visits-box-wrap {
+        position: absolute;
+        right: 10px;
+        top: 0;
     }
 }
 @media all and (max-width: 760px) {

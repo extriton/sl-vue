@@ -21,6 +21,8 @@ module.exports = io => {
 
       socket.on('getPlayerHistory', data => { getPlayerHistory(data, socket) })
 
+      socket.on('getVisits', data => { getVisits(data, socket) })
+
       socket.on('getAdminData', data => { getAdminData(data, socket) })
         
     })
@@ -160,6 +162,28 @@ async function getPlayerHistory(data, socket) {
   }
 
   socket.emit('getPlayerHistorySuccess', result)
+}
+
+// Return unique users and site visits
+async function getVisits(data, socket) {
+
+  const ips = await Ip.find({})
+
+  const result = {
+    newUsers: ips.length,
+    visits:  0
+  }
+
+  for (let i = 0; i < ips.length; i++) {
+    if (excludeIPs.indexOf(ips[i].ip) === -1) {
+      result.visits += ips[i].cnt
+    }
+  }
+
+  
+
+  socket.emit('getVisitsSuccess', result)
+  
 }
 
 // Return data for admin page

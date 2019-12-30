@@ -7,18 +7,28 @@
       </transition>
     </div>
     <TheFooter />
+    <div class="eth-gas-price-wrap">
+      <ETHGasPrice />
+    </div>
+    <div class="cryptocurrency-box-wrap">
+      <CryptocurrencyBox />
+    </div>
   </div>
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
+import ETHGasPrice from '@/components/ETHGasPrice.vue'
+import CryptocurrencyBox from '@/components/CryptocurrencyBox.vue'
 
 export default {
   name: 'GameWrapper',
   components: {
     TheHeader,
-    TheFooter
+    TheFooter,
+    ETHGasPrice,
+    CryptocurrencyBox
   },
   created () {
     // Register web3 metamask / mist
@@ -38,6 +48,16 @@ export default {
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px);
     padding-bottom: calc(58px + 1em);
+  }
+  .eth-gas-price-wrap {
+    position: fixed;
+    top: 100px;
+    left: 10px;
+  }
+  .cryptocurrency-box-wrap {
+    position: fixed;
+    top: 260px;
+    left: 10px;
   }
 }
 @media all and (max-width: 760px) {

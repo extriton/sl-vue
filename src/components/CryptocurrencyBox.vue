@@ -1,0 +1,140 @@
+<template>
+    <div class="cryptocurrency-box">
+        <h3 class="cryptocurrency-box__caption">
+            Cryptocurrencies
+        </h3>
+        <p
+            v-for="(currency, name) in currencies"
+            :key="'cc' + name"
+            class="cryptocurrency-box__item"
+            :class="[currency.icon]"
+        >
+            <span class="cryptocurrency-box__item-name">{{ currency.name }}</span>
+            <span class="cryptocurrency-box__item-value">$ {{ currency.value }}</span>
+        </p>
+    </div>
+</template>
+
+<script>
+/* eslint-disable */
+/* eslint linebreak-style: ["error", "windows"] */
+import axios from 'axios'
+
+const currenciesUrl = 'https://api.coinmarketcap.com/v1/ticker/?limit=16'
+
+export default {
+    name: 'CryptocurrencyBox',
+    data () {
+        return {
+            currencies: {
+                bitcoin: {
+                    icon: 'bitcoin',
+                    name: 'Bitcoin',
+                    value: 'n/a'
+                },
+                ethereum: {
+                    icon: 'ethereum',
+                    name: 'Ethereum',
+                    value: 'n/a'
+                },
+                litecoin: {
+                    icon: 'litecoin',
+                    name: 'Litecoin',
+                    value: 'n/a'
+                },
+                monero: {
+                    icon: 'monero',
+                    name: 'Monero',
+                    value: 'n/a'
+                },
+            },
+            intervalId: null,
+            intervalTime: 5 * 60 * 1000
+        }
+    },
+    methods: {
+        async loadData () {
+            const currencies = await axios.get(currenciesUrl)
+            if (currencies !== null) {
+                this.currencies.bitcoin.value = parseInt(currencies.data[0].price_usd * 100) / 100
+                this.currencies.ethereum.value = parseInt(currencies.data[1].price_usd * 100) / 100
+                this.currencies.litecoin.value = parseInt(currencies.data[5].price_usd * 100) / 100
+                this.currencies.monero.value = parseInt(currencies.data[15].price_usd * 100) / 100
+            } else {
+                this.currencies.bitcoin.value = 'n/a'
+                this.currencies.ethereum.value = 'n/a'
+                this.currencies.litecoin.value = 'n/a'
+                this.currencies.monero.value = 'n/a'
+            }
+        }
+    },
+    created () {
+        this.loadData()
+        this.intervalId = setInterval(() => {
+            this.loadData()
+        }, this.intervalTime)
+    },
+    beforeDestroy () {
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId)
+            this.intervalId = null
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+.cryptocurrency-box {
+    width: 280px;
+    border: 1px solid #000;
+    border-top: none;
+    background-color: rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    text-align: left;
+    &__caption {
+        padding: 10px;
+        background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
+        background-size: 100% 100%, auto;
+        background-position: 50% 50%;
+        box-shadow: inset #6e5a24 0 -1px 1px, inset 0 1px 1px #3b2e06, #663c12 0 0 0 1px, #000 0 10px 15px -10px;
+        color: #000;
+        margin-bottom: 3px;
+    }
+    &__item {
+        padding: 7px 10px;
+        font-size: 12px;
+        border-bottom: 1px solid #000;
+        background-repeat: no-repeat;
+        background-size: 20px 20px;
+        background-position: 8px 3px;
+        &.bitcoin {
+            background-image: url('../../public/img/icons/icon_bitcoin.png');
+        }
+        &.ethereum {
+            background-image: url('../../public/img/icons/icon_ethereum.png');
+        }
+        &.litecoin {
+            background-image: url('../../public/img/icons/icon_litecoin.png');
+        }
+        &.monero {
+            background-image: url('../../public/img/icons/icon_monero.png');
+        }
+    }
+    &__item-name {
+        display: inline-block;
+        width: 60%;
+        margin-left: 10%;
+    }
+    &__item-value {
+        display: inline-block;
+        width: 30%;
+        text-align: right;
+        color: #34bbff;
+    }
+}
+@media all and (max-width: 1400px) {
+    .cryptocurrency-box {
+        display: none;
+    }
+}
+</style>

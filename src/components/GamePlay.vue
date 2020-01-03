@@ -705,7 +705,7 @@ export default {
         }
     }
     .loto-info-bottom {
-        font-size: 1.2em;
+        font-size: 1em;
         margin: .8em auto 0 auto;
         padding: .3em;
         line-height: 1.2em;

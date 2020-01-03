@@ -112,7 +112,10 @@
                     </div>
                     <div class="data-string">
                         <span v-show="dataString" id="data-string-text">{{ dataString }}</span>
-                        <span v-show="!dataString"><i>{{ dict.play_no_numbers }}</i></span>        
+                        <span v-show="!dataString">
+                            <!-- <i>{{ dict.play_no_numbers }}</i> -->
+                            None
+                        </span>
                     </div>
                     <div class="m-btn btn-ctrl btn-clear" 
                          :class="{ disabled: gameCurrent !== null && leftNumbers >= gameCurrent.reqNumbers }" 
@@ -146,7 +149,8 @@
             {{ dict.play_txt2 }}<br />
             <span v-show="!web3.coinbase" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
-                <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
+                <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a><br />
+                {{ dict.play_txt4 }}
             </span>
         </div>
     </div>
@@ -629,19 +633,19 @@ export default {
     .game-play-wrapper {
         font-size: .5em;
         .timer-wrapper {
-            margin: .7em auto 1.4em auto;
+            margin: 1.7em auto 2.2em auto;
             .timer {
                 &__part {
                     font-size: 1em;
                     .number {
                         min-width: 25px;
-                        padding: .1em .3em;
+                        padding: .5em .5em;
                         font-size: 1em;
                         margin-right: .3em;
                         text-align: center;
                     }
                     .number-desc {
-                        top: 2.2em;
+                        top: 3em;
                         font-size: .7em;
                     }
                 }
@@ -653,49 +657,55 @@ export default {
             }
         }
         .loto-pad-wrapper {
-            margin: .5em auto;
+            margin: 1em auto 1em auto;
             .loto-info {
                 .column {
-                    padding: .6em .3em;
-                    font-size: .6em;
+                    padding: 0em .3em .3em .3em;
+                    font-size: 1.2em;
                     img {
-                        display: none;
+                        width: 40px;
+                        height: 40px;
                     }
                 }
             }
             .drawing-text {
                 font-size: 36px;
             }
-            .loto-pad-item {
-                font-size: .6em;
-            }
-            .control-bar {
-                margin: .3em auto;
-                padding: .3em 0 0 0;
-                .data-string {
-                    width: 100px;
-                    height: 38px;
-                    line-height: 36px;
-                    margin-right: .4em;
-                    margin-bottom: .4em;
-                    font-size: .45em;
+            .loto-pad {
+                .loto-pad-item {
+                    font-size: 1em;
                 }
-                .btn-ctrl {
-                    width: 36px;
-                    height: 36px;
-                    line-height: 36px;
-                    margin-right: .4em;
-                    margin-bottom: .4em;
-                    font-size: .5em;
+                .loto-pad-item.selected {
+                    box-shadow: none;
                 }
-                .btn-play {
-                    width: 60px;
+                .control-bar {
+                    margin: .3em auto;
+                    padding: .3em 0 0 0;
+                    .data-string {
+                        width: 100px;
+                        height: 38px;
+                        line-height: 36px;
+                        margin-right: .4em;
+                        margin-bottom: .4em;
+                        font-size: 1.1em;
+                    }
+                    .btn-ctrl {
+                        width: 36px;
+                        height: 36px;
+                        line-height: 36px;
+                        margin-right: .4em;
+                        margin-bottom: .4em;
+                        font-size: 1.1em;
+                    }
+                    .btn-play {
+                        width: 60px;
+                    }
                 }
             }
         }
     }
     .loto-info-bottom {
-        font-size: .6em;
+        font-size: 1.2em;
         margin: .8em auto 0 auto;
         padding: .3em;
         line-height: 1.2em;

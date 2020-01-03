@@ -34,6 +34,7 @@ dicts.ru = {
     play_txt2                           : ', в поле DATA вставьте скопированую строку',
     play_txt3                           : 'Для быстрой игры',
     play_txt3link                       : 'установите Metamask',
+    play_txt4                           : 'Для игры с мобильного устройства используйте браузер MetaMask.',
     play_play                           : 'Играть с Metamask',
           
     // Правила
@@ -136,6 +137,7 @@ dicts.en = {
     play_txt2                           : ' address, in the DATA field, paste the copied string',
     play_txt3                           : 'For a quick game',
     play_txt3link                       : 'install Metamask',
+    play_txt4                           : 'To play from a mobile device, use the MetaMask browser.',
     play_play                           : 'Play with Metamask',
           
     // Правила

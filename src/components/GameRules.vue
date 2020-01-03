@@ -40,7 +40,7 @@
                 <img src="../../public/img/icons/icon_gas.png"  alt="" title="" />
             </span>
             {{ dict.rules_gas_limit }}: <span class="data-value">350 000</span><br />
-            {{ dict.rules_gas_price }}: <span class="data-value">{{ gasPriceFast }} Gwei</span>
+            {{ dict.rules_gas_price }}: <span class="data-value">{{ gasPriceAverage }} Gwei</span>
         </div>
         <div class="rules-row">
             <span class="rules-dotter">
@@ -81,7 +81,7 @@ export default {
     props: {},
     data () {
         return {
-            gasPriceFast: '4',
+            gasPriceAverage: '4',
             gasPriceInterval: null
         }
     },
@@ -126,10 +126,10 @@ export default {
         ...mapGetters(['gameSettings', 'gameCurrent'])
     },
     methods: {
-        getGasPriceFast () {
+        getGasPriceAverage () {
             axios.get('https://ethgasstation.info/json/ethgasAPI.json')
             .then(result => {
-                this.gasPriceFast = '' + (result.data.fast / 10)
+                this.gasPriceAverage = '' + (result.data.average / 10)
             })
             .catch((error) => {
                 console.log('Error: ' + error)
@@ -137,9 +137,9 @@ export default {
         }
     },
     mounted () {
-        this.getGasPriceFast()
+        this.getGasPriceAverage()
         this.gasPriceInterval = setInterval(() => {
-            this.getGasPriceFast()
+            this.getGasPriceAverage()
         }, 5 * 60 * 1000)
     },
     beforeDestroy () {

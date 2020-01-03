@@ -102,7 +102,9 @@ dicts.ru = {
     ticket_price                        : 'Стоимость билета',
     draw_time                           : 'Время розыгрыша',
     enter_member_address                : 'Введите адрес участника',
-    no_tickets_found                    : 'Билеты не найдены'
+    no_tickets_found                    : 'Билеты не найдены',
+
+    chat                                : 'Чат'
   
 };
       
@@ -201,7 +203,9 @@ dicts.en = {
     ticket_price                        : 'Ticket price',
     draw_time                           : 'Draw time',
     enter_member_address                : 'Enter Member Address',
-    no_tickets_found                    : 'No tickets found'
+    no_tickets_found                    : 'No tickets found',
+
+    chat                                : 'Chat'
 
 };
 

@@ -1,16 +1,16 @@
 <template>
-    <div class="cryptocurrency-box">
-        <h3 class="cryptocurrency-box__caption">
+    <div class="box-cryptocurrency">
+        <h3 class="box-cryptocurrency__caption">
             Cryptocurrencies
         </h3>
         <p
             v-for="(currency, name) in currencies"
             :key="'cc' + name"
-            class="cryptocurrency-box__item"
+            class="box-cryptocurrency__item"
             :class="[currency.icon]"
         >
-            <span class="cryptocurrency-box__item-name">{{ currency.name }}</span>
-            <span class="cryptocurrency-box__item-value">$ {{ currency.value }}</span>
+            <span class="box-cryptocurrency__item-name">{{ currency.name }}</span>
+            <span class="box-cryptocurrency__item-value">$ {{ currency.value }}</span>
         </p>
     </div>
 </template>
@@ -23,7 +23,7 @@ import axios from 'axios'
 const currenciesUrl = 'https://api.coinmarketcap.com/v1/ticker/?limit=16'
 
 export default {
-    name: 'CryptocurrencyBox',
+    name: 'BoxCryptocurrency',
     data () {
         return {
             currencies: {
@@ -59,7 +59,7 @@ export default {
                 this.currencies.bitcoin.value = parseInt(currencies.data[0].price_usd * 100) / 100
                 this.currencies.ethereum.value = parseInt(currencies.data[1].price_usd * 100) / 100
                 this.currencies.litecoin.value = parseInt(currencies.data[5].price_usd * 100) / 100
-                this.currencies.monero.value = parseInt(currencies.data[15].price_usd * 100) / 100
+                this.currencies.monero.value = parseInt(currencies.data[13].price_usd * 100) / 100
             } else {
                 this.currencies.bitcoin.value = 'n/a'
                 this.currencies.ethereum.value = 'n/a'
@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style lang="scss">
-.cryptocurrency-box {
+.box-cryptocurrency {
     width: 280px;
     border: 1px solid #000;
     border-top: none;
@@ -94,9 +94,7 @@ export default {
     &__caption {
         padding: 10px;
         background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
-        background-size: 100% 100%, auto;
-        background-position: 50% 50%;
-        box-shadow: inset #6e5a24 0 -1px 1px, inset 0 1px 1px #3b2e06, #663c12 0 0 0 1px, #000 0 10px 15px -10px;
+        box-shadow: inset #6e5a24 0 -1px 1px, #663c12 0 0 0 1px, #000 0 10px 15px -10px;
         color: #000;
         margin-bottom: 3px;
     }

@@ -24,7 +24,7 @@ export default new Router({
     {
       path: '/admin',
       // component: GameHistory
-      component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/AdminPage.vue')
+      component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminPage.vue')
     },
     {
       path: '/:gameType',

@@ -7,72 +7,71 @@ import Web3 from 'web3'
 * 4. Get user account from metamask
 * 5. Get user balance
 */
-
-let getWeb3 = new Promise((resolve, reject) => {
+  let getWeb3 = new Promise((resolve, reject) => {
   
-  if (typeof window.ethereum !== 'undefined' || typeof window.web3 !== 'undefined') {
-    
-    const provider = window['ethereum'] || window.web3.currentProvider
-    const web3 = new Web3(provider)
-    
-    // Disable refreshing page if network id changed in metamask (only in window[ethereum])
-    if (typeof window.ethereum !== 'undefined') window['ethereum'].autoRefreshOnNetworkChange = false
-    
-    ethereum.enable()
-      .then(accounts => {
-        if (accounts.length === 0) 
-          reject(new Error('Metamask is locked'))
-        else { 
-          resolve({ injectedWeb3: true, web3 () { return web3 } })
+    if (typeof window.ethereum !== 'undefined') {
+      
+      const provider = window.ethereum
+      const web3 = new Web3(provider)
+      
+      // Disable refreshing page if network id changed in metamask (only in window[ethereum])
+      window.ethereum.autoRefreshOnNetworkChange = false
+      
+      window.ethereum.enable()
+        .then(accounts => {
+          if (accounts.length === 0) 
+            reject(new Error('Metamask is locked'))
+          else { 
+            resolve({ injectedWeb3: true, web3 () { return web3 } })
+          }
+        })
+        .catch(error => {
+          reject(new Error(`ethereum.enable() error: + ${error}`))
+        })
+      
+    } else {
+      reject(new Error('Unable to connect to Metamask'))
+    }
+  })
+    .then(result => {
+      return new Promise(function (resolve, reject) {
+        // Retrieve network ID
+        result.web3().eth.net.getId((err, networkId) => {
+          if (err) {
+            reject(new Error('Unable to retrieve network ID'))
+          } else {
+            // Assign the networkId property to our result and resolve promise
+            result = Object.assign({}, result, {networkId})
+            resolve(result)
         }
-      })
-      .catch(error => {
-        reject(new Error(`ethereum.enable() error: + ${error}`))
-      })
-    
-  } else {
-    reject(new Error('Unable to connect to Metamask'))
-  }
-})
-  .then(result => {
-    return new Promise(function (resolve, reject) {
-      // Retrieve network ID
-      result.web3().eth.net.getId((err, networkId) => {
-        if (err) {
-          reject(new Error('Unable to retrieve network ID'))
-        } else {
-          // Assign the networkId property to our result and resolve promise
-          result = Object.assign({}, result, {networkId})
-          resolve(result)
-      }
+        })
       })
     })
-  })
-  .then(result => {
-    return new Promise(function (resolve, reject) {
-      // Retrieve coinbase
-      result.web3().eth.getCoinbase((err, coinbase) => {
-        if (err) {
-          reject(new Error('Unable to retrieve coinbase'))
-        } else {
-          result = Object.assign({}, result, { coinbase })
-          resolve(result)
-        }
+    .then(result => {
+      return new Promise(function (resolve, reject) {
+        // Retrieve coinbase
+        result.web3().eth.getCoinbase((err, coinbase) => {
+          if (err) {
+            reject(new Error('Unable to retrieve coinbase'))
+          } else {
+            result = Object.assign({}, result, { coinbase })
+            resolve(result)
+          }
+        })
       })
     })
-  })
-  .then(result => {
-    return new Promise(function (resolve, reject) {
-      // Retrieve balance for coinbase
-      result.web3().eth.getBalance(result.coinbase, (err, balance) => {
-        if (err) {
-          reject(new Error('Unable to retrieve balance for address: ' + result.coinbase))
-        } else {
-          result = Object.assign({}, result, { balance })
-          resolve(result)
-        }
+    .then(result => {
+      return new Promise(function (resolve, reject) {
+        // Retrieve balance for coinbase
+        result.web3().eth.getBalance(result.coinbase, (err, balance) => {
+          if (err) {
+            reject(new Error('Unable to retrieve balance for address: ' + result.coinbase))
+          } else {
+            result = Object.assign({}, result, { balance })
+            resolve(result)
+          }
+        })
       })
     })
-  })
 
 export default getWeb3

@@ -1,15 +1,15 @@
 <template>
-    <div class="eth-gas-price">
-        <h3 class="eth-gas-price__caption">
+    <div class="box-eth-gas-price">
+        <h3 class="box-eth-gas-price__caption">
             ETH Gas prices (Gwei)
         </h3>
         <p
             v-for="(price, name) in gasPrices"
             :key="'gp' + name"
-            class="eth-gas-price__item"
+            class="box-eth-gas-price__item"
         >
-            <span class="eth-gas-price__item-name">{{ price.name }}</span>
-            <span class="eth-gas-price__item-value">{{ price.value }}</span>
+            <span class="box-eth-gas-price__item-name">{{ price.name }}</span>
+            <span class="box-eth-gas-price__item-value">{{ price.value }}</span>
         </p>
     </div>
 </template>
@@ -22,7 +22,7 @@ import axios from 'axios'
 const ethgasUrl = 'https://ethgasstation.info/json/ethgasAPI.json'
 
 export default {
-    name: 'ETHGasPrice',
+    name: 'BoxETHGasPrice',
     data () {
         return {
             gasPrices: {
@@ -73,8 +73,7 @@ export default {
 </script>
 
 <style lang="scss">
-.eth-gas-price {
-    width: 280px;
+.box-eth-gas-price {
     border: 1px solid #000;
     border-top: none;
     background-color: rgba(0, 0, 0, 0.2);
@@ -83,9 +82,7 @@ export default {
     &__caption {
         padding: 10px;
         background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
-        background-size: 100% 100%, auto;
-        background-position: 50% 50%;
-        box-shadow: inset #6e5a24 0 -1px 1px, inset 0 1px 1px #3b2e06, #663c12 0 0 0 1px, #000 0 10px 15px -10px;
+        box-shadow: inset #6e5a24 0 -1px 1px, #663c12 0 0 0 1px, #000 0 10px 15px -10px;
         color: #000;
         margin-bottom: 3px;
     }
@@ -103,11 +100,6 @@ export default {
         width: 20%;
         text-align: right;
         color: #34bbff;
-    }
-}
-@media all and (max-width: 1400px) {
-    .eth-gas-price {
-        display: none;
     }
 }
 </style>

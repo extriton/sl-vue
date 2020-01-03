@@ -128,7 +128,7 @@
                             <i class="fa fa-files-o" aria-hidden="true"></i>
                     </div>
                     <div class="m-btn btn-ctrl btn-play" 
-                         :class="{ disabled: leftNumbers > 0 || !web3.isInjected }"
+                         :class="{ disabled: leftNumbers > 0 || !web3.coinbase }"
                          @click="doPlay()">
                             <p>{{ dict.menu_play }}</p>
                     </div>
@@ -144,7 +144,7 @@
                 <i class="fa fa-files-o" aria-hidden="true"></i>
             </span>
             {{ dict.play_txt2 }}<br />
-            <span v-show="!web3.isInjected" style="color: #EECA57">
+            <span v-show="!web3.coinbase" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
                 <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
             </span>
@@ -156,6 +156,7 @@
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
 import { mapGetters, mapMutations } from 'vuex'
+import web3 from 'web3'
 import util from '@/util/util'
 import ethNetworks from '@/util/constants/networks'
 import axios from 'axios'
@@ -291,63 +292,64 @@ export default {
             }
 
             // Check Metamask install
-            if (!this.web3.isInjected) {
+            if (!window.ethereum || !window.ethereum.isMetaMask) {
                 this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask not installed! <br /> Install <a href="https://metamask.io/" target="_blank rel="noreferrer"">https://metamask.io/</a>` })
                 return
             }
             
-            // Check Metamask lock
-            this.web3.web3Instance().eth.getAccounts()
-            .then((result) => {
-
-                if (!Array.isArray(result) || result.length <= 0) {
-                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask is locked!` })
-                    return
-                }
-                
-                // Check Metamask network
-                if (this.gameSettings.metamaskNetId != this.web3.networkId) {
-                    const netId = '' + this.gameSettings.metamaskNetId
-                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Choose ${ethNetworks[netId]} network in Metamask!` })
-                    return
-                }
-                
-                // Create transaction for confirmation
-                this.createTransaction()
-
-            })
-            .catch((error) => {
-                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error })
+            if (!this.web3.coinbase) {
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Metamask is locked!` })
                 return
-            })
+            }
+
+            // Check Metamask network
+            if (this.gameSettings.metamaskNetId != this.web3.networkId) {
+                const netId = '' + this.gameSettings.metamaskNetId
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: `Choose ${ethNetworks[netId]} network in Metamask!` })
+                return
+            }
+
+            // Create transaction for confirmation
+            this.createTransaction()
         },
         async createTransaction () {
-            let gasPriceFast = '6'
+            let gasPriceAverage = '6'
             const gasPrice = await axios.get(`https://ethgasstation.info/json/ethgasAPI.json`)
-            if (gasPrice !== null) gasPriceFast = '' + (gasPrice.data.fast / 10)
+            if (gasPrice !== null) gasPriceAverage = '' + (gasPrice.data.average / 10)
 
             const transactionObj = {
                 from: this.web3.coinbase,
                 to: this.gameCurrent.contractAddress,
-                value: window.web3.toWei('' + this.gameCurrent.ticketPrice, 'ether'),
-                gas: 350000,
-                gasPrice: window.web3.toWei(gasPriceFast, 'gwei'),
+                value: Number(this.gameCurrent.ticketPrice * 10e17).toString(16),
+                gas: Number(350000).toString(16),
+                gasPrice: Number(gasPriceAverage * 10e8).toString(16),
+                // value: web3.utils.toWei('' + this.gameCurrent.ticketPrice, 'ether'),
+                // gas: '350000',
+                // gasPrice: web3.utils.toWei(gasPriceAverage, 'gwei'),
                 data: this.dataString
             }
-
-            this.web3.web3Instance().eth.sendTransaction(transactionObj, callback)
-            
-            const callback = (error, result) => {
-                if (error) {
-                    error = '' + error
-                    error = error.substr(error.indexOf('{'))
-                    error = JSON.parse(error)
-                    this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error.message })
-                } else {
-                    this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
-                }
+            /*            
+            try {
+                // await window.ethereum.send('eth_sendTransaction', transactionObj)
+            } catch(error) {
+                this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error.message })
+                return
             }
-
+            */
+            window.ethereum.sendAsync({ 
+                    method: 'eth_sendTransaction', 
+                    params: [transactionObj],
+                    from: this.web3.coinbase
+                    },
+                    (error, result) => {
+                        if (error) {
+                            this.newNotify({ type: 'error', title: '<b>:: Play ::</b>', text: error.message })
+                        } else {
+                            this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
+                        }
+                    })
+            
+            // this.newNotify({ type: 'success', title: '<b>:: Play ::</b>', text: `Transaction successfully sent!`  })
         },
         doCopyAddress () {
             this.$copyText(this.gameCurrent.contractAddress)

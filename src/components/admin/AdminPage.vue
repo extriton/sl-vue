@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import IpStat from '@/components/IpStat'
+import IpStat from '@/components/admin/IpStat'
 
 export default {
     name: 'AdminPage',

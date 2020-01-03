@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Language from '@/util/language'
-import getWeb3 from '@/util/getWeb3'
+// import getWeb3 from '@/util/getWeb3'
 import gameSettings from '@/../config/game-settings'
 
 Vue.use(Vuex)
@@ -43,11 +43,8 @@ export default new Vuex.Store({
     },
     // For Metamask / Mist
     web3: {
-      isInjected: false,
-      web3Instance: null,
       networkId: null,
       coinbase: null,
-      error: null,
     }
   },
   getters: {
@@ -114,6 +111,7 @@ export default new Vuex.Store({
     getPlayerHistorySuccess (state, payload) {
       state.playerCurrentHistory = payload
     },
+    /*
     registerWeb3Instance (state, payload) {
       let result = payload
       let web3Copy = state.web3
@@ -129,18 +127,46 @@ export default new Vuex.Store({
         state.web3.networkId = networkId
       })
 
-      state.web3 = web3Copy
+      state.web3 = payload
+    },
+    */
+    changeWeb3Coinbase (state, payload) {
+      state.web3.coinbase = payload
+    },
+    changeWeb3NetworkId (state, payload) {
+      state.web3.networkId = payload
     }
   },
   actions: {
     registerWeb3 ({commit}) {
-      getWeb3
-      .then(result => {
-        commit('registerWeb3Instance', result)
-      })
-      .catch(() => {
-        // console.log('Error in action registerWeb3' + e)
-      })
+      
+      // Check Metamask installation
+      if (!window.ethereum || !window.ethereum.isMetaMask) return
+      
+      // Retrieve Metamask chainId
+      window.ethereum.send('eth_chainId').then(handleChainChanged).catch(e => console.log(e))
+
+      // Retrieve Metamask accounts
+      window.ethereum.send('eth_accounts').then(handleAccountsChanged).catch(e => console.log(e))
+
+      // Set Metamask events handlers
+      window.ethereum.on('chainChanged', handleChainChanged)
+      window.ethereum.on('accountsChanged', handleAccountsChanged)
+
+      // Metamask events handlers
+      function handleChainChanged (chainId) {
+        if (typeof chainId === 'object') chainId = chainId.result
+        commit('changeWeb3NetworkId', chainId)
+      }
+
+      function handleAccountsChanged (accounts) {
+        if (!Array.isArray(accounts)) accounts = accounts.result
+        if (accounts.length === 0) {
+          commit('changeWeb3Coinbase', null)
+        } else {
+          commit('changeWeb3Coinbase', accounts[0])
+        }
+      }
     }
   }
 })

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import BarChart from '@/components/BarChart'
+import BarChart from '@/components/admin/BarChart'
 import DateTimePicker from 'vue-vanilla-datetime-picker'
 
 export default {

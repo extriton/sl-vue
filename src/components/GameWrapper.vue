@@ -96,6 +96,7 @@ export default {
       padding-bottom: calc(34px + 1em);
     }
     .info-block {
+      display: none;
       .box-chat-wrap {
         height: calc(100vh - 100px - 40px);
         margin-top: 0;

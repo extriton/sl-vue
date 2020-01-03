@@ -56,10 +56,10 @@ export default {
         async loadData () {
             const currencies = await axios.get(currenciesUrl)
             if (currencies !== null) {
-                this.currencies.bitcoin.value = parseInt(currencies.data[0].price_usd * 100) / 100
-                this.currencies.ethereum.value = parseInt(currencies.data[1].price_usd * 100) / 100
-                this.currencies.litecoin.value = parseInt(currencies.data[5].price_usd * 100) / 100
-                this.currencies.monero.value = parseInt(currencies.data[13].price_usd * 100) / 100
+                this.currencies.bitcoin.value = getRateBySymbol('BTC', currencies)
+                this.currencies.ethereum.value = getRateBySymbol('ETH', currencies)
+                this.currencies.litecoin.value = getRateBySymbol('LTC', currencies)
+                this.currencies.monero.value = getRateBySymbol('XMR', currencies)
             } else {
                 this.currencies.bitcoin.value = 'n/a'
                 this.currencies.ethereum.value = 'n/a'
@@ -80,6 +80,17 @@ export default {
             this.intervalId = null
         }
     }
+}
+
+function getRateBySymbol(symbol, rates) {
+    let rate = 0
+    for (let i = 0; i < rates.length; i++) {
+        if (rates[i].symbol == symbol) {
+            rate = rates[i].price_usd
+            break
+        }
+    }
+    return parseInt(rate * 100) / 100
 }
 </script>
 

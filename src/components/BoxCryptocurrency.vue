@@ -56,10 +56,10 @@ export default {
         async loadData () {
             const currencies = await axios.get(currenciesUrl)
             if (currencies !== null) {
-                this.currencies.bitcoin.value = getRateBySymbol('BTC', currencies)
-                this.currencies.ethereum.value = getRateBySymbol('ETH', currencies)
-                this.currencies.litecoin.value = getRateBySymbol('LTC', currencies)
-                this.currencies.monero.value = getRateBySymbol('XMR', currencies)
+                this.currencies.bitcoin.value = getRateBySymbol('BTC', currencies.data)
+                this.currencies.ethereum.value = getRateBySymbol('ETH', currencies.data)
+                this.currencies.litecoin.value = getRateBySymbol('LTC', currencies.data)
+                this.currencies.monero.value = getRateBySymbol('XMR', currencies.data)
             } else {
                 this.currencies.bitcoin.value = 'n/a'
                 this.currencies.ethereum.value = 'n/a'

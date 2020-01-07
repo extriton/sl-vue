@@ -73,7 +73,7 @@ export default {
     max-width: 800px;
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px);
-    /* padding-bottom: calc(58px + 1em); */
+    padding-bottom: calc(58px + 1em);
   }
   .info-block {
     position: fixed;
@@ -102,12 +102,15 @@ export default {
     .game-wrapper-content {
       min-height: calc(100vh - 90px - 34px);
       padding-bottom: calc(34px + 1em);
+      /* padding-bottom: 0; */
     }
     .info-block {
       display: block;
       position: static;
       width: 90%;
+      height: auto;
       margin: 0 auto;
+      padding-bottom: calc(34px + 1em);
     }
     .box-chat-wrap {
       width: 95%;

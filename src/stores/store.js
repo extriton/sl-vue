@@ -45,6 +45,10 @@ export default new Vuex.Store({
     web3: {
       networkId: null,
       coinbase: null,
+    },
+    user: {
+      username: '',
+      chatBlocked: false
     }
   },
   getters: {
@@ -78,6 +82,9 @@ export default new Vuex.Store({
     web3: state => {
       return  state.web3
     },
+    user: state => {
+      return state.user
+    }
   },
   mutations: {
     newNotify (state, payload) {
@@ -135,6 +142,9 @@ export default new Vuex.Store({
     },
     changeWeb3NetworkId (state, payload) {
       state.web3.networkId = payload
+    },
+    userChange (state, payload) {
+      state.user = payload
     }
   },
   actions: {

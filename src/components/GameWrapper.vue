@@ -14,16 +14,16 @@
       <div class="box-cryptocurrency-wrap">
         <BoxCryptocurrency />
       </div>
-      <!--
-      <div class="box-chat-wrap">
-        <BoxChat />
-      </div>
-      -->
+    </div>
+    <div class="box-chat-wrap">
+      <BoxChat />
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
 import BoxETHGasPrice from '@/components/BoxETHGasPrice.vue'
@@ -38,6 +38,23 @@ export default {
     BoxETHGasPrice,
     BoxCryptocurrency,
     BoxChat
+  },
+  computed: {
+    ...mapGetters(['web3'])
+  },
+  watch: {
+    'web3.coinbase': function (value) {
+      if (value === null) {
+        this.$store.commit('userChange', { username: '', chatBlocked: false })
+        return
+      }
+      this.$socket.emit('getUserData', { address: value })
+    }
+  },
+  sockets: {
+    getUserDataSuccess (data) {
+      this.$store.commit('userChange', data)
+    }
   },
   mounted () {
     // Register web3 metamask
@@ -56,7 +73,7 @@ export default {
     max-width: 800px;
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px);
-    padding-bottom: calc(58px + 1em);
+    /* padding-bottom: calc(58px + 1em); */
   }
   .info-block {
     position: fixed;
@@ -64,29 +81,20 @@ export default {
     right: 10px;
     width: 280px;
     height: calc(100vh - 100px - 58px);
-    .box-chat-wrap {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 100px - 58px - 126px - 155px - 10px);
-      margin-top: 10px;
-      overflow: hidden;
-    }
+  }
+  .box-chat-wrap {
+    position: fixed;
+    right: 10px;
+    bottom: 58px;
+    width: 280px;
   }
 }
 @media all and (max-width: 1400px) {
   .game-wrapper {
     .info-block {
-      .box-eth-gas-price-wrap {
-        display: none;
-      }
-      .box-cryptocurrency-wrap {
-        display: none;
-      }
-      .box-chat-wrap {
-        height: calc(100vh - 100px - 58px);
-        margin-top: 0;
-      }
+      display: none;
     }
+    
   }
 }
 @media all and (max-width: 760px) {
@@ -96,11 +104,14 @@ export default {
       padding-bottom: calc(34px + 1em);
     }
     .info-block {
-      display: none;
-      .box-chat-wrap {
-        height: calc(100vh - 100px - 40px);
-        margin-top: 0;
-      }
+      display: block;
+      position: static;
+      width: 90%;
+      margin: 0 auto;
+    }
+    .box-chat-wrap {
+      width: 95%;
+      bottom: 40px;
     }
   }
 }

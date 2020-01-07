@@ -4,6 +4,8 @@ const Game = require('../models/Game.js')
 const Member = require('../models/Member.js')
 const Ip = require('../models/Ip.js')
 const Ipstat = require('../models/Ipstat.js')
+const User = require('../models/User.js')
+const Chat = require('../models/Chat.js')
 
 const excludeIPs = gameSettings.excludeIPs
 
@@ -22,6 +24,12 @@ module.exports = io => {
       socket.on('getPlayerHistory', data => { getPlayerHistory(data, socket) })
 
       socket.on('getVisits', data => { getVisits(data, socket) })
+      
+      socket.on('getUserData', data => { getUserData(data, socket) })
+
+      socket.on('newChatMessage', data => { newChatMessage(data, socket, io) })
+      
+      socket.on('getChatHistory', data => { getChatHistory(data, socket) })
 
       socket.on('getAdminData', data => { getAdminData(data, socket) })
         
@@ -31,8 +39,6 @@ module.exports = io => {
 // Return game data by game type to client socket
 async function getGameData(data, socket) {
 
-  console.log('getGameData socket called')
-  
   if (!data.type) return
 
   // Define game settings by type
@@ -186,6 +192,81 @@ async function getVisits(data, socket) {
   
 }
 
+// Return user data
+async function getUserData(data, socket) {
+
+  if (!data.address) return
+  
+  let user = await User.findOne({ address: data.address })
+  if (user === null) {
+    user = new User({ address: data.address })
+  }
+
+  const ip = getRealSocketIP(socket)
+
+  if (user.ips.indexOf(ip) === -1) {
+    user.ips.push(ip)
+  }
+
+  user.save()
+
+  const result = {
+    username: user.username,
+    chatBlocked: user.chatBlocked
+  }
+
+  socket.emit('getUserDataSuccess', result)
+  
+}
+
+// Store and emit new chat message
+async function newChatMessage(data, socket, io) {
+
+  // Check data
+  if (!data.address || !data.message) return
+  
+  // Check user
+  const user = await User.findOne({ address: data.address })
+  if (user === null || user.chatBlocked) return
+
+  const message = new Chat({
+    address: user.address,
+    username: user.username,
+    message: data.message
+  })
+
+  await message.save()
+
+  const result = {
+    username: message.username || getShortAddress(message.address),
+    message: message.message
+  }
+
+  io.sockets.emit('newChatMessageSuccess', result)
+  
+}
+
+// Return last 30 chat messages
+async function getChatHistory(data, socket) {
+  
+  const chatHistory = await Chat.find({ visible: true }).sort({ created: -1 }).limit(30)
+
+  const result = {
+    history: []
+  }
+  
+  for (let i = 0; i < chatHistory.length; i++) {
+    result.history.push({ 
+      username: chatHistory[i].username || getShortAddress(chatHistory[i].address),
+      message: chatHistory[i].message
+     })
+  }
+  
+  result.history.reverse()
+
+  socket.emit('getChatHistorySuccess', result)
+}
+
 // Return data for admin page
 async function getAdminData(data, socket) {
 
@@ -301,4 +382,9 @@ function getRealSocketIP(socket) {
   }
 
   return origin_client_ip
+}
+
+// Return short address in format 0x28c2...65e3
+function getShortAddress (address) {
+  return (address.substr(0, 6) + '...' + address.substr(-4))
 }

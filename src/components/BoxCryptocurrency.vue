@@ -96,7 +96,6 @@ function getRateBySymbol(symbol, rates) {
 
 <style lang="scss">
 .box-cryptocurrency {
-    width: 280px;
     border: 1px solid #000;
     border-top: none;
     background-color: rgba(0, 0, 0, 0.2);
@@ -139,11 +138,6 @@ function getRateBySymbol(symbol, rates) {
         width: 30%;
         text-align: right;
         color: #34bbff;
-    }
-}
-@media all and (max-width: 1400px) {
-    .cryptocurrency-box {
-        display: none;
     }
 }
 </style>

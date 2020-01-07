@@ -105,7 +105,9 @@ dicts.ru = {
     enter_member_address                : 'Введите адрес участника',
     no_tickets_found                    : 'Билеты не найдены',
 
-    chat                                : 'Чат'
+    chat                                : 'Чат',
+    chat_need_auth                      : 'Необходимо авторизоваться через Metamask',
+    chat_blocked                        : 'Вы заблокированы администратором'
   
 };
       
@@ -207,7 +209,9 @@ dicts.en = {
     enter_member_address                : 'Enter Member Address',
     no_tickets_found                    : 'No tickets found',
 
-    chat                                : 'Chat'
+    chat                                : 'Chat',
+    chat_need_auth                      : 'You must log in using Metamask',
+    chat_blocked                        : 'You are blocked by administrator'
 
 };
 

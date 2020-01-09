@@ -7,7 +7,7 @@
                 min-date="2019-12-01"
                 :max-date="new Date()"
                 :auto-close="true"
-                @close="updateAdminData"
+                @close="updateAdminVisitsData"
             >
             </DateTimePicker>
         </div>
@@ -44,8 +44,8 @@ export default {
             for (let i = 0; i < n; i++) result.push(i + 1)
             return result
         },
-        updateAdminData () {
-            this.$socket.emit('getAdminData', { year: this.selectedPeriod.getFullYear(), month: this.selectedPeriod.getMonth() + 1 })
+        updateAdminVisitsData () {
+            this.$socket.emit('getAdminVisitsData', { year: this.selectedPeriod.getFullYear(), month: this.selectedPeriod.getMonth() + 1 })
         },
         fillChartData (ipStat) {
             const newUsers = (new Array(this.daysInMonth)).fill(0)
@@ -80,7 +80,7 @@ export default {
         }
     },
     sockets: {
-        getAdminDataSuccess (data) {
+        getAdminVisitsDataSuccess (data) {
             this.fillChartData(data.ipStat)
         }
     }

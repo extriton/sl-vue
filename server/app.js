@@ -6,11 +6,15 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('../config/server/config-server')
 
+
 // Mongoose
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 mongoose.connect(config.dbURL, config.dbOptions)
-  .then(() =>  console.log('MongoDB: connection succesful'))
+  .then(() =>  {
+    console.log('MongoDB: connection succesful')
+    fixCollections()
+  })
   .catch((err) => console.error('MongoDB: ' + err))
 
 // Routes
@@ -44,5 +48,27 @@ app.use(function(err, req, res, next) {
 
     res.status(err.statusCode || 500).json(err)
 });
+
+// Fix colections fields (TEMPORARY!!!)
+async function fixCollections () {
+
+  const axios = require('axios')
+  const Ip = require('./models/Ip.js')
+
+  const ipGeoUrl = 'https://api.sypexgeo.net/json/'
+
+  // Fix IP field "country"
+  const IPs = await Ip.find()
+  IPs.forEach(async (elem) => {
+    if (!elem.country) {
+      const ipGeo = await axios.get(ipGeoUrl + elem.ip)
+      if (ipGeo && ipGeo.data && ipGeo.data.country && ipGeo.data.city) {
+        elem.country = ipGeo.data.country.name_en + ', ' + ipGeo.data.city.name_en
+        elem.save()
+      }
+    }
+  })
+
+}
 
 module.exports = app;

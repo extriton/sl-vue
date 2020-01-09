@@ -23,8 +23,26 @@ export default new Router({
     },
     {
       path: '/admin',
-      // component: GameHistory
-      component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminPage.vue')
+      // component: AdminMainPage
+      component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminMainPage.vue'),
+      children: [
+        {
+          path: 'visits',
+          component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminVisitsPage.vue'),
+        },
+        {
+          path: 'users',
+          component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminUsersPage.vue'),
+        },
+        {
+          path: 'messages',
+          component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminMessagesPage.vue'),
+        },
+        {
+          path: '*',
+          redirect: 'visits'
+        }
+      ]
     },
     {
       path: '/:gameType',

@@ -7,14 +7,17 @@ const Ipstat = require('../models/Ipstat.js')
 const User = require('../models/User.js')
 const Chat = require('../models/Chat.js')
 
-const excludeIPs = gameSettings.excludeIPs
-
+let USERS_ONLINE = 0
 
 // Export function
 module.exports = io => {
 
     io.sockets.on('connection', socket => {
+
       const realSocketIP = getRealSocketIP(socket)
+
+      if(realSocketIP !== '') addOnlineUser(realSocketIP)
+
       if(realSocketIP !== '') addSocketIP(realSocketIP)
 
       socket.on('getGameData', data => { getGameData(data, socket) })
@@ -31,7 +34,11 @@ module.exports = io => {
       
       socket.on('getChatHistory', data => { getChatHistory(data, socket) })
 
-      socket.on('getAdminData', data => { getAdminData(data, socket) })
+      socket.on('getAdminVisitsData', data => { getAdminVisitsData(data, socket) })
+
+      socket.on('disconnect', () => { 
+        if(realSocketIP !== '') removeOnlineUser(realSocketIP)
+       })
         
     })
 }
@@ -69,7 +76,7 @@ async function getGameData(data, socket) {
 async function getGameHistory(data, socket) {
 
   if (!data.type) {
-    console.log(`getPlayerHistory: Invalid data`)
+    console.log(`getGameHistory: Invalid data`)
     return
   }
 
@@ -173,23 +180,24 @@ async function getPlayerHistory(data, socket) {
 // Return unique users and site visits
 async function getVisits(data, socket) {
 
-  const ips = await Ip.find({})
+  const ipsPromise = Ip.find({})
+  const excludeIPsPromise = getAdminIPs()
+
+  const ips = await ipsPromise
+  const excludeIPs = await excludeIPsPromise
 
   const result = {
     newUsers: ips.length,
     visits:  0
   }
 
-  for (let i = 0; i < ips.length; i++) {
-    if (excludeIPs.indexOf(ips[i].ip) === -1) {
-      result.visits += ips[i].cnt
+  ips.forEach(elem => {
+    if (excludeIPs.indexOf(elem.ip) === -1) {
+      result.visits += elem.cnt
     }
-  }
-
-  
+  })
 
   socket.emit('getVisitsSuccess', result)
-  
 }
 
 // Return user data
@@ -206,6 +214,10 @@ async function getUserData(data, socket) {
 
   if (user.ips.indexOf(ip) === -1) {
     user.ips.push(ip)
+  }
+
+  if (!user.isAdmin) {
+    user.isAdmin = false
   }
 
   user.save()
@@ -268,7 +280,7 @@ async function getChatHistory(data, socket) {
 }
 
 // Return data for admin page
-async function getAdminData(data, socket) {
+async function getAdminVisitsData(data, socket) {
 
   if (!data.year || !data.month) {
     const now = new Date()
@@ -287,85 +299,117 @@ async function getAdminData(data, socket) {
   
   const ipsPromise = Ip.find({})
   const ipStatPromise = Ipstat.find({ year: data.year, month: data.month })
+  const excludeIPsPromise = getAdminIPs()
 
   const ips = await ipsPromise
   const ipStat = await ipStatPromise
+  const excludeIPs = await excludeIPsPromise
 
   const result = {
     newUsers: ips.length,
     visits:  0,
+    online: USERS_ONLINE,
     ipStat: []
   }
 
-  for (let i = 0; i < ips.length; i++) {
-    if (excludeIPs.indexOf(ips[i].ip) === -1) {
-      result.visits += ips[i].cnt
+  ips.forEach(elem => {
+    if (excludeIPs.indexOf(elem.ip) === -1) {
+      result.visits += elem.cnt
     }
-  }
-
+  })
   result.ipStat = ipStat
 
-  socket.emit('getAdminDataSuccess', result)
-  
+  socket.emit('getAdminVisitsDataSuccess', result)
 }
 
 // Add socket IP
 async function addSocketIP(socketIP) {
-
-    if (excludeIPs.indexOf(socketIP) !== -1) return
   
-    // Add in DB
-    Ip.findOne({ ip: socketIP }).exec((err, ip) => {
-        if(err) {
-          console.log('Ip find Error: ' + err)
-          return
-        }
+  const axios = require('axios')
+  const ipGeoUrl = 'https://api.sypexgeo.net/json/'
+    
+  const excludeIPs = await getAdminIPs()
+  if (excludeIPs.indexOf(socketIP) !== -1) return
+  
+  // Add in DB
+  Ip.findOne({ ip: socketIP }).exec(async (err, ip) => {
+    if(err) {
+      console.log('Ip find Error: ' + err)
+      return
+    }
         
-        let isNew = false
+    let isNew = false
+    if (!ip) {
+      ip = new Ip({
+        ip: socketIP,
+        cnt: 1,
+        country: ''
+      })
+      isNew = true
+    } else {
+      ip.cnt = ip.cnt + 1
+    }
+    
+    if (!ip.country) {
+      const ipGeo = await axios.get(ipGeoUrl + ip.ip)
+      if (ipGeo && ipGeo.data && ipGeo.data.country && ipGeo.data.city) {
+        ip.country = ipGeo.data.country.name_en + ', ' + ipGeo.data.city.name_en
+      }
+    }
+    
+    ip.updated = new Date()
+    ip.save()
 
-        if (!ip) {
-            ip = new Ip({
-                ip: socketIP,
-                cnt: 1
-            })
-            isNew = true
-        } else {
-            ip.cnt = ip.cnt + 1
-        }
-        ip.updated = new Date()
-        ip.save()
-
-        const now = new Date()
-        const year = now.getFullYear()
-        const month = now.getMonth() + 1
-        const date = now.getDate()
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = now.getMonth() + 1
+    const date = now.getDate()
         
-        Ipstat.findOne({ year: year, month: month, date: date }).exec((err, stat) => {
-          if(err) {
-            console.log('Ipstat find Error:' + err)
-            return
-          }
+    Ipstat.findOne({ year: year, month: month, date: date }).exec((err, stat) => {
+      if(err) {
+        console.log('Ipstat find Error:' + err)
+        return
+      }
 
-          if (!stat) {
-            stat = new Ipstat({
-              year: year,
-              month: month,
-              date: date,
-              newUsers: 0,
-              visits: 1
-            })
-          } else {
-            stat.visits += 1
-          }
-
-          if (isNew) {
-            stat.newUsers += 1
-          }
-          stat.save()
+      if (!stat) {
+        stat = new Ipstat({
+          year: year,
+          month: month,
+          date: date,
+          newUsers: 0,
+          visits: 1
         })
+      } else {
+        stat.visits += 1
+      }
 
+      if (isNew) {
+        stat.newUsers += 1
+      }
+      stat.save()
     })
 
+  })
+}
+
+// Add online user
+async function addOnlineUser(socketIP) {
+  
+  const excludeIPs = await getAdminIPs()
+  if (excludeIPs.indexOf(socketIP) !== -1) return
+  
+  USERS_ONLINE++
+
+}
+
+// Remove online user
+async function removeOnlineUser(socketIP) {
+  
+  const excludeIPs = await getAdminIPs()
+  if (excludeIPs.indexOf(socketIP) !== -1) return
+  
+  USERS_ONLINE--
+  
 }
 
 // Return real socket IP
@@ -387,4 +431,19 @@ function getRealSocketIP(socket) {
 // Return short address in format 0x28c2...65e3
 function getShortAddress (address) {
   return (address.substr(0, 6) + '...' + address.substr(-4))
+}
+
+// Return array of admin IPs
+async function getAdminIPs () {
+  return new Promise(async (resolve) => {
+
+    const result = []
+    const admins = await User.find({ isAdmin: true })
+
+    admins.forEach(admin => {
+      admin.ips.forEach(ip => { result.push(ip) })
+    })
+
+    resolve(result)
+  })
 }

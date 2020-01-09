@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 var UserSchema = new Schema({
     address:            { type: String, default: '', unique: true },
     username:           { type: String, default: '' },
+    isAdmin:            { type: Boolean, default: false },
     ips:                { type: Array, default: [] },
     chatBlocked:        { type: Boolean, default: false },
     status:             { type: Number, default: 0 },

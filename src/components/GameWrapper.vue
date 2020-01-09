@@ -115,6 +115,7 @@ export default {
     .box-chat-wrap {
       width: 95%;
       bottom: 40px;
+      z-index: 2;
     }
   }
 }

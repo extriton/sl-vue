@@ -6,6 +6,7 @@
       <router-link to="/admin/users" class="menu-list-item">Пользователи</router-link>
       <router-link to="/admin/ips" class="menu-list-item">IPs</router-link>
       <router-link to="/admin/messages" class="menu-list-item">Сообщения</router-link>
+      <router-link to="/admin/news" class="menu-list-item">Новости</router-link>
     </div>
     <!-- Admin body -->
     <transition name="fade" mode="out-in">

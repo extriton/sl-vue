@@ -133,6 +133,7 @@ export default {
             th, td {
                 border: 1px solid #777;
                 padding: 10px 5px;
+                vertical-align: middle;
                 &:nth-child(1),
                 &:nth-child(4),
                 &:nth-child(5),

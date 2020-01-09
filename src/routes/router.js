@@ -43,6 +43,10 @@ export default new Router({
           component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminMessagesPage.vue'),
         },
         {
+          path: 'news',
+          component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminNewsPage.vue'),
+        },
+        {
           path: '*',
           redirect: 'visits'
         }

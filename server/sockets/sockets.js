@@ -42,6 +42,10 @@ module.exports = io => {
 
       socket.on('getAdminIPsData', data => { getAdminIPsData(data, socket) })
 
+      socket.on('getAdminMessagesData', data => { getAdminMessagesData(data, socket) })
+
+      socket.on('changeMessageFlags', data => { changeMessageFlags(data, socket) })
+
       socket.on('disconnect', () => { 
         if(realSocketIP !== '') removeOnlineUser(realSocketIP)
        })
@@ -380,6 +384,32 @@ async function getAdminIPsData(data, socket) {
   const ips = await Ip.find()
 
   socket.emit('getAdminIPsDataSuccess', ips)
+}
+
+// Return data for admin messages page
+async function getAdminMessagesData(data, socket) {
+
+  const messages = await Chat.find()
+  
+  messages.forEach(elem => {
+    elem.address = getShortAddress(elem.address)
+  })
+
+  socket.emit('getAdminMessagesDataSuccess', messages)
+}
+
+// Change user flags
+async function changeMessageFlags (data, socket) {
+
+  if (!data.created) return
+
+  const message = await Chat.findOne({ created: data.created })
+  if(!message) return
+
+  message.visible = !!data.visible
+  await message.save()
+
+  socket.emit('changeMessageFlagsSuccess')
 }
 
 // Add socket IP

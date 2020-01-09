@@ -35,6 +35,10 @@ export default new Router({
           component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminUsersPage.vue'),
         },
         {
+          path: 'ips',
+          component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminIPsPage.vue'),
+        },
+        {
           path: 'messages',
           component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminMessagesPage.vue'),
         },

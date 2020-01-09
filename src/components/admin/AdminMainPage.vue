@@ -4,6 +4,7 @@
     <div class="menu-list">
       <router-link to="/admin/visits" class="menu-list-item">Посещаемость</router-link>
       <router-link to="/admin/users" class="menu-list-item">Пользователи</router-link>
+      <router-link to="/admin/ips" class="menu-list-item">IPs</router-link>
       <router-link to="/admin/messages" class="menu-list-item">Сообщения</router-link>
     </div>
     <!-- Admin body -->

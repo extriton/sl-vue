@@ -40,6 +40,8 @@ module.exports = io => {
 
       socket.on('changeUserFlags', data => { changeUserFlags(data, socket) })
 
+      socket.on('getAdminIPsData', data => { getAdminIPsData(data, socket) })
+
       socket.on('disconnect', () => { 
         if(realSocketIP !== '') removeOnlineUser(realSocketIP)
        })
@@ -370,6 +372,14 @@ async function changeUserFlags (data, socket) {
   await user.save()
 
   socket.emit('changeUserFlagsSuccess')
+}
+
+// Return data for admin IPs page
+async function getAdminIPsData(data, socket) {
+
+  const ips = await Ip.find()
+
+  socket.emit('getAdminIPsDataSuccess', ips)
 }
 
 // Add socket IP

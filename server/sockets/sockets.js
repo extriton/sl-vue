@@ -507,7 +507,14 @@ function getRealSocketIP(socket) {
         
   let origin_client_ip = ''
   let x_forwarded_for = []
-  
+
+  // Check crawlers
+  const regExp = /(Google|Yahoo|Rambler|Bot|Yandex|Spider|Snoopy|Crawler|Finder|Mail|curl)/i
+  if (regExp.test(socket.handshake.headers['user-agent'])) {
+    return ''
+  }
+
+  // Define IP
   if(socket.handshake.headers['x-forwarded-for']) {
       x_forwarded_for = socket.handshake.headers['x-forwarded-for'].split(', ')
       origin_client_ip = x_forwarded_for[0]

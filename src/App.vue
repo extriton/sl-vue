@@ -41,8 +41,10 @@ export default {
   font-family: 'Comfortaa', sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
+  -ms-user-select: none;
   text-align: center;
   translate: no;
 }

@@ -23,6 +23,10 @@ export default {
 
 <style lang="scss">
 .admin-main-page {
+  user-select: text;
+  -moz-user-select: test;
+  -webkit-user-select: text;
+  -ms-user-select: text;
   .menu-list {
     text-align: left;
     .menu-list-item {

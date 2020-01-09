@@ -127,8 +127,10 @@ export default {
           transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
   outline-color: rgba(51, 181, 247, 0.5);
   outline-offset: 0px;
+  /*
   -moz-user-select: none;
   -webkit-user-select: none;
+  */
 }
 .m-btn:hover {
   box-shadow: inset 0 0 20px rgba(51, 181, 247, 0.5), 0 0 20px rgba(51, 181, 247, 0.2);

@@ -67,13 +67,5 @@ export default {
             text-align: center;
         }
     }
-    /*
-    &__new-users {
-        float: left;
-    }
-    &__visits {
-        float: right;
-    }
-    */
 }
 </style>

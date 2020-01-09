@@ -36,6 +36,10 @@ module.exports = io => {
 
       socket.on('getAdminVisitsData', data => { getAdminVisitsData(data, socket) })
 
+      socket.on('getAdminUsersData', data => { getAdminUsersData(data, socket) })
+
+      socket.on('changeUserFlags', data => { changeUserFlags(data, socket) })
+
       socket.on('disconnect', () => { 
         if(realSocketIP !== '') removeOnlineUser(realSocketIP)
        })
@@ -279,7 +283,7 @@ async function getChatHistory(data, socket) {
   socket.emit('getChatHistorySuccess', result)
 }
 
-// Return data for admin page
+// Return data for admin visits page
 async function getAdminVisitsData(data, socket) {
 
   if (!data.year || !data.month) {
@@ -320,6 +324,52 @@ async function getAdminVisitsData(data, socket) {
   result.ipStat = ipStat
 
   socket.emit('getAdminVisitsDataSuccess', result)
+}
+
+// Return data for admin users page
+async function getAdminUsersData(data, socket) {
+
+  const result = []
+
+  const users = await User.find()
+
+  for (let i = 0; i < users.length; i++) {
+    const obj = {
+      address: users[i].address,
+      username: users[i].username,
+      ips: users[i].ips,
+      isAdmin: users[i].isAdmin,
+      chatBlocked: users[i].chatBlocked,
+      status: users[i].status,
+      tickets: 0
+    }
+    obj.tickets = await Member.countDocuments({ address: users[i].address })
+    result.push(obj)
+  }
+  
+  socket.emit('getAdminUsersDataSuccess', result)
+}
+
+// Change user flags
+async function changeUserFlags (data, socket) {
+
+  if (!data.address) return
+
+  const user = await User.findOne({ address: data.address })
+  if(!user) return
+
+  user.isAdmin = !!data.isAdmin
+  user.chatBlocked = !!data.chatBlocked
+
+  if (user.isAdmin) {
+    user.username = 'Admin'
+  } else {
+    user.username = ''
+  }
+
+  await user.save()
+
+  socket.emit('changeUserFlagsSuccess')
 }
 
 // Add socket IP

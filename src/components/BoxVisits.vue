@@ -63,7 +63,7 @@ export default {
             margin-right: 20px;
         }
         &__value {
-            width: 150px;
+            /* width: 150px; */
             padding-top: 5px;
             font-size: 30px;
         }
@@ -79,7 +79,7 @@ export default {
             margin-right: 10px;
         }
         &__value {
-            width: 80px;
+            /* width: 80px; */
             padding-top: 2px;
             font-size: 16px;
         }

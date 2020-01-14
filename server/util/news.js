@@ -1,8 +1,8 @@
 const axios = require('axios')
 const News = require('../models/News')
 
-const newsUrl = 'https://api.coinstats.app/public/v1/news/latest?skip=0&limit=20'
-const updateInterval = 15 * 60 * 1000
+const newsUrl = 'https://api.coinstats.app/public/v1/news/latest?skip=0&limit=30'
+const updateInterval = 10 * 60 * 1000
 
 module.exports = {
     runUpdater              : runUpdater
@@ -28,7 +28,7 @@ async function update(io) {
     }
     
     for (let i = 0; i < apiNews.length; i++) {
-        if (apiNews[i].feedDate > lastDbNewsDate) {
+        if (apiNews[i].feedDate > lastDbNewsDate && apiNews[i].source.indexOf('Reddit') === -1) {
             const news = new News({
                 id              : apiNews[i].id,
                 searchKeyWords  : apiNews[i].searchKeyWords,

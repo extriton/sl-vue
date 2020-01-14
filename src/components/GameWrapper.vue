@@ -7,6 +7,9 @@
       </transition>
     </div>
     <TheFooter />
+    <div class="box-news-wrap">
+      <BoxNews />
+    </div>
     <div class="info-block">
       <div class="box-eth-gas-price-wrap">
         <BoxETHGasPrice />
@@ -26,6 +29,7 @@ import { mapGetters } from 'vuex'
 
 import TheHeader from '@/components/TheHeader.vue'
 import TheFooter from '@/components/TheFooter.vue'
+import BoxNews from '@/components/BoxNews.vue'
 import BoxETHGasPrice from '@/components/BoxETHGasPrice.vue'
 import BoxCryptocurrency from '@/components/BoxCryptocurrency.vue'
 import BoxChat from '@/components/BoxChat.vue'
@@ -35,6 +39,7 @@ export default {
   components: {
     TheHeader,
     TheFooter,
+    BoxNews,
     BoxETHGasPrice,
     BoxCryptocurrency,
     BoxChat
@@ -75,6 +80,13 @@ export default {
     min-height: calc(100vh - 90px - 58px);
     padding-bottom: calc(58px + 1em);
   }
+  .box-news-wrap {
+    position: fixed;
+    top: 100px;
+    left: 10px;
+    width: 280px;
+    height: calc(100vh - 100px - 58px);
+  }
   .info-block {
     position: fixed;
     top: 100px;
@@ -91,10 +103,12 @@ export default {
 }
 @media all and (max-width: 1400px) {
   .game-wrapper {
+    .box-news-wrap {
+      display: none;
+    }
     .info-block {
       display: none;
     }
-    
   }
 }
 @media all and (max-width: 760px) {
@@ -102,7 +116,14 @@ export default {
     .game-wrapper-content {
       min-height: calc(100vh - 90px - 34px);
       padding-bottom: calc(34px + 1em);
-      /* padding-bottom: 0; */
+    }
+    .box-news-wrap {
+      display: block;
+      position: static;
+      width: 90%;
+      height: auto;
+      margin: 0 auto;
+      padding-bottom: calc(34px + 1em);
     }
     .info-block {
       display: block;

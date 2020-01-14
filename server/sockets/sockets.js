@@ -6,6 +6,7 @@ const Ip = require('../models/Ip.js')
 const Ipstat = require('../models/Ipstat.js')
 const User = require('../models/User.js')
 const Chat = require('../models/Chat.js')
+const News = require('../models/News.js')
 
 let USERS_ONLINE = 0
 
@@ -33,6 +34,8 @@ module.exports = io => {
       socket.on('newChatMessage', data => { newChatMessage(data, socket, io) })
       
       socket.on('getChatHistory', data => { getChatHistory(data, socket) })
+
+      socket.on('getNews', data => { getNews(data, socket) })
 
       socket.on('getAdminVisitsData', data => { getAdminVisitsData(data, socket) })
 
@@ -287,6 +290,22 @@ async function getChatHistory(data, socket) {
   result.history.reverse()
 
   socket.emit('getChatHistorySuccess', result)
+}
+
+// Return News
+async function getNews(data, socket) {
+
+  let limit
+
+  try {
+    limit = parseInt(data.limit)
+  } catch (e) {
+    limit = 50
+  }
+  
+  const news = await News.find().sort({ feedDate: -1 }).limit(limit)
+
+  socket.emit('getNewsSuccess', { news: news })
 }
 
 // Return data for admin visits page

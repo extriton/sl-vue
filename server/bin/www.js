@@ -3,6 +3,7 @@ const app = require('../app')
 const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../util/contracts')
+const news = require('../util/news')
 
 // const test = require('../util/test')
 
@@ -39,6 +40,9 @@ contracts.init(io, () => {
 
   // Set socket listeners
   require('../sockets/sockets')(io)
+
+  // Run News updater
+  news.runUpdater(io)
 
 })
 

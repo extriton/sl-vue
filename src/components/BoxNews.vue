@@ -24,6 +24,7 @@
                 </div>
             </li>
         </ul>
+        <router-link :to="{ name: 'NewsPage' }" class="box-news__all-news-link">All news</router-link>
     </div>
 </template>
 
@@ -147,6 +148,22 @@ export default {
                     width: 120px;
                 }
             }
+        }
+    }
+    &__all-news-link {
+        display: inline-block;
+        width: 100%;
+        border: 1px solid #34bbff;
+        border-radius: 15px;
+        padding: 5px;
+        text-align: center;
+        min-width: 120px;
+        color: #34bbff;
+        text-decoration: none;
+        margin-top: 15px;
+        &:hover {
+            color: #ffa959;
+            border: 1px solid #ffa959;
         }
     }
 }

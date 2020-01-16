@@ -22,6 +22,17 @@ export default new Router({
       redirect: '/w5x36/play'
     },
     {
+      path: '/news',
+      name: 'NewsPage',
+      component: () => import(/* webpackChunkName: "NewsPage" */ '@/components/NewsPage.vue'),
+    },
+    {
+      path: '/news/:id',
+      name: 'NewsItemPage',
+      props: true,
+      component: () => import(/* webpackChunkName: "NewsPage" */ '@/components/NewsItemPage.vue'),
+    },
+    {
       path: '/admin',
       // component: AdminMainPage
       component: () => import(/* webpackChunkName: "AdminPage" */ '@/components/admin/AdminMainPage.vue'),

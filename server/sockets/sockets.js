@@ -37,6 +37,8 @@ module.exports = io => {
 
       socket.on('getNews', data => { getNews(data, socket) })
 
+      socket.on('getNewsItem', data => { getNewsItem(data, socket) })
+
       socket.on('getAdminVisitsData', data => { getAdminVisitsData(data, socket) })
 
       socket.on('getAdminUsersData', data => { getAdminUsersData(data, socket) })
@@ -292,20 +294,42 @@ async function getChatHistory(data, socket) {
   socket.emit('getChatHistorySuccess', result)
 }
 
-// Return News
+// Return News List
 async function getNews(data, socket) {
 
-  let limit
+  let skip, limit
 
+  try {
+    skip = parseInt(data.skip)
+  } catch (e) {
+    skip = 0
+  }
+  
   try {
     limit = parseInt(data.limit)
   } catch (e) {
     limit = 50
   }
   
-  const news = await News.find().sort({ feedDate: -1 }).limit(limit)
-
+  const news = await News.find().sort({ feedDate: -1 }).skip(skip).limit(limit)
   socket.emit('getNewsSuccess', { news: news })
+}
+
+// Return News Item
+async function getNewsItem(data, socket) {
+
+  if (!data.id) {
+    socket.emit('getNewsItemSuccess', { newsItem: { title: 'Not found' } })
+    return
+  }
+  
+  const newsItem = await News.findOne({ innerLink: data.id })
+  if (!newsItem) {
+    socket.emit('getNewsItemSuccess', { newsItem: { title: 'Not found' } })
+    return
+  }
+
+  socket.emit('getNewsItemSuccess', { newsItem: newsItem })
 }
 
 // Return data for admin visits page

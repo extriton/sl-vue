@@ -7,7 +7,7 @@
       </transition>
     </div>
     <TheFooter />
-    <div class="box-news-wrap">
+    <div v-if="showBoxNews" class="box-news-wrap">
       <BoxNews />
     </div>
     <div class="info-block">
@@ -45,6 +45,9 @@ export default {
     BoxChat
   },
   computed: {
+    showBoxNews () {
+      return this.$route.name != 'NewsPage' && this.$route.name != 'NewsItemPage'
+    },
     ...mapGetters(['web3'])
   },
   watch: {
@@ -65,6 +68,10 @@ export default {
     // Register web3 metamask
     this.$store.dispatch('registerWeb3')
   },
+  beforeRouteUpdate (to, from, next) {
+    console.log(to)
+    next()
+  }
 }
 </script>
 
@@ -78,7 +85,7 @@ export default {
     max-width: 800px;
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px);
-    padding-bottom: calc(58px + 1em);
+    padding-bottom: 58px;
   }
   .box-news-wrap {
     position: fixed;

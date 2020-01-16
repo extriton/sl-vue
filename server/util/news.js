@@ -27,8 +27,9 @@ async function update(io) {
         lastDbNewsDate = dbNews[0].feedDate
     }
     
+    let newItemExist = false
     for (let i = 0; i < apiNews.length; i++) {
-        if (apiNews[i].feedDate > lastDbNewsDate && apiNews[i].source.indexOf('Reddit') === -1) {
+        if (apiNews[i].feedDate > lastDbNewsDate && apiNews[i].source.indexOf('Reddit') === -1 && apiNews[i].link !== '') {
             const news = new News({
                 id              : apiNews[i].id,
                 searchKeyWords  : apiNews[i].searchKeyWords,
@@ -47,9 +48,39 @@ async function update(io) {
                 news.icon = apiNews[i].icon
             }
 
+            news.innerLink = getInnerLink(news.link)
+            if (!news.innerLink) news.innerLink = news.id
+
             await news.save()
+            newItemExist = true
         }
-        io.sockets.emit('refreshNews')
+
+        if (newItemExist) {
+            io.sockets.emit('refreshNews')
+        }
     }
 
+}
+
+function getInnerLink (link) {
+    let SPos, QPos, res
+
+    QPos = link.indexOf('/?')
+    if (QPos === -1) {
+        QPos = link.indexOf('?')
+    }
+    if (QPos === -1) {
+        res = link
+    } else {
+        res = link.substr(0, QPos)
+    }
+  
+    SPos = res.lastIndexOf('/')
+    if (SPos === res.length - 1) {
+        res = res.substr(0, res.length - 1)
+        SPos = res.lastIndexOf('/')
+    }
+
+    res = res.substr(SPos + 1)
+    return res
 }

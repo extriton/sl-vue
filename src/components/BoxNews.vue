@@ -1,7 +1,7 @@
 <template>
     <div class="box-news">
         <h3 class="box-news__caption">
-            NEWS
+            LAST NEWS
         </h3>
         <ul class="box-news-list">
             <li
@@ -38,6 +38,9 @@ export default {
         }
     },
     methods: {
+        getNews () {
+            this.$socket.emit('getNews', { skip: 0, limit: 5})
+        },
         getAgo (feedDate) {
             const SEC_IN_HOUR = 60 * 60
             const SEC_IN_DAY = 24 * SEC_IN_HOUR
@@ -66,14 +69,14 @@ export default {
     },
     sockets: {
         refreshNews (data) {
-            this.$socket.emit('getNews', { limit: 5})
+            this.getNews()
         },
         getNewsSuccess (data) {
             this.news = data.news
         }
     },
     created () {
-        this.$socket.emit('getNews', { limit: 5 })
+        this.getNews()
     }
 }
 </script>

@@ -54,6 +54,8 @@ async function fixCollections () {
 
   const axios = require('axios')
   const Ip = require('./models/Ip.js')
+  const News = require('./models/News.js')
+
 
   const ipGeoUrl = 'https://api.sypexgeo.net/json/'
 
@@ -69,6 +71,39 @@ async function fixCollections () {
     }
   })
 
+  // Fix News field "innerLink"
+  const news = await News.find()
+  news.forEach(async (elem) => {
+    // if (elem.innerLink) {
+      elem.innerLink = getInnerLink(elem.link)
+      if (!elem.innerLink) elem.innerLink = elem.id
+      elem.save()
+    // }
+  })
+
+}
+
+function getInnerLink (link) {
+  let SPos, QPos, res
+
+  QPos = link.indexOf('/?')
+  if (QPos === -1) {
+    QPos = link.indexOf('?')
+  }
+  if (QPos === -1) {
+    res = link
+  } else {
+    res = link.substr(0, QPos)
+  }
+  
+  SPos = res.lastIndexOf('/')
+  if (SPos === res.length - 1) {
+    res = res.substr(0, res.length - 1)
+    SPos = res.lastIndexOf('/')
+  }
+
+  res = res.substr(SPos + 1)
+  return res
 }
 
 module.exports = app;

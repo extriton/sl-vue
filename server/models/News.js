@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 // Схема хранения сообщений чата
 var NewsSchema = new Schema({
     id:                 { type: String, default: '', unique: true },
+    innerLink:          { type: String, default: '' },
     searchKeyWords:     { type: Array, default: [] },
     feedDate:           { type: Number, default: 0 },
     icon:               { type: String, default: '' },

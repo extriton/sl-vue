@@ -13,9 +13,9 @@
                     <div class="box-news-list__item-icon" >
                         <img :src="item.imgURL" />
                     </div>
-                    <a :href="item.link" target="_blank" class="box-news-list__item-link">
+                    <router-link :to="{ name: 'NewsItemPage', params: { id: item.innerLink }}" class="box-news-list__item-link">
                         <span v-html="item.title"></span>
-                    </a>
+                    </router-link>
                 </div>
                 <div class="clearfix"></div>
                 <div class="box-news-list__item-footer">

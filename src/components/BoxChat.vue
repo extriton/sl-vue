@@ -258,7 +258,7 @@ export default {
 }
 @media all and (max-width: 760px) {
     .box-chat {
-        height: calc(100vh - 90px - 40px);
+        height: calc(100vh - 70px - 40px);
         border: none;
         transition: none;
         &__caption {
@@ -268,7 +268,7 @@ export default {
             display: block;
         }
         &.opened {
-            top: calc(-1 * (100vh - 90px - 40px));
+            top: calc(-1 * (100vh - 70px - 40px));
             .box-chat__caption {
                 display: block;
             }

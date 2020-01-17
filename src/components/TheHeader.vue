@@ -12,6 +12,9 @@
             <div class="language-wrapper">
                 <TheLanguage />
             </div>
+            <div class="header-menu-wrapper">
+                <TheHeaderMenu />
+            </div>
         </div>
     </div>
 </template>
@@ -20,11 +23,13 @@
 // eslint-disable-next-line
 /* eslint-disable */
 import TheLanguage from './TheLanguage.vue';
+import TheHeaderMenu from './TheHeaderMenu.vue';
 
 export default {
     name: 'TheHeader',
     components: {
         TheLanguage,
+        TheHeaderMenu
     },
     data () {
         return {}
@@ -49,6 +54,7 @@ export default {
     font-size: 1em;
     .site-logo {
         position: absolute;
+        display: block;
         top: 0;
         left: 20px;
         height: 50px;
@@ -68,14 +74,38 @@ export default {
         display: block;
         position: absolute;
         top: 30px;
+        right: 120px;
+    }
+    .header-menu-wrapper {
+        display: block;
+        position: absolute;
+        top: 30px;
         right: 70px;
+        z-index: 10;
     }
 }
-
 @media all and (max-width: 870px) {
     .header {
         .header-title-text {
             display: none;
+        }
+    }
+}
+@media all and (max-width: 760px) {
+    .header {
+        height: 70px;
+        .site-logo {
+            left: 10px;
+            height: 30px;
+            width: 120px;
+        }
+        .language-wrapper {
+            top: 20px;
+            right: 90px;
+        }
+        .header-menu-wrapper {
+            top: 20px;
+            right: 40px;
         }
     }
 }

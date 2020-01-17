@@ -120,8 +120,9 @@ export default {
 }
 @media all and (max-width: 760px) {
   .game-wrapper {
+    padding-top: 70px;
     .game-wrapper-content {
-      min-height: calc(100vh - 90px - 34px);
+      min-height: calc(100vh - 70px - 34px);
       padding-bottom: calc(34px + 1em);
     }
     .box-news-wrap {

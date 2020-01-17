@@ -10,6 +10,8 @@ let dicts = {};
 dicts.ru = {
           
     // Меню
+    menu_lottery                        : 'Лотерея',
+    menu_news                           : 'Новости',
     menu_play                           : 'Играть',
     menu_rules                          : 'Правила',
     menu_history                        : 'История',
@@ -115,6 +117,8 @@ dicts.ru = {
 dicts.en = {
           
     // Меню
+    menu_lottery                        : 'Lottery',
+    menu_news                           : 'News',
     menu_play                           : 'Play',
     menu_rules                          : 'Rules',
     menu_history                        : 'History',

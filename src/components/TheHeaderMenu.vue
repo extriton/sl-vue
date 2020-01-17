@@ -1,0 +1,84 @@
+<template>
+    <div class="header-menu">
+        <div type="button" class="header-menu__button" @click="showMenu = !showMenu">&#9776;</div>
+        <ul class="header-menu-list" v-show="showMenu">
+            <li class="header-menu-list__item">
+                <router-link to='/' class="header-menu-list__item-link">
+                    <span @click="showMenu = false">{{ dict.menu_lottery }}</span>
+                </router-link>
+            </li>
+            <li class="header-menu-list__item">
+                <router-link to='/news' class="header-menu-list__item-link">
+                    <span @click="showMenu = false">{{ dict.menu_news }}</span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script>
+// eslint-disable-next-line
+/* eslint-disable */
+export default {
+    name: 'TheHeaderMenu',
+    data () {
+        return {
+            showMenu: false
+        }
+    },
+    computed: {
+        dict () {
+            return this.$store.state.dict
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+.header-menu {
+    position: relative;
+    &__button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #aaa;
+        width: 32px;
+        height: 32px;
+        font-size: 28px;
+        top: -4px;
+        &:hover {
+            cursor: pointer;
+            color: #ffa959;
+        }
+    }
+    &-list {
+        display: block;
+        position: absolute;
+        top: 32px;
+        right: -32px;
+        width: 200px;
+        background-color: #000;
+        padding: 10px;
+        &__item {
+            display: block;
+            padding: 10px 10px;
+            text-align: left;
+            border-top: 1px solid #666;
+            &:last-child {
+                border-bottom: 1px solid #666;
+            }
+            &-link {
+                display: block;
+                text-decoration: none;
+                color: #aaa;
+                &:hover {
+                    color: #ffa959;
+                }
+                span {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+</style>

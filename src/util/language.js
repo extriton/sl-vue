@@ -12,6 +12,7 @@ dicts.ru = {
     // Меню
     menu_lottery                        : 'Лотерея',
     menu_news                           : 'Новости',
+    menu_profile                        : 'Профайл',
     menu_play                           : 'Играть',
     menu_rules                          : 'Правила',
     menu_history                        : 'История',
@@ -81,6 +82,9 @@ dicts.ru = {
     statistics_update                   : 'Обновить',
     statisctics_no_draw                 : 'Нет розыгрыша',
 
+    // Профайл
+    profile_referal_link                : 'Реферальная ссылка',
+
     // Прочее
     monday                              : 'Понедельник', 
     tuesday                             : 'Вторник', 
@@ -119,6 +123,7 @@ dicts.en = {
     // Меню
     menu_lottery                        : 'Lottery',
     menu_news                           : 'News',
+    menu_profile                        : 'Profile',
     menu_play                           : 'Play',
     menu_rules                          : 'Rules',
     menu_history                        : 'History',
@@ -187,6 +192,9 @@ dicts.en = {
     statisctics_col4                    : 'Prize',
     statistics_update                   : 'Refresh',
     statisctics_no_draw                 : 'No draw',
+
+    // Профайл
+    profile_referal_link                : 'Referal link',
 
     // Прочее
     monday                              : 'Monday', 

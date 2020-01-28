@@ -12,6 +12,11 @@
                     <span @click="showMenu = false">{{ dict.menu_news }}</span>
                 </router-link>
             </li>
+            <li class="header-menu-list__item" v-if="user.address">
+                <router-link to='/profile' class="header-menu-list__item-link">
+                    <span @click="showMenu = false">{{ dict.menu_profile }}</span>
+                </router-link>
+            </li>
         </ul>
     </div>
 </template>
@@ -19,6 +24,8 @@
 <script>
 // eslint-disable-next-line
 /* eslint-disable */
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'TheHeaderMenu',
     data () {
@@ -29,7 +36,8 @@ export default {
     computed: {
         dict () {
             return this.$store.state.dict
-        }
+        },
+        ...mapGetters(['user'])
     }
 }
 </script>

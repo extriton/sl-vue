@@ -53,10 +53,10 @@ export default {
   watch: {
     'web3.coinbase': function (value) {
       if (value === null) {
-        this.$store.commit('userChange', { username: '', chatBlocked: false })
-        return
+        this.$store.commit('userInit')
+      } else {
+        this.$socket.emit('getUserData', { address: value })
       }
-      this.$socket.emit('getUserData', { address: value })
     }
   },
   sockets: {

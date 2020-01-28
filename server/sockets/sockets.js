@@ -231,15 +231,26 @@ async function getUserData(data, socket) {
     user.ips.push(ip)
   }
 
-  if (!user.isAdmin) {
-    user.isAdmin = false
-  }
+  if (!user.isAdmin) user.isAdmin = false
+  if (!user.username) user.username = ''
+  if (!user.chatBlocked) user.chatBlocked = false
+  if (!user.referrer) user.referrer = ''
+  if (!user.referalCount) user.referalCount = 0
+  if (!user.referalAmount) user.referalAmount = 0
+  if (!user.freeAmount) user.freeAmount = 0
+  if (!user.totalAmount) user.totalAmount = 0
 
   user.save()
 
   const result = {
+    address: user.address,
     username: user.username,
-    chatBlocked: user.chatBlocked
+    chatBlocked: user.chatBlocked,
+    referrer: user.referrer,
+    referalCount: user.referalCount,
+    referalAmount: user.referalAmount,
+    freeAmount: user.freeAmount,
+    totalAmount: user.totalAmount
   }
 
   socket.emit('getUserDataSuccess', result)

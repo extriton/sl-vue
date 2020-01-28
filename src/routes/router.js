@@ -22,6 +22,11 @@ export default new Router({
       redirect: '/w5x36/play'
     },
     {
+      path: '/profile',
+      name: 'ProfilePage',
+      component: () => import(/* webpackChunkName: "ProfilePage" */ '@/components/ProfilePage.vue'),
+    },
+    {
       path: '/news',
       name: 'NewsPage',
       component: () => import(/* webpackChunkName: "NewsPage" */ '@/components/NewsPage.vue'),

@@ -8,6 +8,11 @@ var UserSchema = new Schema({
     isAdmin:            { type: Boolean, default: false },
     ips:                { type: Array, default: [] },
     chatBlocked:        { type: Boolean, default: false },
+    referrer:           { type: String, default: '' },
+    referalCount:       { type: Number, default: 0 },
+    referalAmount:      { type: Number, default: 0 },
+    freeAmount:         { type: Number, default: 0 },
+    totalAmount:        { type: Number, default: 0 },
     status:             { type: Number, default: 0 },
     created:            { type: Date, default: Date.now },
 })

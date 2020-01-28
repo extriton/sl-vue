@@ -1,7 +1,7 @@
 <template>
     <div class="news-page">
         <h3 class="news-page__caption">
-            NEWS
+            {{ dict.menu_news.toUpperCase() }}
         </h3>
         <!-- News List -->
         <ul class="news-list"
@@ -40,6 +40,11 @@ export default {
     data () {
         return {
             news: []
+        }
+    },
+    computed: {
+        dict () {
+            return this.$store.state.dict
         }
     },
     methods: {

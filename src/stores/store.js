@@ -47,8 +47,14 @@ export default new Vuex.Store({
       coinbase: null,
     },
     user: {
+      address: '',
       username: '',
-      chatBlocked: false
+      chatBlocked: false,
+      referrer: '',
+      referalCount: 0,
+      referalAmount: 0,
+      freeAmount: 0,
+      totalAmount: 0
     }
   },
   getters: {
@@ -142,6 +148,18 @@ export default new Vuex.Store({
     },
     changeWeb3NetworkId (state, payload) {
       state.web3.networkId = payload
+    },
+    userInit (state) {
+      state.user = {
+        address: '',
+        username: '',
+        chatBlocked: false,
+        referrer: '',
+        referalCount: 0,
+        referalAmount: 0,
+        freeAmount: 0,
+        totalAmount: 0
+      }
     },
     userChange (state, payload) {
       state.user = payload

@@ -19,7 +19,14 @@ export default new Router({
     {
       path: '/',
       component: GamesList,
-      redirect: '/w5x36/play'
+      beforeEnter:  (to, from, next) => {
+        
+        const referrer = to.query.r
+        if (referrer)
+          $cookies.set('referrer', referrer)
+
+        next('/w5x36/play')
+      }
     },
     {
       path: '/profile',

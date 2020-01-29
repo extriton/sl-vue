@@ -225,6 +225,14 @@ async function getUserData(data, socket) {
     user = new User({ address: data.address })
   }
 
+  if (!user.referrer && data.referrer) {
+    const referrer = await User.findOne({ address: data.referrer })
+    if (referrer)
+      user.referrer = referrer.address
+    else
+      user.referrer = ''
+  }
+
   const ip = getRealSocketIP(socket)
 
   if (user.ips.indexOf(ip) === -1) {
@@ -234,7 +242,6 @@ async function getUserData(data, socket) {
   if (!user.isAdmin) user.isAdmin = false
   if (!user.username) user.username = ''
   if (!user.chatBlocked) user.chatBlocked = false
-  if (!user.referrer) user.referrer = ''
   if (!user.referalCount) user.referalCount = 0
   if (!user.referalAmount) user.referalAmount = 0
   if (!user.freeAmount) user.freeAmount = 0

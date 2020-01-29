@@ -84,6 +84,13 @@ dicts.ru = {
 
     // Профайл
     profile_referal_link                : 'Реферальная ссылка',
+    profile_address                     : 'Адрес',
+    profile_username                    : 'Имя',
+    profile_referrer                    : 'Реферер',
+    profile_referal_count               : 'Количество рефералов',
+    profile_referal_amount              : 'Сумма (рефералы)',
+    profile_free_amount                 : 'Сумма (Free ETH)',
+    profile_total_amount                : 'Общая сумма',
 
     // Прочее
     monday                              : 'Понедельник', 
@@ -195,6 +202,13 @@ dicts.en = {
 
     // Профайл
     profile_referal_link                : 'Referal link',
+    profile_address                     : 'Address',
+    profile_username                    : 'Username',
+    profile_referrer                    : 'Referrer',
+    profile_referal_count               : 'Number of referals',
+    profile_referal_amount              : 'Amount (referals)',
+    profile_free_amount                 : 'Amount (Free ETH)',
+    profile_total_amount                : 'Total amount',
 
     // Прочее
     monday                              : 'Monday', 

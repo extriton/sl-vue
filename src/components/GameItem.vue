@@ -42,6 +42,7 @@ export default {
     }
   },
   created () {
+
     // Define current game by router id
     let index = null
     
@@ -55,6 +56,7 @@ export default {
       this.$router.push({ path: '/' })
     else
       this.$store.commit('gameCurrentChange', index)
+
   }
 }
 </script>

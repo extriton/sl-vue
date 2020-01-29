@@ -11,14 +11,44 @@
                 {{ referalLink }}
             </div>
         </div>
+        <div class="profile-page__table">
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_address }}</div>
+                <div class="profile-page__table-row-value">{{ user.address }}</div>
+            </div>
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_username }}</div>
+                <div class="profile-page__table-row-value">{{ user.username || 'None' }}</div>
+            </div>
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_referrer }}</div>
+                <div class="profile-page__table-row-value">{{ user.referrer || 'None' }}</div>
+            </div>
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_referal_count }}</div>
+                <div class="profile-page__table-row-value">{{ user.referalCount }}</div>
+            </div>
+        </div>
+        <div class="profile-page__table">
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_referal_amount }}</div>
+                <div class="profile-page__table-row-value">{{ user.referalAmount }}</div>
+            </div>
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_free_amount }}</div>
+                <div class="profile-page__table-row-value">{{ user.freeAmount }}</div>
+            </div>
+            <div class="profile-page__table-row">
+                <div class="profile-page__table-row-caption">{{ dict.profile_total_amount }}</div>
+                <div class="profile-page__table-row-value">{{ user.totalAmount }}</div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import config from '../../config/config'
 import { mapGetters } from 'vuex'
-
-// https://smart-lotto.org?r=0x203bF6B46508eD917c085F50F194F36b0a62EB02
 
 export default {
     name: 'ProfilePage',
@@ -36,9 +66,7 @@ export default {
     },
     watch: {
         'referalLink': function (value) {
-            console.log(value)
             if (!value) this.$router.push('/')
-
         }
     }
 }
@@ -65,7 +93,6 @@ export default {
         width: calc(100% - 20px);
         margin: 20px auto 0 auto;
         background: rgba(0, 0, 0, .5);
-        border-radius: 15px;
         padding: 20px;
         &-caption {
             margin-bottom: 10px;
@@ -79,6 +106,26 @@ export default {
             border-radius: 10px;
         }
     }
+    &__table {
+        width: calc(100% - 20px);
+        text-align: left;
+        margin: 20px auto 0 auto;
+        background: rgba(0, 0, 0, .5);
+        &-row {
+            width: 100%;
+            &-caption {
+                width: 30%;
+                display: inline-block;
+                padding: 10px;
+            }
+            &-value {
+                width: 70%;
+                display: inline-block;
+                padding: 10px;
+                color: #34bbff;
+            }
+        }
+    }
 }
 @media all and (max-width: 760px) {
     .profile-page {
@@ -90,6 +137,24 @@ export default {
             &-input {
                 padding: 5px;
                 font-size: 10px;
+            }
+        }
+        &__table {
+            width: 100%;
+            margin-top: 10px;
+            &-row {
+                &-caption {
+                    display: block;
+                    width: 100%;
+                    font-size: 10px;
+                    padding: 5px;
+                }
+                &-value {
+                    display: block;
+                    width: 100%;
+                    font-size: 10px;
+                    padding: 5px;
+                }
             }
         }
     }

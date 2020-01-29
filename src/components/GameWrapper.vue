@@ -55,7 +55,8 @@ export default {
       if (value === null) {
         this.$store.commit('userInit')
       } else {
-        this.$socket.emit('getUserData', { address: value })
+        const referrer = $cookies.get('referrer')
+        this.$socket.emit('getUserData', { address: value, referrer: referrer })
       }
     }
   },
@@ -67,10 +68,6 @@ export default {
   mounted () {
     // Register web3 metamask
     this.$store.dispatch('registerWeb3')
-  },
-  beforeRouteUpdate (to, from, next) {
-    console.log(to)
-    next()
   }
 }
 </script>

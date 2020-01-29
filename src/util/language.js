@@ -84,6 +84,8 @@ dicts.ru = {
 
     // Профайл
     profile_referal_link                : 'Реферальная ссылка',
+    profile_referal_rate                : 'Реферальная ставка комиссии',
+    profile_referal_rate1               : 'от базового выигрыша',
     profile_address                     : 'Адрес',
     profile_username                    : 'Имя',
     profile_referrer                    : 'Реферер',
@@ -91,6 +93,8 @@ dicts.ru = {
     profile_referal_amount              : 'Сумма (рефералы)',
     profile_free_amount                 : 'Сумма (Free ETH)',
     profile_total_amount                : 'Общая сумма',
+    profile_withdraw_min_amount         : 'Минимальная сумма для вывода средств',
+    profile_withdraw_button             : 'Забрать',
 
     // Прочее
     monday                              : 'Понедельник', 
@@ -202,6 +206,8 @@ dicts.en = {
 
     // Профайл
     profile_referal_link                : 'Referal link',
+    profile_referal_rate                : 'Referal commission rates',
+    profile_referal_rate1               : 'of base prize',
     profile_address                     : 'Address',
     profile_username                    : 'Username',
     profile_referrer                    : 'Referrer',
@@ -209,6 +215,8 @@ dicts.en = {
     profile_referal_amount              : 'Amount (referals)',
     profile_free_amount                 : 'Amount (Free ETH)',
     profile_total_amount                : 'Total amount',
+    profile_withdraw_min_amount         : 'Minimum amount to withdraw',
+    profile_withdraw_button             : 'Withdraw',
 
     // Прочее
     monday                              : 'Monday', 

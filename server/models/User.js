@@ -10,9 +10,9 @@ var UserSchema = new Schema({
     chatBlocked:        { type: Boolean, default: false },
     referrer:           { type: String, default: '' },
     referalCount:       { type: Number, default: 0 },
-    referalAmount:      { type: Number, default: 0 },
-    freeAmount:         { type: Number, default: 0 },
-    totalAmount:        { type: Number, default: 0 },
+    referalAmount:      { type: Number, default: 0 },           // (Gwei)
+    freeAmount:         { type: Number, default: 0 },           // (Gwei)
+    totalAmount:        { type: Number, default: 0 },           // (Gwei)
     status:             { type: Number, default: 0 },
     created:            { type: Date, default: Date.now },
 })

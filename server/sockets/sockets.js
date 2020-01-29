@@ -30,6 +30,8 @@ module.exports = io => {
       socket.on('getVisits', data => { getVisits(data, socket) })
       
       socket.on('getUserData', data => { getUserData(data, socket) })
+      
+      socket.on('saveUserName', data => { saveUserName(data, socket) })
 
       socket.on('newChatMessage', data => { newChatMessage(data, socket, io) })
       
@@ -225,7 +227,7 @@ async function getUserData(data, socket) {
     user = new User({ address: data.address })
   }
 
-  if (!user.referrer && data.referrer) {
+  if (!user.referrer && data.referrer && data.address != data.referrer) {
     const referrer = await User.findOne({ address: data.referrer })
     if (referrer)
       user.referrer = referrer.address
@@ -262,6 +264,20 @@ async function getUserData(data, socket) {
 
   socket.emit('getUserDataSuccess', result)
   
+}
+
+// Save user name
+async function saveUserName(data, socket) {
+
+  if (!data.address || !data.username) return
+
+  const user = await User.findOne({ address: data.address })
+  if (!user) return
+
+  user.username = data.username
+  user.save()
+
+  socket.emit('saveUserNameSuccess')
 }
 
 // Store and emit new chat message

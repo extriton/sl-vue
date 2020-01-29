@@ -55,7 +55,7 @@ export default {
       if (value === null) {
         this.$store.commit('userInit')
       } else {
-        const referrer = $cookies.get('referrer')
+        const referrer = this.$cookies.get('referrer')
         this.$socket.emit('getUserData', { address: value, referrer: referrer })
       }
     }

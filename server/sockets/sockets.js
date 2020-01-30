@@ -229,10 +229,13 @@ async function getUserData(data, socket) {
 
   if (!user.referrer && data.referrer && data.address != data.referrer) {
     const referrer = await User.findOne({ address: data.referrer })
-    if (referrer)
+    if (referrer) {
       user.referrer = referrer.address
-    else
+      referrer.referalCount += 1
+      referrer.save()
+    } else {
       user.referrer = ''
+    }
   }
 
   const ip = getRealSocketIP(socket)
@@ -269,10 +272,23 @@ async function getUserData(data, socket) {
 // Save user name
 async function saveUserName(data, socket) {
 
+  // Check params
   if (!data.address || !data.username) return
 
+  // Find user by address
   const user = await User.findOne({ address: data.address })
   if (!user) return
+
+  // Check dublicate username (not admin)
+  if (('' + data.username).toLowerCase() !== 'admin') {
+    const userByUsername = await User.findOne({ username: data.username })
+    if (userByUsername !== null) {
+      socket.emit('saveUserNameError', { error: 'A user with the same name already exists.' })
+      return
+    }
+  } else {
+    data.username = 'Admin'
+  }
 
   user.username = data.username
   user.save()

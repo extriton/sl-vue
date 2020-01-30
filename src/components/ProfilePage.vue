@@ -120,6 +120,9 @@ export default {
         saveUserNameSuccess () {
             this.newNotify({ type: 'success', title: '<b>:: Save ::</b>', text: `Username successfull changed!` })
         },
+        saveUserNameError (data) {
+            this.newNotify({ type: 'error', title: '<b>:: Save ::</b>', text: data.error })
+        },
         withdrawAmountSuccess () {
             this.newNotify({ type: 'success', title: '<b>:: Save ::</b>', text: `Your order has been accepted for processing.!` })
         }

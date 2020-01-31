@@ -132,7 +132,8 @@ export default {
             this.prizes = data.prizes
             this.timeLeft = data.timeLeft
             // this.timeLeft = 5 * 1000
-            this.runTimer()
+            console.log(this.timeLeft)
+            if (this.timeLeft > 0) this.runTimer()
         },
         rollFreeETHSuccess (data) {
             this.resultNumber = data.resultNumber
@@ -143,7 +144,7 @@ export default {
                 this.showPrize = true
             }, 1500)
             setTimeout(() => {
-                this.getFreeETHData()
+                this.getFreeETHData(this.web3.coinbase)
             }, 3000)
         },
         rollFreeETHError (data) {

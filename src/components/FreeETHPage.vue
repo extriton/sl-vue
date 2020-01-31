@@ -132,7 +132,6 @@ export default {
             this.prizes = data.prizes
             this.timeLeft = data.timeLeft
             // this.timeLeft = 5 * 1000
-            console.log(this.timeLeft)
             if (this.timeLeft > 0) this.runTimer()
         },
         rollFreeETHSuccess (data) {

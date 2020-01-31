@@ -13,6 +13,7 @@ dicts.ru = {
     menu_lottery                        : 'Лотерея',
     menu_news                           : 'Новости',
     menu_profile                        : 'Профайл',
+    menu_free_eth                       : 'Free ETH',
     menu_play                           : 'Играть',
     menu_rules                          : 'Правила',
     menu_history                        : 'История',
@@ -96,6 +97,12 @@ dicts.ru = {
     profile_withdraw_min_amount         : 'Минимальная сумма для вывода средств',
     profile_withdraw_button             : 'Забрать',
 
+    // Free ETH
+    free_install_metamask               : 'Для участия в розыгрыше Free ETH необходимо',
+    free_install_metamask1              : 'установить Metamask',
+    free_install_metamask2              : 'и авторизоваться.',
+    free_you_win                        : 'Вы выиграли',
+
     // Прочее
     monday                              : 'Понедельник', 
     tuesday                             : 'Вторник', 
@@ -135,6 +142,7 @@ dicts.en = {
     menu_lottery                        : 'Lottery',
     menu_news                           : 'News',
     menu_profile                        : 'Profile',
+    menu_free_eth                       : 'Free ETH',
     menu_play                           : 'Play',
     menu_rules                          : 'Rules',
     menu_history                        : 'History',
@@ -217,6 +225,12 @@ dicts.en = {
     profile_total_amount                : 'Total amount',
     profile_withdraw_min_amount         : 'Minimum amount to withdraw',
     profile_withdraw_button             : 'Withdraw',
+
+    // Free ETH
+    free_install_metamask               : 'To participate in the Free ETH draw, you need to',
+    free_install_metamask1              : 'install Metamask',
+    free_install_metamask2              : 'and log in.',
+    free_you_win                        : 'You win',
 
     // Прочее
     monday                              : 'Monday', 

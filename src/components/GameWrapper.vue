@@ -10,7 +10,7 @@
     <div v-if="showBoxNews" class="box-news-wrap">
       <BoxNews />
     </div>
-    <div class="info-block">
+    <div v-if="showBoxInfo" class="info-block">
       <div class="box-eth-gas-price-wrap">
         <BoxETHGasPrice />
       </div>
@@ -46,7 +46,10 @@ export default {
   },
   computed: {
     showBoxNews () {
-      return this.$route.name != 'NewsPage' && this.$route.name != 'NewsItemPage'
+      return this.$route.name != 'NewsPage' && this.$route.name != 'NewsItemPage' && this.$route.name != 'FreeETHPage'
+    },
+    showBoxInfo () {
+      return this.$route.name != 'FreeETHPage'
     },
     ...mapGetters(['web3'])
   },

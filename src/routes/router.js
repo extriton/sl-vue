@@ -34,6 +34,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "ProfilePage" */ '@/components/ProfilePage.vue'),
     },
     {
+      path: '/free-eth',
+      name: 'FreeETHPage',
+      component: () => import(/* webpackChunkName: "ProfilePage" */ '@/components/FreeETHPage.vue'),
+    },
+    {
       path: '/news',
       name: 'NewsPage',
       component: () => import(/* webpackChunkName: "NewsPage" */ '@/components/NewsPage.vue'),

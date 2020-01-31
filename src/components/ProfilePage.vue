@@ -127,6 +127,10 @@ export default {
             this.newNotify({ type: 'success', title: '<b>:: Save ::</b>', text: `Your order has been accepted for processing.!` })
         }
     },
+    created () {
+        const referrer = this.$cookies.get('referrer')
+        this.$socket.emit('getUserData', { address: this.user.address, referrer: referrer })
+    },
     watch: {
         'referalLink': function (value) {
             if (!value) this.$router.push('/')

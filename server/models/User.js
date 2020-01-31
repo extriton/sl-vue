@@ -13,6 +13,7 @@ var UserSchema = new Schema({
     referalAmount:      { type: Number, default: 0 },           // (Gwei)
     freeAmount:         { type: Number, default: 0 },           // (Gwei)
     totalAmount:        { type: Number, default: 0 },           // (Gwei)
+    lastRollTime:       { type: Date, default: 0 },
     status:             { type: Number, default: 0 },
     created:            { type: Date, default: Date.now },
 })

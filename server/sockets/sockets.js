@@ -1,3 +1,4 @@
+const config = require('../../config/config')
 const gameSettings = require('../../config/server/game-settings-server')
 
 const Game = require('../models/Game.js')
@@ -40,6 +41,10 @@ module.exports = io => {
       socket.on('getNews', data => { getNews(data, socket) })
 
       socket.on('getNewsItem', data => { getNewsItem(data, socket) })
+
+      socket.on('getFreeETHData', data => { getFreeETHData(data, socket) })
+
+      socket.on('rollFreeETH', data => { rollFreeETH(data, socket) })
 
       socket.on('getAdminVisitsData', data => { getAdminVisitsData(data, socket) })
 
@@ -382,6 +387,92 @@ async function getNewsItem(data, socket) {
   socket.emit('getNewsItemSuccess', { newsItem: newsItem })
 }
 
+// Return data for Free ETH page
+async function getFreeETHData(data, socket) {
+  
+  const result = {
+    timeLeft: 0,
+    prizes: []
+  }
+  
+  if (data.address) {
+    const user = await User.findOne({ address: data.address })
+    if (user !== null) {
+      user.lastRollTime = user.lastRollTime || new Date(0)
+      result.timeLeft = user.lastRollTime.getTime() + (60 * 60 * 1000) - (new Date().getTime())
+      if (result.timeLeft < 0)
+        result.timeLeft = 0
+    }
+  }
+  
+  result.prizes = await getFreeETHPrizes()
+  
+  socket.emit('getFreeETHDataSuccess', result)
+}
+
+// Roll Free ETH
+async function rollFreeETH(data, socket) {
+
+  // Check input params
+  if (!data.address) {
+    socket.emit('rollFreeETHError', { error: 'Invalid address!' })
+    return
+  }
+
+  // Find user by address
+  const user = await User.findOne({ address: data.address })
+  if (!data.address) {
+    socket.emit('rollFreeETHError', { error: 'User not found!' })
+    return
+  }
+
+  // Check user lastRollTime
+    user.lastRollTime = user.lastRollTime || new Date(0)
+  if ( (new Date().getTime()) < (user.lastRollTime.getTime() + 60 * 60 * 1000) ) {
+    socket.emit('rollFreeETHError', { error: 'Invalid time!' })
+    return
+  }
+  
+  // Retrieve random number
+  const resultNumber = parseInt(Math.random() * 10000)
+  if (resultNumber >= 9997) resultNumber -=100
+
+  // Define prize
+  let resultPrize = 0
+  const prizes = await getFreeETHPrizes()
+  for (let i = 0; i < prizes.length; i++) {
+    if (resultNumber >= prizes[i].min && resultNumber <= prizes[i].max) {
+      resultPrize = prizes[i].prize
+      break
+    }
+  }
+
+  // Update user
+  user.freeAmount += resultPrize
+  user.totalAmount += resultPrize
+  user.lastRollTime = new Date()
+  user.save()
+
+  // Find & update referrer //RRR
+  let referrer = null
+  if (user.referrer) {
+    referrer = await User.findOne({ address: user.referrer })
+    if (referrer !== null) {
+      referalAmount = parseInt(resultPrize * config.referalRate / 100)
+      referrer.referalAmount += referalAmount
+      referrer.totalAmount += referalAmount
+      referrer.save()
+    }
+  }
+
+  const result = {
+    resultNumber: resultNumber,
+    resultPrize: resultPrize
+  }
+
+  socket.emit('rollFreeETHSuccess', result)
+}
+
 // Return data for admin visits page
 async function getAdminVisitsData(data, socket) {
 
@@ -634,6 +725,52 @@ async function getAdminIPs () {
       admin.ips.forEach(ip => { result.push(ip) })
     })
 
+    resolve(result)
+  })
+}
+
+async function getFreeETHPrizes () {
+  // prize in Gwei
+  const result = [
+    {
+      min: 0,
+      max: 9885,
+      range: '0 - 9885',
+      prize: 3600           // 0.000000070
+    },
+    {
+      min: 9886,
+      max: 9985,
+      range: '9886 - 9985',
+      prize: 110570
+    },
+    {
+      min: 9986,
+      max: 9993,
+      range: '9986 - 9993',
+      prize: 1105200
+    },
+    {
+      min: 9994,
+      max: 9996,
+      range: '9994 - 9996',
+      prize: 11050460
+    },
+    {
+      min: 9997,
+      max: 9998,
+      range: '9997 - 9998',
+      prize: 110504060
+    },
+    {
+      min: 9999,
+      max: 9999,
+      range: '9999',
+      prize: 1105040060
+    }
+  ]
+
+  return new Promise((resolve, reject) => {
     resolve(result)
   })
 }

@@ -12,7 +12,7 @@
                     <span @click="showMenu = false">{{ dict.menu_news }}</span>
                 </router-link>
             </li>
-            <li class="header-menu-list__item" v-if="user.address">
+            <li class="header-menu-list__item" v-if="web3.coinbase">
                 <router-link to='/profile' class="header-menu-list__item-link">
                     <span @click="showMenu = false">{{ dict.menu_profile }}</span>
                 </router-link>
@@ -42,7 +42,7 @@ export default {
         dict () {
             return this.$store.state.dict
         },
-        ...mapGetters(['user'])
+        ...mapGetters(['web3'])
     }
 }
 </script>

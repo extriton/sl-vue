@@ -24,12 +24,12 @@
                 </tr>
             </tbody>
         </table>
-        <div class="install-metamask-warning" v-if="!user.address">
+        <div class="install-metamask-warning" v-if="!web3.coinbase">
             {{ dict.free_install_metamask }} 
             <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.free_install_metamask1 }}</a><br />
             {{ dict.free_install_metamask2 }}
         </div>
-        <div class="roll-body" v-if="user.address">
+        <div class="roll-body" v-if="web3.coinbase">
             <div
                 class="roll-body__dices"
                 v-show="showDices"

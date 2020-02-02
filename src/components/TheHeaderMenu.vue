@@ -12,6 +12,7 @@
                     <span @click="showMenu = false">{{ dict.menu_news }}</span>
                 </router-link>
             </li>
+            <!--
             <li class="header-menu-list__item" v-if="web3.coinbase">
                 <router-link to='/profile' class="header-menu-list__item-link">
                     <span @click="showMenu = false">{{ dict.menu_profile }}</span>
@@ -22,6 +23,7 @@
                     <span @click="showMenu = false">{{ dict.menu_free_eth }}</span>
                 </router-link>
             </li>
+            -->
         </ul>
     </div>
 </template>

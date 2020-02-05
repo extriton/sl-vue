@@ -69,6 +69,9 @@
                 <span class="roll-body__timer-cell-desc">Seconds</span>
             </div>
         </div>
+        <div class="top-banner">
+            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+        </div>
         <!--
         <div class="bottom-banner"></div>
         -->
@@ -231,7 +234,7 @@ export default {
     }
     .lucky-numbers-table {
         width: 400px;
-        margin: 30px auto;
+        margin: 20px auto 30px auto;
         @media all and (max-width: 760px) {
             margin: 15px auto;
             width: 100%;
@@ -336,8 +339,7 @@ export default {
     .top-banner {
         display: inline-block;
         width: auto;
-        background-color: #111;
-        margin: 10px auto;
+        margin: 0 auto;
     }
     .bottom-banner {
         position: absolute;

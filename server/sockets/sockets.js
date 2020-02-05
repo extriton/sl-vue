@@ -414,9 +414,8 @@ async function getFreeETHData(data, socket) {
 // Roll Free ETH
 async function rollFreeETH(data, socket) {
 
-  // const axios = require('axios')
-
-  const request = require("request");
+  // const request = require("request")
+  const axios = require("axios")
 
   // Check input params
   if (!data.address) {
@@ -429,16 +428,10 @@ async function rollFreeETH(data, socket) {
     return
   }
 
-  // reCAPTCHA verify RRR
-  console.log('secret: ' + configServer.reCaptchaSecretKey)
-  console.log('response: ' + data.recaptchaToken)
-  const reCaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify'
-  
-  // const reCaptchaRes = await axios.post(reCaptchaUrl, { secret: configServer.reCaptchaSecretKey, response: data.recaptchaToken })
-  // console.log('reCaptchaRes.data')
-  // console.log(reCaptchaRes.data)
+  // reCAPTCHA verify
+  /*
   const verifyCaptchaOptions = {
-    uri: reCaptchaUrl,
+    uri: 'https://www.google.com/recaptcha/api/siteverify',
     json: true,
     form: {
         secret: configServer.reCaptchaSecretKey,
@@ -448,19 +441,30 @@ async function rollFreeETH(data, socket) {
 
   request.post(verifyCaptchaOptions, function (err, response, body) {
     if (err) {
-      return res.status(500).json({message: "oops, something went wrong on our side"});
+      socket.emit('rollFreeETHError', { error: 'Oops, something went wrong on our side!' })
+      return
     }
-
-    console.log('reCaptchaRes.data')
-    console.log(body)
 
     if (!body.success) {
-      return res.status(500).json({message: body["error-codes"].join(".")});
+      socket.emit('rollFreeETHError', { error: body["error-codes"].join(", ") })
+      return
     }
 
-    //Save the user to the database. At this point they have been verified.
-    res.status(201).json({message: "Congratulations! We think you are human."});
+    // Save data RRR
+    
   })
+  */
+
+  const verifyCaptchaOptions = {
+    method: 'post',
+    url: 'https://www.google.com/recaptcha/api/siteverify',
+    data: {
+      secret: configServer.reCaptchaSecretKey,
+      response: data.recaptchaToken
+    }
+  }
+
+  axios(verifyCaptchaOptions).then(response => console.log(response))
 
   // Find user by address
   const user = await User.findOne({ address: data.address })

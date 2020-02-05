@@ -414,7 +414,9 @@ async function getFreeETHData(data, socket) {
 // Roll Free ETH
 async function rollFreeETH(data, socket) {
 
-  const axios = require('axios')
+  // const axios = require('axios')
+
+  const request = require("request");
 
   // Check input params
   if (!data.address) {
@@ -431,9 +433,34 @@ async function rollFreeETH(data, socket) {
   console.log('secret: ' + configServer.reCaptchaSecretKey)
   console.log('response: ' + data.recaptchaToken)
   const reCaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify'
-  const reCaptchaRes = await axios.post(reCaptchaUrl, { secret: configServer.reCaptchaSecretKey, response: data.recaptchaToken })
-  console.log('reCaptchaRes.data')
-  console.log(reCaptchaRes.data)
+  
+  // const reCaptchaRes = await axios.post(reCaptchaUrl, { secret: configServer.reCaptchaSecretKey, response: data.recaptchaToken })
+  // console.log('reCaptchaRes.data')
+  // console.log(reCaptchaRes.data)
+  const verifyCaptchaOptions = {
+    uri: reCaptchaUrl,
+    json: true,
+    form: {
+        secret: configServer.reCaptchaSecretKey,
+        response: data.recaptchaToken
+    }
+  }
+
+  request.post(verifyCaptchaOptions, function (err, response, body) {
+    if (err) {
+      return res.status(500).json({message: "oops, something went wrong on our side"});
+    }
+
+    console.log('reCaptchaRes.data')
+    console.log(body)
+
+    if (!body.success) {
+      return res.status(500).json({message: body["error-codes"].join(".")});
+    }
+
+    //Save the user to the database. At this point they have been verified.
+    res.status(201).json({message: "Congratulations! We think you are human."});
+  })
 
   // Find user by address
   const user = await User.findOne({ address: data.address })

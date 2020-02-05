@@ -414,7 +414,7 @@ async function getFreeETHData(data, socket) {
 // Roll Free ETH
 async function rollFreeETH(data, socket) {
 
-  const axios = reauire('axios')
+  const axios = require('axios')
 
   // Check input params
   if (!data.address) {

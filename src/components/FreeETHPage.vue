@@ -3,9 +3,9 @@
         <h3 class="page-caption">
             {{ dict.menu_free_eth }}
         </h3>
-        <!--
-        <div class="top-banner"></div>
-        -->
+        <div class="top-banner">
+            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+        </div>
         <!-- Luccky numbers table -->
         <table class="lucky-numbers-table">
             <thead>

@@ -449,9 +449,7 @@ async function rollFreeETH(data, socket) {
     }
 
     // Save data
-    console.log('Captcha successefuly verified!')
     saveData()
-
   })
 
   // Save user and referrer data

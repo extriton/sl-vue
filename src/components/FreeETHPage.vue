@@ -73,8 +73,12 @@
             <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <div class="banners-list-left">
-            <iframe data-aa="1322061" src="//ad.a-ads.com/1322061?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
-            <iframe data-aa="1322066" src="//ad.a-ads.com/1322066?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <div class="banners-list-left__item">
+                <iframe data-aa="1322061" src="//ad.a-ads.com/1322061?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            </div>
+            <div class="banners-list-left__item">
+                <iframe data-aa="1322066" src="//ad.a-ads.com/1322066?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            </div>
         </div>
     </div>
 </template>
@@ -349,6 +353,13 @@ export default {
         left: 10px;
         width: 180px;
         height: calc(100vh - 100px - 58px);
+        @media all and (max-width: 1200px) {
+            position: relative;
+            width: 100%;
+        }
+        &__item {
+            display: inline-block;
+        }
     }
 }
 /* Buttons styles */

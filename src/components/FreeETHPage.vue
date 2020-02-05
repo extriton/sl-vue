@@ -6,6 +6,9 @@
         <div class="top-banner">
             <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
+        <div class="top-banner-small">
+            <iframe data-aa="1322083" src="//ad.a-ads.com/1322083?size=300x250" scrolling="no" style="width:300px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+        </div>
         <!-- Luccky numbers table -->
         <table class="lucky-numbers-table">
             <thead>
@@ -72,12 +75,21 @@
         <div class="bottom-banner">
             <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
+        <div class="bottom-banner-small">
+            <iframe data-aa="1322087" src="//ad.a-ads.com/1322087?size=300x250" scrolling="no" style="width:300px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+        </div>
         <div class="banners-list-left">
             <div class="banners-list-left__item">
                 <iframe data-aa="1322061" src="//ad.a-ads.com/1322061?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
             </div>
             <div class="banners-list-left__item">
                 <iframe data-aa="1322066" src="//ad.a-ads.com/1322066?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            </div>
+            <div class="banners-list-left__item">
+                <iframe data-aa="1322075" src="//ad.a-ads.com/1322075?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            </div>
+            <div class="banners-list-left__item">
+                <iframe data-aa="1322078" src="//ad.a-ads.com/1322078?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
             </div>
         </div>
     </div>
@@ -343,9 +355,29 @@ export default {
     }
     .top-banner {
         margin: 0 auto;
+        @media all and (max-width: 760px) {
+            display: none;
+        }
+    }
+    .top-banner-small {
+        margin: 0 auto;
+        display: none;
+        @media all and (max-width: 760px) {
+            display: block;
+        }
     }
     .bottom-banner {
         margin: 40px auto 0 auto;
+        @media all and (max-width: 760px) {
+            display: none;
+        }
+    }
+    .bottom-banner-small {
+        margin: 40px auto 0 auto;
+        display: none;
+        @media all and (max-width: 760px) {
+            display: block;
+        }
     }
     .banners-list-left {
         position: fixed;

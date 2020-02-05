@@ -69,7 +69,7 @@
                 <span class="roll-body__timer-cell-desc">Seconds</span>
             </div>
         </div>
-        <div class="top-banner">
+        <div class="bottom-banner">
             <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <!--
@@ -337,13 +337,17 @@ export default {
         }
     }
     .top-banner {
+        /*
         display: inline-block;
         width: auto;
+        */
         margin: 0 auto;
     }
     .bottom-banner {
+        /*
         display: inline-block;
         width: auto;
+        */
         margin: 40px auto 20px auto;
     }
 }

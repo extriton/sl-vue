@@ -18,12 +18,12 @@
                     <span @click="showMenu = false">{{ dict.menu_profile }}</span>
                 </router-link>
             </li>
-            -->
             <li class="header-menu-list__item">
                 <router-link to='/free-eth' class="header-menu-list__item-link">
                     <span @click="showMenu = false">{{ dict.menu_free_eth }}</span>
                 </router-link>
             </li>
+            -->
         </ul>
     </div>
 </template>

@@ -414,8 +414,7 @@ async function getFreeETHData(data, socket) {
 // Roll Free ETH
 async function rollFreeETH(data, socket) {
 
-  // const request = require("request")
-  const axios = require("axios")
+  const request = require("request")
 
   // Check input params
   if (!data.address) {
@@ -429,7 +428,6 @@ async function rollFreeETH(data, socket) {
   }
 
   // reCAPTCHA verify
-  /*
   const verifyCaptchaOptions = {
     uri: 'https://www.google.com/recaptcha/api/siteverify',
     json: true,
@@ -450,74 +448,68 @@ async function rollFreeETH(data, socket) {
       return
     }
 
-    // Save data RRR
-    
+    // Save data
+    saveData()
+
   })
-  */
 
-  const verifyCaptchaOptions = {
-    method: 'post',
-    url: 'https://www.google.com/recaptcha/api/siteverify',
-    data: {
-      secret: configServer.reCaptchaSecretKey,
-      response: data.recaptchaToken
+  // Save user and referrer data
+  async function saveData () {
+    
+    // Find user by address
+    const user = await User.findOne({ address: data.address })
+    if (user === null) {
+      socket.emit('rollFreeETHError', { error: 'User not found!' })
+      return
     }
-  }
-
-  axios(verifyCaptchaOptions).then(response => console.log(response))
-
-  // Find user by address
-  const user = await User.findOne({ address: data.address })
-  if (user === null) {
-    socket.emit('rollFreeETHError', { error: 'User not found!' })
-    return
-  }
   
-  // Check user lastRollTime
-  user.lastRollTime = user.lastRollTime || new Date(0)
-  if ( (new Date().getTime()) < (user.lastRollTime.getTime() + 60 * 60 * 1000) ) {
-    socket.emit('rollFreeETHError', { error: 'Invalid time!' })
-    return
-  }
+    // Check user lastRollTime
+    user.lastRollTime = user.lastRollTime || new Date(0)
+    if ( (new Date().getTime()) < (user.lastRollTime.getTime() + 60 * 60 * 1000) ) {
+      socket.emit('rollFreeETHError', { error: 'Invalid time!' })
+      return
+    }
   
-  // Retrieve random number
-  const resultNumber = parseInt(Math.random() * 10000)
-  if (resultNumber >= 9997) resultNumber -=100
+    // Retrieve random number
+    const resultNumber = parseInt(Math.random() * 10000)
+    if (resultNumber >= 9997) resultNumber -=100
 
-  // Define prize
-  let resultPrize = 0
-  const prizes = await getFreeETHPrizes()
-  for (let i = 0; i < prizes.length; i++) {
-    if (resultNumber >= prizes[i].min && resultNumber <= prizes[i].max) {
-      resultPrize = prizes[i].prize
-      break
+    // Define prize
+    let resultPrize = 0
+    const prizes = await getFreeETHPrizes()
+    for (let i = 0; i < prizes.length; i++) {
+      if (resultNumber >= prizes[i].min && resultNumber <= prizes[i].max) {
+        resultPrize = prizes[i].prize
+        break
+      }
     }
-  }
 
-  // Update user
-  user.freeAmount += resultPrize
-  user.totalAmount += resultPrize
-  user.lastRollTime = new Date()
-  user.save()
+    // Update user
+    user.freeAmount += resultPrize
+    user.totalAmount += resultPrize
+    user.lastRollTime = new Date()
+    user.save()
 
-  // Find & update referrer
-  let referrer = null
-  if (user.referrer) {
-    referrer = await User.findOne({ address: user.referrer })
-    if (referrer !== null) {
-      referalAmount = parseInt(resultPrize * config.referalRate / 100)
-      referrer.referalAmount += referalAmount
-      referrer.totalAmount += referalAmount
-      referrer.save()
+    // Find & update referrer
+    let referrer = null
+    if (user.referrer) {
+      referrer = await User.findOne({ address: user.referrer })
+      if (referrer !== null) {
+        referalAmount = parseInt(resultPrize * config.referalRate / 100)
+        referrer.referalAmount += referalAmount
+        referrer.totalAmount += referalAmount
+        referrer.save()
+      }
     }
+
+    const result = {
+      resultNumber: resultNumber,
+      resultPrize: resultPrize
+    }
+
+    socket.emit('rollFreeETHSuccess', result)
   }
 
-  const result = {
-    resultNumber: resultNumber,
-    resultPrize: resultPrize
-  }
-
-  socket.emit('rollFreeETHSuccess', result)
 }
 
 // Return data for admin visits page

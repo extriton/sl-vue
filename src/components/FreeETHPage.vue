@@ -342,13 +342,9 @@ export default {
         margin: 0 auto;
     }
     .bottom-banner {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 728px;
-        height: 90px;
-        background-color: #111;
+        display: inline-block;
+        width: auto;
+        margin: 40px auto 20px auto;
     }
 }
 /* Buttons styles */

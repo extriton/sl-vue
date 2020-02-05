@@ -1,5 +1,5 @@
 const config = require('../../config/config')
-const configServer = require('../config/server/config-server')
+const configServer = require('../../config/server/config-server')
 const gameSettings = require('../../config/server/game-settings-server')
 
 const Game = require('../models/Game.js')

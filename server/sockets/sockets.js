@@ -1,4 +1,5 @@
 const config = require('../../config/config')
+const configServer = require('../config/server/config-server')
 const gameSettings = require('../../config/server/game-settings-server')
 
 const Game = require('../models/Game.js')
@@ -413,21 +414,33 @@ async function getFreeETHData(data, socket) {
 // Roll Free ETH
 async function rollFreeETH(data, socket) {
 
+  const axios = reauire('axios')
+
   // Check input params
   if (!data.address) {
     socket.emit('rollFreeETHError', { error: 'Invalid address!' })
     return
   }
 
-  // Find user by address
-  const user = await User.findOne({ address: data.address })
-  if (!data.address) {
-    socket.emit('rollFreeETHError', { error: 'User not found!' })
+  if (!data.recaptchaToken) {
+    socket.emit('rollFreeETHError', { error: 'Invalid recatptcha token!' })
     return
   }
 
+  // reCAPTCHA verify RRR
+  const reCaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify'
+  const reCaptchaRes = await axios.post(reCaptchaUrl, { secret: configServer.reCaptchaSecretKey, response: data.recaptchaToken })
+  console.log(reCaptchaRes)
+
+  // Find user by address
+  const user = await User.findOne({ address: data.address })
+  if (user === null) {
+    socket.emit('rollFreeETHError', { error: 'User not found!' })
+    return
+  }
+  
   // Check user lastRollTime
-    user.lastRollTime = user.lastRollTime || new Date(0)
+  user.lastRollTime = user.lastRollTime || new Date(0)
   if ( (new Date().getTime()) < (user.lastRollTime.getTime() + 60 * 60 * 1000) ) {
     socket.emit('rollFreeETHError', { error: 'Invalid time!' })
     return
@@ -453,7 +466,7 @@ async function rollFreeETH(data, socket) {
   user.lastRollTime = new Date()
   user.save()
 
-  // Find & update referrer //RRR
+  // Find & update referrer
   let referrer = null
   if (user.referrer) {
     referrer = await User.findOne({ address: user.referrer })

@@ -24,6 +24,9 @@
                 </tr>
             </tbody>
         </table>
+        <div v-if="!web3.coinbase" class="roll-body__button m-btn disabled">
+            <p>Roll</p>
+        </div>
         <div class="install-metamask-warning" v-if="!web3.coinbase">
             {{ dict.free_install_metamask }} 
             <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.free_install_metamask1 }}</a><br />
@@ -46,12 +49,17 @@
             >
                 {{ dict.free_you_win }} {{ resultPrize | eth }}
             </div>
-            <div
-                class="roll-body__button m-btn"
-                v-show="timeLeft <= 0 && !pressedRollButton"
-                @click="doRoll()"
-            >
-                <p>Roll</p>
+            <div v-show="timeLeft <= 0 && !pressedRollButton">
+                <vue-recaptcha
+                    ref="recaptcha"
+                    size="invisible"
+                    :sitekey="reCaptchaSiteKey"
+                    @verify="roll"
+                    @expired="onCaptchaExpired"
+                />
+                <div class="roll-body__button m-btn" @click="doRoll()">
+                    <p>Roll</p>
+                </div>
             </div>
             <div class="roll-body__timer" v-show="timeLeft > 0">
                 <span class="roll-body__timer-cell">{{ timeLeft | minutes }}</span>
@@ -68,14 +76,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
 import web3 from 'web3'
-
+import VueRecaptcha from 'vue-recaptcha'
 import FreeDiceResult from '@/components/FreeDiceResult.vue'
+
+import config from '../../config/config'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     name: 'FreeETHPage',
     components: {
+        VueRecaptcha,
         FreeDiceResult
     },
     data () {
@@ -90,7 +101,8 @@ export default {
             showPrize: false,
             resultNumber: 0,
             resultPrize: 0,
-            gameCounter: 0
+            gameCounter: 0,
+            reCaptchaSiteKey: config.reCaptchaSiteKey
         }
     },
     computed: {
@@ -122,10 +134,21 @@ export default {
             }, 1000)
         },
         doRoll () {
-            this.$socket.emit('rollFreeETH', { address: this.web3.coinbase })
+            this.$refs.recaptcha.execute()
+        },
+        roll (recaptchaToken) {
+            this.$socket.emit('rollFreeETH', { address: this.web3.coinbase, recaptchaToken: recaptchaToken })
             this.pressedRollButton = true
         },
+        onCaptchaExpired () {
+            this.$refs.recaptcha.reset()
+        },
         ...mapMutations(['newNotify'])
+    },
+    watch: {
+        'web3.coinbase': function (value) {
+            if (value !== null) this.getFreeETHData(this.web3.coinbase)
+        }
     },
     sockets: {
         getFreeETHDataSuccess (data) {
@@ -240,11 +263,11 @@ export default {
         }
     }
     .install-metamask-warning {
+        width: 90%;
         color: #EECA57;
         padding: 10px;
         border: 1px solid #EECA57;
-        width: 100%;
-        margin: 0 auto;
+        margin: 20px auto 0 auto;
         @media all and (max-width: 760px) {
             font-size: 12px;
         }

@@ -7,7 +7,7 @@
             <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <div class="top-banner-small">
-            <iframe data-aa="1322083" src="//ad.a-ads.com/1322083?size=300x250" scrolling="no" style="width:300px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=234x60" scrolling="no" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <!-- Luccky numbers table -->
         <table class="lucky-numbers-table">
@@ -76,8 +76,9 @@
             <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <div class="bottom-banner-small">
-            <iframe data-aa="1322087" src="//ad.a-ads.com/1322087?size=300x250" scrolling="no" style="width:300px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=234x60" scrolling="no" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
+        <!--
         <div class="banners-list-left">
             <div class="banners-list-left__item">
                 <iframe data-aa="1322061" src="//ad.a-ads.com/1322061?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
@@ -92,6 +93,7 @@
                 <iframe data-aa="1322078" src="//ad.a-ads.com/1322078?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
             </div>
         </div>
+        -->
     </div>
 </template>
 

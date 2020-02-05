@@ -428,9 +428,12 @@ async function rollFreeETH(data, socket) {
   }
 
   // reCAPTCHA verify RRR
+  console.log('secret: ' + configServer.reCaptchaSecretKey)
+  console.log('response: ' + data.recaptchaToken)
   const reCaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify'
   const reCaptchaRes = await axios.post(reCaptchaUrl, { secret: configServer.reCaptchaSecretKey, response: data.recaptchaToken })
-  console.log(reCaptchaRes)
+  console.log('reCaptchaRes.data')
+  console.log(reCaptchaRes.data)
 
   // Find user by address
   const user = await User.findOne({ address: data.address })

@@ -354,8 +354,9 @@ export default {
         width: 180px;
         height: calc(100vh - 100px - 58px);
         @media all and (max-width: 1200px) {
-            position: relative;
+            position: static;
             width: 100%;
+            height: auto;
         }
         &__item {
             display: inline-block;

@@ -70,11 +70,8 @@
             </div>
         </div>
         <div class="bottom-banner">
-            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
-        <!--
-        <div class="bottom-banner"></div>
-        -->
     </div>
 </template>
 
@@ -224,7 +221,7 @@ export default {
     margin: 0 auto;
     min-height: calc(100vh - 90px - 58px - 5px);
     position: relative;
-    padding: 0 0 100px 0;
+    padding: 0 0 20px 0;
     .page-caption {
         padding: 10px;
         background: linear-gradient(to left, rgba(0,0,0,.3), rgba(0,0,0,.0) 50%, rgba(0,0,0,.3)), linear-gradient(#d77d31, #fe8417, #d77d31);
@@ -348,7 +345,7 @@ export default {
         display: inline-block;
         width: auto;
         */
-        margin: 40px auto 20px auto;
+        margin: 40px auto 0 auto;
     }
 }
 /* Buttons styles */

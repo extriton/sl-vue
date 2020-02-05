@@ -334,8 +334,8 @@ export default {
         }
     }
     .top-banner {
-        width: 728px;
-        height: 90px;
+        display: inline-block;
+        width: auto;
         background-color: #111;
         margin: 10px auto;
     }

@@ -807,43 +807,56 @@ async function getAdminIPs () {
 }
 
 async function getFreeETHPrizes () {
+  
+  const minInUSD = 0.0007             // Выплата за прокрутку (1-я строка)
+  let minInGwei = minInUSD / currencies.rates.ethereum.value * 1000000000
+  minInGwei = parseInt(minInGwei / 100) * 100
+
+
+  const m1 = 1
+  const m2 = 29.7
+  const m3 = 297
+  const m4 = 2972
+  const m5 = 29724
+  const m6 = 297246
+
   // Prizes in Gwei
   const result = [
     {
       min: 0,
       max: 9885,
       range: '0 - 9885',
-      prize: 3600           // 0.000000070
+      prize: minInGwei * m1
     },
     {
       min: 9886,
       max: 9985,
       range: '9886 - 9985',
-      prize: 110570
+      prize: minInGwei * m2
     },
     {
       min: 9986,
       max: 9993,
       range: '9986 - 9993',
-      prize: 1105200
+      prize: minInGwei * m3
     },
     {
       min: 9994,
       max: 9996,
       range: '9994 - 9996',
-      prize: 11050460
+      prize: minInGwei * m4
     },
     {
       min: 9997,
       max: 9998,
       range: '9997 - 9998',
-      prize: 110504060
+      prize: minInGwei * m5
     },
     {
       min: 9999,
       max: 9999,
       range: '9999',
-      prize: 1105040060
+      prize: minInGwei * m6
     }
   ]
 

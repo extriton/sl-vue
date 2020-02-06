@@ -102,6 +102,7 @@ dicts.ru = {
     free_install_metamask1              : 'установить Metamask',
     free_install_metamask2              : 'и авторизоваться.',
     free_you_win                        : 'Вы выиграли',
+    free_adblock_disable                : 'Отключите блокировщик рекламы!',
 
     // Прочее
     monday                              : 'Понедельник', 
@@ -231,6 +232,7 @@ dicts.en = {
     free_install_metamask1              : 'install Metamask',
     free_install_metamask2              : 'and log in.',
     free_you_win                        : 'You win',
+    free_adblock_disable                : 'Disable ad blocker!',
 
     // Прочее
     monday                              : 'Monday', 

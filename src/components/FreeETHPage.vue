@@ -4,10 +4,10 @@
             {{ dict.menu_free_eth }}
         </h3>
         <div class="top-banner">
-            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <iframe data-aa="1322011" src="//ad.a-ads.com/1322011?size=728x90" scrolling="no" ref="topBanner" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <div class="top-banner-small">
-            <iframe data-aa="1322104" src="//ad.a-ads.com/1322104?size=234x60" scrolling="no" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <iframe data-aa="1322104" src="//ad.a-ads.com/1322104?size=234x60" scrolling="no" ref="topBannerSmall" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <!-- Luccky numbers table -->
         <table class="lucky-numbers-table">
@@ -30,7 +30,7 @@
         <div v-if="!web3.coinbase" class="roll-body__button m-btn disabled">
             <p>Roll</p>
         </div>
-        <div class="install-metamask-warning" v-if="!web3.coinbase">
+        <div class="warning" v-if="!web3.coinbase">
             {{ dict.free_install_metamask }} 
             <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.free_install_metamask1 }}</a><br />
             {{ dict.free_install_metamask2 }}
@@ -50,7 +50,7 @@
                 class="roll-body__prize"
                 v-show="showPrize"
             >
-                {{ dict.free_you_win }} {{ resultPrize | eth }}
+                {{ dict.free_you_win }} {{ resultPrize | eth }} ETH
             </div>
             <div v-show="timeLeft <= 0 && !pressedRollButton">
                 <vue-recaptcha
@@ -60,8 +60,15 @@
                     @verify="roll"
                     @expired="onCaptchaExpired"
                 />
-                <div class="roll-body__button m-btn" @click="doRoll()">
+                <div
+                    class="roll-body__button m-btn"
+                    :class="{ disabled: adBlockOn }"
+                    @click="doRoll()"
+                >
                     <p>Roll</p>
+                </div>
+                <div class="warning" v-show="adBlockOn">
+                    {{ dict.free_adblock_disable }}
                 </div>
             </div>
             <div class="roll-body__timer" v-show="timeLeft > 0">
@@ -72,12 +79,14 @@
                 <span class="roll-body__timer-cell-desc">Seconds</span>
             </div>
         </div>
+        <!--
         <div class="bottom-banner">
             <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
         <div class="bottom-banner-small">
             <iframe data-aa="1322105" src="//ad.a-ads.com/1322105?size=234x60" scrolling="no" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
         </div>
+        -->
         <!--
         <div class="banners-list-left">
             <div class="banners-list-left__item">
@@ -124,7 +133,8 @@ export default {
             resultNumber: 0,
             resultPrize: 0,
             gameCounter: 0,
-            reCaptchaSiteKey: config.reCaptchaSiteKey
+            reCaptchaSiteKey: config.reCaptchaSiteKey,
+            adBlockOn: false
         }
     },
     computed: {
@@ -156,6 +166,11 @@ export default {
             }, 1000)
         },
         doRoll () {
+            console.log(this.adBlockOn)
+            console.log(this.$refs.topBanner.style)
+            console.log(this.$refs.topBannerSmall.style)
+            return
+            if (this.adBlockOn) return
             this.$refs.recaptcha.execute()
         },
         roll (recaptchaToken) {
@@ -228,6 +243,14 @@ export default {
             clearInterval(this.timerIntervalId)
             this.timerIntervalId = null
         }
+    },
+    mounted () {
+        setTimeout(() => {
+            if (!this.$refs.topBanner || !this.$refs.topBannerSmall) return
+            this.adBlockOn = this.$refs.topBanner.style.display == 'none' && this.$refs.topBannerSmall.style.display == 'none'
+            console.log(this.$refs.topBanner.style)
+            console.log(this.adBlockOn)
+        }, 300)
     }
 }
 </script>
@@ -284,7 +307,7 @@ export default {
             color: #34bbff;
         }
     }
-    .install-metamask-warning {
+    .warning {
         width: 90%;
         color: #EECA57;
         padding: 10px;

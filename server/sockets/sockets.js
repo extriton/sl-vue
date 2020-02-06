@@ -396,6 +396,7 @@ async function getFreeETHData(data, socket) {
     prizes: []
   }
   
+  /* Переделано под IP (data.address может и не нужен)  
   if (data.address) {
     const user = await User.findOne({ address: data.address })
     if (user !== null) {
@@ -405,7 +406,19 @@ async function getFreeETHData(data, socket) {
         result.timeLeft = 0
     }
   }
+  */
   
+  const realSocketIp = getRealSocketIP(socket)
+  if (realSocketIp !== '') {
+    const ip = await Ip.findOne({ ip: realSocketIp })
+    if (ip !== null) {
+      ip.lastRollTime = ip.lastRollTime || new Date(0)
+      result.timeLeft = ip.lastRollTime.getTime() + (60 * 60 * 1000) - (new Date().getTime())
+      if (result.timeLeft < 0)
+        result.timeLeft = 0
+    }
+  }
+
   result.prizes = await getFreeETHPrizes()
   
   socket.emit('getFreeETHDataSuccess', result)
@@ -455,23 +468,34 @@ async function rollFreeETH(data, socket) {
   // Save user and referrer data
   async function saveData () {
     
+    // Find ip by realSocketIp
+    const realSocketIp = getRealSocketIP(socket)
+    const ip = await Ip.findOne({ ip: data.realSocketIp })
+    if (ip === null) {
+      socket.emit('rollFreeETHError', { error: 'Invalid IP!' })
+      return
+    }
+  
     // Find user by address
     const user = await User.findOne({ address: data.address })
     if (user === null) {
       socket.emit('rollFreeETHError', { error: 'User not found!' })
       return
     }
-  
-    // Check user lastRollTime
+
+    // Check ip & user lastRollTime RRR
+    ip.lastRollTime = ip.lastRollTime || new Date(0)
     user.lastRollTime = user.lastRollTime || new Date(0)
-    if ( (new Date().getTime()) < (user.lastRollTime.getTime() + 60 * 60 * 1000) ) {
+
+    const lastRollTime = (ip.lastRollTime > user.lastRollTime) ? ip.lastRollTime : user.lastRollTime
+    if ( (new Date().getTime()) < (lastRollTime.getTime() + 60 * 60 * 1000) ) {
       socket.emit('rollFreeETHError', { error: 'Invalid time!' })
       return
     }
   
     // Retrieve random number
     const resultNumber = parseInt(Math.random() * 10000)
-    if (resultNumber >= 9997) resultNumber -=100
+    if (resultNumber >= 9994) resultNumber -=100
 
     // Define prize
     let resultPrize = 0
@@ -482,6 +506,10 @@ async function rollFreeETH(data, socket) {
         break
       }
     }
+
+    // Update ip
+    ip.lastRollTime = new Date()
+    ip.save()
 
     // Update user
     user.freeAmount += resultPrize

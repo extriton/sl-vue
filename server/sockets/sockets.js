@@ -809,7 +809,7 @@ async function getAdminIPs () {
 async function getFreeETHPrizes () {
   
   const minInUSD = 0.0007             // Выплата за прокрутку (1-я строка)
-  let minInGwei = minInUSD / currencies.rates.ethereum.value * 1000000000
+  let minInGwei = minInUSD / cryptocurrency.rates.ethereum.value * 1000000000
   minInGwei = parseInt(minInGwei / 100) * 100
 
 

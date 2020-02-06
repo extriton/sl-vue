@@ -375,7 +375,7 @@ async function getNews(data, socket) {
   try {
     limit = parseInt(data.limit)
   } catch (e) {
-    limit = 50
+    limit = 30
   }
   
   const news = await News.find().sort({ feedDate: -1 }).skip(skip).limit(limit)

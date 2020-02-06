@@ -244,8 +244,6 @@ export default {
         setTimeout(() => {
             if (!this.$refs.topBanner || !this.$refs.topBannerSmall) return
             this.adBlockOn = this.$refs.topBanner.style.display == 'none' && this.$refs.topBannerSmall.style.display == 'none'
-            console.log(this.$refs.topBanner.style)
-            console.log(this.adBlockOn)
         }, 300)
     }
 }

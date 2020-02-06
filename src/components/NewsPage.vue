@@ -85,6 +85,7 @@ export default {
     sockets: {
         refreshNews () {
             this.news = []
+            this.$refs.newsList.scrollTop = 0
             this.getNews(0, 30)
         },
         getNewsSuccess (data) {

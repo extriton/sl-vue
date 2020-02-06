@@ -166,10 +166,6 @@ export default {
             }, 1000)
         },
         doRoll () {
-            console.log(this.adBlockOn)
-            console.log(this.$refs.topBanner.style)
-            console.log(this.$refs.topBannerSmall.style)
-            return
             if (this.adBlockOn) return
             this.$refs.recaptcha.execute()
         },

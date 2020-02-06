@@ -18,6 +18,7 @@ let USERS_ONLINE = 0
 module.exports = io => {
 
     io.sockets.on('connection', socket => {
+      console.log('new user')
 
       const realSocketIP = getRealSocketIP(socket)
 

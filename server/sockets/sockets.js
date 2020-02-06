@@ -10,6 +10,8 @@ const User = require('../models/User.js')
 const Chat = require('../models/Chat.js')
 const News = require('../models/News.js')
 
+const cryptocurrency = require('../util/cryptocurrency')
+
 let USERS_ONLINE = 0
 
 // Export function
@@ -38,6 +40,8 @@ module.exports = io => {
       socket.on('newChatMessage', data => { newChatMessage(data, socket, io) })
       
       socket.on('getChatHistory', data => { getChatHistory(data, socket) })
+
+      socket.on('getCryptoRates', data => { getCryptoRates(data, socket) })
 
       socket.on('getNews', data => { getNews(data, socket) })
 
@@ -350,6 +354,13 @@ async function getChatHistory(data, socket) {
   socket.emit('getChatHistorySuccess', result)
 }
 
+// Return crypto rates
+async function getCryptoRates(data, socket) {
+  
+  socket.emit('getCryptoRatesSuccess', { rates: cryptocurrency.rates })
+
+}
+
 // Return News List
 async function getNews(data, socket) {
 
@@ -483,7 +494,7 @@ async function rollFreeETH(data, socket) {
       return
     }
 
-    // Check ip & user lastRollTime RRR
+    // Check ip & user lastRollTime
     ip.lastRollTime = ip.lastRollTime || new Date(0)
     user.lastRollTime = user.lastRollTime || new Date(0)
 
@@ -796,7 +807,7 @@ async function getAdminIPs () {
 }
 
 async function getFreeETHPrizes () {
-  // prize in Gwei
+  // Prizes in Gwei
   const result = [
     {
       min: 0,

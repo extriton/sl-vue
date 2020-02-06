@@ -4,6 +4,7 @@ const debug = require('debug')('mevn-app:server')
 const http = require('http')
 const contracts = require('../util/contracts')
 const news = require('../util/news')
+const cryptocurrency = require('../util/cryptocurrency')
 
 // const test = require('../util/test')
 
@@ -21,6 +22,9 @@ server.on('listening', onListening)
 
 // Create socket connection
 const io = require('socket.io').listen(server, { secure: false, rejectUnauthorized: false, path: '/ws/socket.io' })
+
+// Run cryptocurrency updater
+cryptocurrency.run()
 
 const SYNC_INTERVAL = 30 * 60 * 1000                        // Synchronize every 30 minutes
 const CLEAR_COLLECTION = false

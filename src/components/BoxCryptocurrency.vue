@@ -1,16 +1,16 @@
 <template>
-    <div class="box-cryptocurrency">
+    <div class="box-cryptocurrency" v-show="rates !== null">
         <h3 class="box-cryptocurrency__caption">
             Cryptocurrencies
         </h3>
         <p
-            v-for="(currency, name) in currencies"
+            v-for="(rate, name) in rates"
             :key="'cc' + name"
             class="box-cryptocurrency__item"
-            :class="[currency.icon]"
+            :class="[rate.icon]"
         >
-            <span class="box-cryptocurrency__item-name">{{ currency.name }}</span>
-            <span class="box-cryptocurrency__item-value">$ {{ currency.value }}</span>
+            <span class="box-cryptocurrency__item-name">{{ rate.name }}</span>
+            <span class="box-cryptocurrency__item-value">$ {{ rate.value }}</span>
         </p>
     </div>
 </template>
@@ -18,54 +18,23 @@
 <script>
 /* eslint-disable */
 /* eslint linebreak-style: ["error", "windows"] */
-import axios from 'axios'
-
-const currenciesUrl = 'https://api.coinmarketcap.com/v1/ticker/?limit=16'
-
 export default {
     name: 'BoxCryptocurrency',
     data () {
         return {
-            currencies: {
-                bitcoin: {
-                    icon: 'bitcoin',
-                    name: 'Bitcoin',
-                    value: 'n/a'
-                },
-                ethereum: {
-                    icon: 'ethereum',
-                    name: 'Ethereum',
-                    value: 'n/a'
-                },
-                litecoin: {
-                    icon: 'litecoin',
-                    name: 'Litecoin',
-                    value: 'n/a'
-                },
-                monero: {
-                    icon: 'monero',
-                    name: 'Monero',
-                    value: 'n/a'
-                },
-            },
+            rates: null,
             intervalId: null,
-            intervalTime: 5 * 60 * 1000
+            intervalTime: 25 * 60 * 1000
         }
     },
     methods: {
         async loadData () {
-            const currencies = await axios.get(currenciesUrl)
-            if (currencies !== null) {
-                this.currencies.bitcoin.value = getRateBySymbol('BTC', currencies.data)
-                this.currencies.ethereum.value = getRateBySymbol('ETH', currencies.data)
-                this.currencies.litecoin.value = getRateBySymbol('LTC', currencies.data)
-                this.currencies.monero.value = getRateBySymbol('XMR', currencies.data)
-            } else {
-                this.currencies.bitcoin.value = 'n/a'
-                this.currencies.ethereum.value = 'n/a'
-                this.currencies.litecoin.value = 'n/a'
-                this.currencies.monero.value = 'n/a'
-            }
+           this.$socket.emit('getCryptoRates')
+        }
+    },
+    sockets: {
+        getCryptoRatesSuccess (data) {
+            this.rates = data.rates
         }
     },
     created () {
@@ -80,17 +49,6 @@ export default {
             this.intervalId = null
         }
     }
-}
-
-function getRateBySymbol(symbol, rates) {
-    let rate = 0
-    for (let i = 0; i < rates.length; i++) {
-        if (rates[i].symbol == symbol) {
-            rate = rates[i].price_usd
-            break
-        }
-    }
-    return parseInt(rate * 100) / 100
 }
 </script>
 

@@ -470,7 +470,7 @@ async function rollFreeETH(data, socket) {
     
     // Find ip by realSocketIp
     const realSocketIp = getRealSocketIP(socket)
-    const ip = await Ip.findOne({ ip: data.realSocketIp })
+    const ip = await Ip.findOne({ ip: realSocketIp })
     if (ip === null) {
       socket.emit('rollFreeETHError', { error: 'Invalid IP!' })
       return

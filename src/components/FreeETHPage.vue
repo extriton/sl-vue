@@ -95,6 +95,11 @@
                     <img src="../../public/img/adv/binance250.gif"  alt="888tron" />
                 </a>
             </div>
+            <div class="banners-list-left__item">
+                <a href="https://www.bitfinex.com/?refcode=eXrWWSpS" target="_blank" title="https://www.bitfinex.com">
+                    <img src="../../public/img/adv/bitfinex250.png"  alt="888tron" />
+                </a>
+            </div>
         </div>
     </div>
 </template>
@@ -405,6 +410,7 @@ export default {
         }
         &__item {
             display: inline-block;
+            margin-bottom: 15px;
         }
     }
 }

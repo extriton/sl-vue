@@ -79,14 +79,11 @@
                 <span class="roll-body__timer-cell-desc">Seconds</span>
             </div>
         </div>
-        <!--
         <div class="bottom-banner">
-            <iframe data-aa="1322054" src="//ad.a-ads.com/1322054?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+            <a href="https://888tron.com/?r=33456778998980" target="_blank" title="888tron.com">
+                <img src="../../public/img/icons/icon_chat.png"  alt="888tron" />
+            </a>
         </div>
-        <div class="bottom-banner-small">
-            <iframe data-aa="1322105" src="//ad.a-ads.com/1322105?size=234x60" scrolling="no" style="width:234px; height:60px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
-        </div>
-        -->
         <!--
         <div class="banners-list-left">
             <div class="banners-list-left__item">

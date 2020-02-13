@@ -81,7 +81,7 @@
         </div>
         <div class="bottom-banner">
             <a href="https://888tron.com/?r=33456778998980" target="_blank" title="888tron.com">
-                <img src="../../public/img/icons/icon_chat.png"  alt="888tron" />
+                <img src="../../public/img/adv/tron720.jpg"  alt="888tron" />
             </a>
         </div>
         <!--

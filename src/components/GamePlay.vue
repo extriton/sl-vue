@@ -149,8 +149,7 @@
             {{ dict.play_txt2 }}<br />
             <span v-show="!web3.coinbase" style="color: #EECA57">
                 {{ dict.play_txt3 }} 
-                <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a><br />
-                {{ dict.play_txt4 }}
+                <a href="https://metamask.io/" target="_blank" rel="noreferrer">{{ dict.play_txt3link }}</a>
             </span>
         </div>
     </div>

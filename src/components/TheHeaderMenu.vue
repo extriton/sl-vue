@@ -1,9 +1,12 @@
 <template>
     <div class="header-menu">
-        <div type="button" class="header-menu__button" @click="showMenu = !showMenu">&#9776;</div>
+        <div class="header-menu__button" @click="showMenu = !showMenu">&#9776;</div>
         <ul class="header-menu-list" v-show="showMenu">
             <li class="header-menu-list__item">
-                <router-link to='/' class="header-menu-list__item-link">
+                <router-link to='/'
+                    class="header-menu-list__item-link"
+
+                >
                     <span @click="showMenu = false">{{ dict.menu_lottery }}</span>
                 </router-link>
             </li>
@@ -63,6 +66,9 @@ export default {
             cursor: pointer;
             color: #ffa959;
         }
+        @media all and (min-width: 761px) {
+            display: none;
+        }
     }
     &-list {
         display: block;
@@ -72,18 +78,40 @@ export default {
         width: 200px;
         background-color: #000;
         padding: 10px;
+        @media all and (min-width: 761px) {
+            display: inline-block!important;
+            position: static;
+            width: auto;
+            margin-top: 15px;
+        }
         &__item {
             display: block;
             padding: 10px 10px;
             text-align: left;
             border-top: 1px solid #666;
+            @media all and (min-width: 761px) {
+                display: inline-block;
+                border: none;
+                margin-right: 20px;
+                &:last-child {
+                    border: none;
+                }
+            }
             &:last-child {
                 border-bottom: 1px solid #666;
+                @media all and (min-width: 761px) {
+                    border: none;
+                }
             }
             &-link {
                 display: block;
                 text-decoration: none;
                 color: #aaa;
+                /*
+                &.router-link-active {
+                    color: #ffa959;
+                }
+                */
                 &:hover {
                     color: #ffa959;
                 }

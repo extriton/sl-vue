@@ -1,7 +1,13 @@
 <template>
   <div class="game-item">
     <!-- Game name -->
-    <div class="game-name">{{ gameName }}</div>
+    <div class="game-name">
+      {{ gameName }}
+      <div class="game-description">
+        {{ dict.play_title1 }} <strong class="blue-color">{{ dict.play_title2 }}</strong> 
+        {{ dict.play_title3 }} {{ dict.play_title4 }}
+      </div>
+    </div>
     <!-- Game menu -->
     <div class="menu-list">
       <router-link :to="linkPath('play')" class="menu-list-item">{{ dict.menu_play }}</router-link>
@@ -76,6 +82,12 @@ export default {
       radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
       radial-gradient(1px 60% at 100% 50%, rgba(255,255,255,.3), transparent),
       linear-gradient(rgb(12,33,43), rgb(20,41,51));
+    font-size: 1em;
+    padding: .5em 1em;
+    @media all and (max-width: 760px) {
+      font-size: .5em;
+      padding: .2em .1em;
+    }
     &:hover {
       background-image:
         radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
@@ -104,18 +116,22 @@ export default {
     background-size: 100% 100%, auto;
     background-position: 50% 50%;
     box-shadow: inset #ebab00 0 -1px 1px, inset 0 1px 1px #ffbf00, #cc7722 0 0 0 1px, #000 0 10px 15px -10px;
-  }
-}
-@media all and (min-width: 761px) {
-  .menu-list-item {
-    font-size: 1em;
-    padding: .5em 1em;
-  }
-}
-@media all and (max-width: 760px) {
-  .menu-list-item {
-    font-size: .5em;
-    padding: .2em .1em;
+    @media all and (max-width: 760px) {
+      font-size: .8em;
+      padding: .3em .3em;
+    }
+    .game-description {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #222;
+      .blue-color {
+        color: blue;/* #3BB9FB; */
+      }
+      @media all and (max-width: 760px) {
+        margin-top: 5px;
+        font-size: .8em;
+      }
+    }
   }
 }
 .m-btn {

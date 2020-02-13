@@ -5,10 +5,12 @@
                 <img src="/img/brand/logo.png" alt="Logo" title="SmartLotto" />
             </router-link>
             <!-- Title -->
+            <!--
             <h3 class="header-title-text">
                 {{ dict.play_title1 }} <strong class="blue-color">{{ dict.play_title2 }}</strong> 
                 {{ dict.play_title3 }} {{ dict.play_title4 }}
             </h3>
+            -->
             <div class="language-wrapper">
                 <TheLanguage />
             </div>
@@ -52,6 +54,9 @@ export default {
     background-color: #000;
     z-index: 5;
     font-size: 1em;
+    @media all and (max-width: 760px) {
+        height: 70px;
+    }
     .site-logo {
         position: absolute;
         display: block;
@@ -59,7 +64,13 @@ export default {
         left: 20px;
         height: 50px;
         width: 200px;
+        @media all and (max-width: 760px) {
+            left: 10px;
+            height: 30px;
+            width: 120px;
+        }
     }
+    /*
     .header-title-text {
         position: absolute;
         width: 60%;
@@ -69,43 +80,38 @@ export default {
         .blue-color {
             color: #3BB9FB;
         }
+        @media all and (max-width: 870px) {
+            display: none;
+        }
     }
+    */
     .language-wrapper {
         display: block;
         position: absolute;
         top: 30px;
         right: 120px;
+        @media all and (max-width: 760px) {
+            top: 20px;
+            right: 90px;
+        }
     }
     .header-menu-wrapper {
         display: block;
+        /*
         position: absolute;
         top: 30px;
         right: 70px;
         z-index: 10;
-    }
-}
-@media all and (max-width: 870px) {
-    .header {
-        .header-title-text {
-            display: none;
-        }
-    }
-}
-@media all and (max-width: 760px) {
-    .header {
-        height: 70px;
-        .site-logo {
-            left: 10px;
-            height: 30px;
-            width: 120px;
-        }
-        .language-wrapper {
-            top: 20px;
-            right: 90px;
-        }
-        .header-menu-wrapper {
+        */
+        @media all and (max-width: 760px) {
+            position: absolute;
+            /*
+            top: 30px;
+            right: 70px;
+            */
             top: 20px;
             right: 40px;
+            z-index: 10;
         }
     }
 }

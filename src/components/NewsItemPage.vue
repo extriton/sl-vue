@@ -64,15 +64,19 @@ export default {
                 url = url.substr(0, c)
 
             return url
+        },
+        changePageMeta (item) {
+            document.title = 'Smart Lotto - ' + item.title
+            document.querySelector('meta[name="description"]').setAttribute("content", 'test')
         }
     },
     sockets: {
         getNewsItemSuccess (data) {
             this.newsItem = data.newsItem
+            this.changePageMeta(this.newsItem)
         }
     },
     created () {
-        console.log(this.id)
         this.getNewsItem(this.id)
     }
 }

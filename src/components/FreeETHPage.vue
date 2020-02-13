@@ -87,12 +87,12 @@
         <div class="banners-list-left">
             <div class="banners-list-left__item">
                 <a href="https://www.bestchange.ru/?p=987691" target="_blank" title="https://www.bestchange.ru/">
-                    <img src="../../public/img/adv/bestchange250.jpg"  alt="888tron" />
+                    <img src="../../public/img/adv/bestchange250.png"  alt="888tron" />
                 </a>
             </div>
             <div class="banners-list-left__item">
                 <a href="https://www.binance.com/ru/register?ref=39314837" target="_blank" title="https://www.binance.com">
-                    <img src="../../public/img/adv/binance250.jpg"  alt="888tron" />
+                    <img src="../../public/img/adv/binance250.gif"  alt="888tron" />
                 </a>
             </div>
         </div>

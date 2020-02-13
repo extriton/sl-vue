@@ -80,26 +80,22 @@
             </div>
         </div>
         <div class="bottom-banner">
-            <a href="https://888tron.com/?r=33456778998980" target="_blank" title="888tron.com">
+            <a href="https://888tron.com/?r=33456778998980" target="_blank" title="https://888tron.com">
                 <img src="../../public/img/adv/tron720.jpg"  alt="888tron" />
             </a>
         </div>
-        <!--
         <div class="banners-list-left">
             <div class="banners-list-left__item">
-                <iframe data-aa="1322061" src="//ad.a-ads.com/1322061?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+                <a href="https://www.bestchange.ru/?p=987691" target="_blank" title="https://www.bestchange.ru/">
+                    <img src="../../public/img/adv/bestchange250.jpg"  alt="888tron" />
+                </a>
             </div>
             <div class="banners-list-left__item">
-                <iframe data-aa="1322066" src="//ad.a-ads.com/1322066?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
-            </div>
-            <div class="banners-list-left__item">
-                <iframe data-aa="1322075" src="//ad.a-ads.com/1322075?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
-            </div>
-            <div class="banners-list-left__item">
-                <iframe data-aa="1322078" src="//ad.a-ads.com/1322078?size=180x150" scrolling="no" style="width:180px; height:150px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+                <a href="https://www.binance.com/ru/register?ref=39314837" target="_blank" title="https://www.binance.com">
+                    <img src="../../public/img/adv/binance250.jpg"  alt="888tron" />
+                </a>
             </div>
         </div>
-        -->
     </div>
 </template>
 
@@ -399,8 +395,9 @@ export default {
         position: fixed;
         top: 100px;
         left: 10px;
-        width: 180px;
+        width: 250px;
         height: calc(100vh - 100px - 58px);
+        overflow-y: auto;
         @media all and (max-width: 1200px) {
             position: static;
             width: 100%;
